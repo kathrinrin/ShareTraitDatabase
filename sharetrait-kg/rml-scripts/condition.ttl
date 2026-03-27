@@ -1,0 +1,142 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#ConditionMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/condition.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "condition/{condition_pk}" ;
+        rr:class vocab:Condition
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTemperature ;
+        rr:objectMap [
+            rml:reference "temperature" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "temperature != '' AND temperature != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPhotoperiod ;
+        rr:objectMap [
+            rml:reference "photoperiod" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "photoperiod != '' AND photoperiod != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasHumidity ;
+        rr:objectMap [
+            rml:reference "humidity" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "humidity != '' AND humidity != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOxygen ;
+        rr:objectMap [
+            rml:reference "oxygen" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "oxygen != '' AND oxygen != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOxygenUnit ;
+        rr:objectMap [
+            rml:reference "oxygen_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "oxygen_units != '' AND oxygen_units != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCarbonDioxide ;
+        rr:objectMap [
+            rml:reference "carbon_dioxide" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "carbon_dioxide != '' AND carbon_dioxide != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCarbonDioxideUnit ;
+        rr:objectMap [
+            rml:reference "carbon_dioxide_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "carbon_dioxide_units != '' AND carbon_dioxide_units != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSalinity ;
+        rr:objectMap [
+            rml:reference "salinity" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "salinity != '' AND salinity != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPH ;
+        rr:objectMap [
+            rml:reference "pH" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "pH != '' AND pH != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFoodType ;
+        rr:objectMap [
+            rml:reference "food_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "food_type != '' AND food_type != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDuration ;
+        rr:objectMap [
+            rml:reference "duration" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "duration != '' AND duration != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDurationGenerations ;
+        rr:objectMap [
+            rml:reference "duration_generations" ;
+            rr:datatype xsd:decimal ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "duration_generations != '' AND duration_generations != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMethodCheck ;
+        rr:objectMap [
+            rml:reference "method_check" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "method_check != '' AND method_check != 'NA'"
+    ] .

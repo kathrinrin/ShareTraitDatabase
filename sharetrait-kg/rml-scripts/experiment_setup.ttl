@@ -1,0 +1,42 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#MeasurementConditionMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/experiment_setup.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "measurement/{measurement_pk}" ;
+        rr:class vocab:Measurement
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCondition ;
+        rr:objectMap [
+            rr:template "condition/{condition_pk}"
+        ]
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasConditionType ;
+        rr:objectMap [
+            rml:reference "condition_type" ;
+            rr:termType rr:Literal
+        ]
+    ] .
+
+<#ConditionTypeMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/experiment_setup.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "condition/{condition_pk}" ;
+        rr:class vocab:Condition
+    ] .

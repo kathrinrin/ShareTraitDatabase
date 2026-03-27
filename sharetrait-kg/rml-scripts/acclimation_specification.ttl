@@ -1,0 +1,43 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#AcclimationSpecificationMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/acclimation-specification.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "acclimation/{acclimation_pk}" ;
+        rr:class vocab:Acclimation
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMating ;
+        rr:objectMap [
+            rml:reference "acclimation_mating" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "acclimation_mating != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasChamber ;
+        rr:objectMap [
+            rml:reference "acclimation_chamber" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "acclimation_chamber != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFastingTime ;
+        rr:objectMap [
+            rml:reference "fasting_time" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "fasting_time != ''"
+    ] .

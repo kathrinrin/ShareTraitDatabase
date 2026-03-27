@@ -1,0 +1,109 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#DatasetMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/dataset.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "dataset/{dataset_pk}" ;
+        rr:class vocab:Dataset
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTitle ;
+        rr:objectMap [
+            rml:reference "title_dataset" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "title_dataset != '' AND title_dataset != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDOI ;
+        rr:objectMap [
+            rml:reference "doi_dataset" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "doi_dataset != '' AND doi_dataset != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasShareTraitDatasetID ;
+        rr:objectMap [
+            rml:reference "sharetrait_datasetid" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "sharetrait_datasetid != '' AND sharetrait_datasetid != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasReferenceType ;
+        rr:objectMap [
+            rml:reference "reference_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "reference_type != '' AND reference_type != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDatasetType ;
+        rr:objectMap [
+            rml:reference "dataset_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "dataset_type != '' AND dataset_type != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPublisher ;
+        rr:objectMap [
+            rml:reference "dataset_publisher" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "dataset_publisher != '' AND dataset_publisher != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasYearPublication ;
+        rr:objectMap [
+            rml:reference "year_publication" ;
+            rr:datatype xsd:integer ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "year_publication != '' AND year_publication != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDateContribution ;
+        rr:objectMap [
+            rml:reference "date_contribution" ;
+            rr:datatype xsd:date ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "date_contribution != '' AND date_contribution != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDatasetTrait ;
+        rr:objectMap [
+            rml:reference "dataset_trait" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "dataset_trait != '' AND dataset_trait != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasComment ;
+        rr:objectMap [
+            rml:reference "dataset_comment" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "dataset_comment != '' AND dataset_comment != 'NA'"
+    ] .
