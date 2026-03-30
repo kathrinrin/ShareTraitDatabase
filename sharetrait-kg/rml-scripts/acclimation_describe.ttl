@@ -4,40 +4,28 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
 
-<#AcclimationSpecificationMap>
+<#MeasurementAcclimationMap>
     rml:logicalSource [
-        rml:source "../../tables/table_values_v04/acclimation-specification.csv" ;
+        rml:source "../../tables/table_values_v04/acclimation-describe.csv" ;
         rml:referenceFormulation ql:CSV
     ] ;
 
     rr:subjectMap [
-        rr:template "acclimation/{acclimation_pk}" ;
-        rr:class vocab:Acclimation
+        rr:template "measurement/{measurement_pk}"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasMating ;
+        rr:predicate vocab:hasAcclimation ;
         rr:objectMap [
-            rml:reference "acclimation_mating" ;
-            rr:termType rr:Literal
-        ] ;
-        rr:condition "acclimation_mating != '' AND acclimation_mating != 'NA'"
+            rr:template "acclimation/{acclimation_pk}"
+        ]
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasChamber ;
+        rr:predicate vocab:hasSpecificationDate ;
         rr:objectMap [
-            rml:reference "acclimation_chamber" ;
+            rml:reference "specification_date" ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "acclimation_chamber != '' AND acclimation_chamber != 'NA'"
-    ] ;
-
-    rr:predicateObjectMap [
-        rr:predicate vocab:hasFastingTime ;
-        rr:objectMap [
-            rml:reference "fasting_time" ;
-            rr:termType rr:Literal
-        ] ;
-        rr:condition "fasting_time != '' AND fasting_time != 'NA'"
+        rr:condition "specification_date != ''"
     ] .

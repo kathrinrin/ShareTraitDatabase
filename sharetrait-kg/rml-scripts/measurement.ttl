@@ -1,0 +1,219 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#MeasurementMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/measurement.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "measurement/{measurement_pk}" ;
+        rr:class vocab:Measurement
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasIndividual ;
+        rr:objectMap [
+            rr:template "individual/{individual_pk}"
+        ]
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTrait ;
+        rr:objectMap [
+            rr:template "trait/{trait_pk}"
+        ]
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitType ;
+        rr:objectMap [
+            rml:reference "trait_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitValue ;
+        rr:objectMap [
+            rml:reference "trait_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_value != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitUnit ;
+        rr:objectMap [
+            rml:reference "trait_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_unit != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitErrorEstimate ;
+        rr:objectMap [
+            rml:reference "trait_error_estimate" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_error_estimate != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitErrorType ;
+        rr:objectMap [
+            rml:reference "trait_error_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_error_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitConverted ;
+        rr:objectMap [
+            rml:reference "trait_converted" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_converted != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasIndividualDevelopmentalStage ;
+        rr:objectMap [
+            rml:reference "individual_developmental_stage" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "individual_developmental_stage != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFreshMass ;
+        rr:objectMap [
+            rml:reference "fresh_mass" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "fresh_mass != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFreshMassUnit ;
+        rr:objectMap [
+            rml:reference "fresh_mass_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "fresh_mass_unit != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSampleSize ;
+        rr:objectMap [
+            rml:reference "sample_size" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "sample_size != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSizeValue ;
+        rr:objectMap [
+            rml:reference "size_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "size_value != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSizeUnits ;
+        rr:objectMap [
+            rml:reference "size_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "size_units != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSizeType ;
+        rr:objectMap [
+            rml:reference "size_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "size_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifeStageGeneral ;
+        rr:objectMap [
+            rml:reference "life_stage_general" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "life_stage_general != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifeStageSpecific ;
+        rr:objectMap [
+            rml:reference "life_stage_specific" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "life_stage_specific != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommentTrait ;
+        rr:objectMap [
+            rml:reference "comment_trait" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comment_trait != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMeasureDate ;
+        rr:objectMap [
+            rml:reference "measure_date" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "measure_date != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFecundityTemporalUnit ;
+        rr:objectMap [
+            rml:reference "fecundity_temporal_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "fecundity_temporal_unit != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasReproductiveStage ;
+        rr:objectMap [
+            rml:reference "reproductive_stage" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "reproductive_stage != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasExperimentLocation ;
+        rr:objectMap [
+            rml:reference "experiment_location" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "experiment_location != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommentsExperimentalConditions ;
+        rr:objectMap [
+            rml:reference "comments_experimental_conditions" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comments_experimental_conditions != ''"
+    ] .

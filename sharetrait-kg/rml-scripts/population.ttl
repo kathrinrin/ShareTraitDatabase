@@ -1,0 +1,79 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#PopulationMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/population.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "population/{population_pk}" ;
+        rr:class vocab:Population
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPopulationName ;
+        rr:objectMap [
+            rml:reference "population_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "population_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPopulationLabel ;
+        rr:objectMap [
+            rml:reference "population_label" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "population_label != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPopulationDescription ;
+        rr:objectMap [
+            rml:reference "population_description" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "population_description != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSpeciesReported ;
+        rr:objectMap [
+            rml:reference "species_reported" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "species_reported != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasAuthority ;
+        rr:objectMap [
+            rml:reference "authority" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "authority != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPopulationFacts ;
+        rr:objectMap [
+            rml:reference "population_facts" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "population_facts != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasComments ;
+        rr:objectMap [
+            rml:reference "comments" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comments != ''"
+    ] .

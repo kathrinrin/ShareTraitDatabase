@@ -1,0 +1,79 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#SiteMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/site.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "site/{site_pk}" ;
+        rr:class vocab:Site
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSiteName ;
+        rr:objectMap [
+            rml:reference "site_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "site_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSiteRealmGeneral ;
+        rr:objectMap [
+            rml:reference "site_realm_general" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "site_realm_general != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSiteRealmSpecific ;
+        rr:objectMap [
+            rml:reference "site_realm_specific" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "site_realm_specific != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasElevationValue ;
+        rr:objectMap [
+            rml:reference "elevation_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "elevation_value != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasElevationUnit ;
+        rr:objectMap [
+            rml:reference "elevation_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "elevation_unit != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDepthValue ;
+        rr:objectMap [
+            rml:reference "depth_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "depth_value != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDepthUnit ;
+        rr:objectMap [
+            rml:reference "depth_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "depth_unit != ''"
+    ] .

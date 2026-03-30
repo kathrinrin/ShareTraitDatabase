@@ -1,0 +1,160 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#TaxonomyMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/ref_taxonomy.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "taxonomy/{taxonomy_pk}" ;
+        rr:class vocab:Taxonomy
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasScientificName ;
+        rr:objectMap [
+            rml:reference "scientific_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "scientific_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTaxonomyIDRef ;
+        rr:objectMap [
+            rml:reference "taxonomy_id_ref" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "taxonomy_id_ref != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTaxonomyDBName ;
+        rr:objectMap [
+            rml:reference "taxonomy_db_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "taxonomy_db_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTaxonomyDBUrl ;
+        rr:objectMap [
+            rml:reference "taxonomy_db_url" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "taxonomy_db_url != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTaxonomyDBVersion ;
+        rr:objectMap [
+            rml:reference "taxonomy_db_version" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "taxonomy_db_version != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentID ;
+        rr:objectMap [
+            rml:reference "parent_id" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_id != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentName ;
+        rr:objectMap [
+            rml:reference "parent_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasRankLevel ;
+        rr:objectMap [
+            rml:reference "rank_level" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "rank_level != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPhylumName ;
+        rr:objectMap [
+            rml:reference "phylum_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "phylum_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasClassName ;
+        rr:objectMap [
+            rml:reference "class_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "class_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOrderName ;
+        rr:objectMap [
+            rml:reference "order_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "order_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasFamilyName ;
+        rr:objectMap [
+            rml:reference "family_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "family_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasGenusName ;
+        rr:objectMap [
+            rml:reference "genus_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "genus_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSpeciesName ;
+        rr:objectMap [
+            rml:reference "species_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "species_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommonNames ;
+        rr:objectMap [
+            rml:reference "common_names" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "common_names != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommentTaxonomy ;
+        rr:objectMap [
+            rml:reference "comment_taxonomy" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comment_taxonomy != ''"
+    ] .

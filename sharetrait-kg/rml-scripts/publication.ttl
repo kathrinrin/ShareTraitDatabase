@@ -4,19 +4,19 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
 
-<#PopulationIndividualMap>
+<#DatasetManuscriptMap>
     rml:logicalSource [
-        rml:source "../../tables/table_values_v04/contains.csv" ;
+        rml:source "../../tables/table_values_v04/publication.csv" ;
         rml:referenceFormulation ql:CSV
     ] ;
 
     rr:subjectMap [
-        rr:template "population/{population_pk}"
+        rr:template "dataset/{dataset_pk}"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:containsIndividual ;
+        rr:predicate vocab:hasManuscript ;
         rr:objectMap [
-            rr:template "individual/{individual_pk}"
+            rr:template "manuscript/{manuscript_pk}"
         ]
     ] .

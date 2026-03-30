@@ -1,0 +1,124 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#TraitMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/trait.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "trait/{trait_pk}" ;
+        rr:class vocab:Trait
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitName ;
+        rr:objectMap [
+            rml:reference "trait_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitID ;
+        rr:objectMap [
+            rml:reference "trait_id" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_id != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasShareTraitType ;
+        rr:objectMap [
+            rml:reference "sharetrait_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "sharetrait_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitType ;
+        rr:objectMap [
+            rml:reference "trait_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitCondition ;
+        rr:objectMap [
+            rml:reference "trait_condition" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_condition != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitParentID ;
+        rr:objectMap [
+            rml:reference "trait_parentid" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_parentid != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifeStageGeneralInitial ;
+        rr:objectMap [
+            rml:reference "life_stage_general_initial" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "life_stage_general_initial != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifeStageGeneralFinal ;
+        rr:objectMap [
+            rml:reference "life_stage_general_final" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "life_stage_general_final != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitDefinition ;
+        rr:objectMap [
+            rml:reference "trait_definition" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_definition != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitDefinitionSource ;
+        rr:objectMap [
+            rml:reference "trait_definition_source" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_definition_source != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitUnit ;
+        rr:objectMap [
+            rml:reference "trait_unit" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_unit != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasTraitComment ;
+        rr:objectMap [
+            rml:reference "trait_comment" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "trait_comment != ''"
+    ] .

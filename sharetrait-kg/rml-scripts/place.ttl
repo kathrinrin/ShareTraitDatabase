@@ -1,0 +1,70 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#PlaceMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/place.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "place/{place_pk}" ;
+        rr:class vocab:Place
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasPlaceName ;
+        rr:objectMap [
+            rml:reference "place_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "place_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLocationName ;
+        rr:objectMap [
+            rml:reference "location_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "location_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLocationLabel ;
+        rr:objectMap [
+            rml:reference "location_label" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "location_label != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCountryName ;
+        rr:objectMap [
+            rml:reference "country_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "country_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasContinentName ;
+        rr:objectMap [
+            rml:reference "continent_name" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "continent_name != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasGeonameCountryID ;
+        rr:objectMap [
+            rml:reference "geoname_countryid" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "geoname_countryid != ''"
+    ] .

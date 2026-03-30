@@ -1,0 +1,76 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#PopulationSiteMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/occurrence.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "population/{population_pk}"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:occurredAt ;
+        rr:objectMap [
+            rr:template "site/{site_pk}"
+        ]
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasObservationDateInitial ;
+        rr:objectMap [
+            rml:reference "observation_date_initial" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "observation_date_initial != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasObservationDateFinal ;
+        rr:objectMap [
+            rml:reference "observation_date_final" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "observation_date_final != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasYearCollectionInitial ;
+        rr:objectMap [
+            rml:reference "year_collection_initial" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "year_collection_initial != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasYearCollectionFinal ;
+        rr:objectMap [
+            rml:reference "year_collection_final" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "year_collection_final != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommentLocation ;
+        rr:objectMap [
+            rml:reference "comment_location" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comment_location != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOrigin ;
+        rr:objectMap [
+            rml:reference "origin" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "origin != ''"
+    ] .

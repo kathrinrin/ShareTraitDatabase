@@ -1,0 +1,88 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#RespiratoryChamberMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/respiratory_chamber.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "technique/{technique_pk}" ;
+        rr:class vocab:Technique
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSensorType ;
+        rr:objectMap [
+            rml:reference "sensor_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "sensor_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasRespirationVolume ;
+        rr:objectMap [
+            rml:reference "respiration_volume" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "respiration_volume != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDelayTime ;
+        rr:objectMap [
+            rml:reference "delay_time" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "delay_time != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasRespiratoryChamberMaterial ;
+        rr:objectMap [
+            rml:reference "respiratory_chamber_material" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "respiratory_chamber_material != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasIncubationTime ;
+        rr:objectMap [
+            rml:reference "incubation_time" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "incubation_time != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasRespirometryType ;
+        rr:objectMap [
+            rml:reference "respirometry_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "respirometry_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasBreathingMode ;
+        rr:objectMap [
+            rml:reference "breathing_mode" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "breathing_mode != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMetabolicRateType ;
+        rr:objectMap [
+            rml:reference "metabolic_rate_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "metabolic_rate_type != ''"
+    ] .

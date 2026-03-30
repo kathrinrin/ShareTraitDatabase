@@ -1,0 +1,88 @@
+@base <https://sharetrait.org/> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+
+<#IndividualMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/individual.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "individual/{individual_pk}" ;
+        rr:class vocab:Individual
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasRepresentativeStage ;
+        rr:objectMap [
+            rml:reference "representative_stage" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "representative_stage != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSex ;
+        rr:objectMap [
+            rml:reference "sex" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "sex != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasIndividualType ;
+        rr:objectMap [
+            rml:reference "individual_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "individual_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMatingMethod ;
+        rr:objectMap [
+            rml:reference "mating_method" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "mating_method != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasMethodType ;
+        rr:objectMap [
+            rml:reference "method_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "method_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasStrategyOfProtection ;
+        rr:objectMap [
+            rml:reference "strategy_of_protection" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "strategy_of_protection != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDescription ;
+        rr:objectMap [
+            rml:reference "description_individual" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "description_individual != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasComment ;
+        rr:objectMap [
+            rml:reference "comment" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comment != ''"
+    ] .

@@ -4,46 +4,46 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
 
-<#MeasurementConditionMap>
+<#TaxonomicLabelMap>
     rml:logicalSource [
-        rml:source "../../tables/table_values_v04/experiment_setup.csv" ;
+        rml:source "../../tables/table_values_v04/taxonomic_label.csv" ;
         rml:referenceFormulation ql:CSV
     ] ;
 
     rr:subjectMap [
-        rr:template "measurement/{measurement_pk}"
+        rr:template "taxonomy/{taxonomy_pk}"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCondition ;
+        rr:predicate vocab:labelsPopulation ;
         rr:objectMap [
-            rr:template "condition/{condition_pk}"
+            rr:template "population/{population_pk}"
         ]
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasConditionLabel ;
+        rr:predicate vocab:hasNameDate ;
         rr:objectMap [
-            rml:reference "condition_label" ;
+            rml:reference "name_date" ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "condition_label != ''"
+        rr:condition "name_date != ''"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasSetupDate ;
+        rr:predicate vocab:hasReferenceSource ;
         rr:objectMap [
-            rml:reference "setup_date" ;
+            rml:reference "reference_source" ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "setup_date != ''"
+        rr:condition "reference_source != ''"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasExperimentLocation ;
+        rr:predicate vocab:hasVersionTaxa ;
         rr:objectMap [
-            rml:reference "experiment_location" ;
+            rml:reference "version_taxa" ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "experiment_location != ''"
+        rr:condition "version_taxa != ''"
     ] .

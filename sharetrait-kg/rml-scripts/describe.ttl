@@ -11,8 +11,7 @@
     ] ;
 
     rr:subjectMap [
-        rr:template "dataset/{dataset_pk}" ;
-        rr:class vocab:Dataset
+        rr:template "dataset/{dataset_pk}"
     ] ;
 
     rr:predicateObjectMap [
@@ -20,15 +19,31 @@
         rr:objectMap [
             rr:template "population/{population_pk}"
         ]
-    ] .
-
-<#PopulationTypeMap>
-    rml:logicalSource [
-        rml:source "../../tables/table_values_v04/describe.csv" ;
-        rml:referenceFormulation ql:CSV
     ] ;
 
-    rr:subjectMap [
-        rr:template "population/{population_pk}" ;
-        rr:class vocab:Population
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDateDescribe ;
+        rr:objectMap [
+            rml:reference "date_describe" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "date_describe != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasDateIso ;
+        rr:objectMap [
+            rml:reference "date_iso" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "date_iso != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasYear ;
+        rr:objectMap [
+            rml:reference "year" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "year != ''"
     ] .

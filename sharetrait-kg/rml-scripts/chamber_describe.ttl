@@ -11,8 +11,7 @@
     ] ;
 
     rr:subjectMap [
-        rr:template "measurement/{measurement_pk}" ;
-        rr:class vocab:Measurement
+        rr:template "measurement/{measurement_pk}"
     ] ;
 
     rr:predicateObjectMap [
@@ -20,15 +19,13 @@
         rr:objectMap [
             rr:template "technique/{technique_pk}"
         ]
-    ] .
-
-<#TechniqueTypeMap>
-    rml:logicalSource [
-        rml:source "../../tables/table_values_v04/chamber-describe.csv" ;
-        rml:referenceFormulation ql:CSV
     ] ;
 
-    rr:subjectMap [
-        rr:template "technique/{technique_pk}" ;
-        rr:class vocab:Technique
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSpecificationDate ;
+        rr:objectMap [
+            rml:reference "specification_date" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "specification_date != ''"
     ] .
