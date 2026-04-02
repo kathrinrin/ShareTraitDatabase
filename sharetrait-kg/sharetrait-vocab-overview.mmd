@@ -1,0 +1,44 @@
+%%{init: {'theme': 'default'}}%%
+flowchart TB
+    %% Tier 1: roots ordered left-to-right
+    Place["vocab:Place"]
+    Taxonomy["vocab:Taxonomy"]
+    Dataset["vocab:Dataset"]
+    Measurement["vocab:Measurement"]
+
+    %% Source - Manuscript first to pull it up
+    Dataset -->|hasManuscript| Manuscript["vocab:Manuscript"]
+
+    %% Geography (left side)
+    Place -->|locatedIn| Site["vocab:Site"]
+
+    %% Source relationships
+    Taxonomy -->|labelsPopulation| Population["vocab:Population"]
+    Dataset -->|describesPopulation| Population
+
+    %% Core organism chain
+    Population -->|occurredAt| Site
+    Population -->|containsIndividual| Individual["vocab:Individual"]
+    Measurement -->|hasIndividual| Individual
+
+    %% Measurement fan-out to trait and method
+    Measurement -->|hasTrait| Trait["vocab:Trait"]
+    Measurement -->|hasCondition| Condition["vocab:Condition"]
+    Measurement -->|usesTechnique| Technique["vocab:Technique"]
+    Measurement -->|hasAcclimation| Acclimation["vocab:Acclimation"]
+
+    classDef source fill:#5DADE2,stroke:#2471A3,color:#000000
+    classDef organism fill:#58D68D,stroke:#1E8449,color:#000000
+    classDef taxonomy fill:#F0B27A,stroke:#CA6F1E,color:#000000
+    classDef environment fill:#EC7063,stroke:#CB4335,color:#000000
+    classDef location fill:#E59866,stroke:#BA4A00,color:#000000
+    classDef method fill:#F4D03F,stroke:#D4AC0D,color:#000000
+
+    class Dataset,Manuscript source
+    class Population,Individual,Measurement,Trait organism
+    class Taxonomy taxonomy
+    class Site environment
+    class Place location
+    class Condition,Technique,Acclimation method
+
+    linkStyle default stroke:#000000,stroke-width:2px

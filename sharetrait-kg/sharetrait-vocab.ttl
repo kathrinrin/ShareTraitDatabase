@@ -1,0 +1,1482 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@base <https://sharetrait.org/vocab/> .
+
+# =============================================================================
+# ShareTrait Vocabulary — Ontology Metadata
+# =============================================================================
+
+<https://sharetrait.org/vocab/> a owl:Ontology ;
+    dcterms:title "ShareTrait Vocabulary"@en ;
+    dcterms:description "Vocabulary for the ShareTrait Database and Knowledge Graph. ShareTrait is a relational database developed for standardising and integrating functional trait datasets across species. It covers organism traits (development, fecundity, metabolic rate), taxonomy, geographic occurrence, experimental conditions, and measurement methodology."@en ;
+    dcterms:created "2025-01-01"^^xsd:date ;
+    dcterms:modified "2025-07-24"^^xsd:date ;
+    owl:versionInfo "1.0.0" ;
+    vann:preferredNamespacePrefix "vocab" ;
+    vann:preferredNamespaceUri "https://sharetrait.org/vocab/" .
+
+# =============================================================================
+# CLASSES
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Source category
+# ---------------------------------------------------------------------------
+
+vocab:Dataset a owl:Class ;
+    rdfs:label "Dataset"@en ;
+    rdfs:comment "A published or contributed dataset containing functional trait measurements. Each dataset is identified by a DOI and a ShareTrait dataset ID, and may be linked to one or more manuscripts."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRADAT001" .
+
+vocab:Manuscript a owl:Class ;
+    rdfs:label "Manuscript"@en ;
+    rdfs:comment "A scientific publication (journal article, data paper, etc.) associated with one or more datasets. Manuscripts provide the scholarly context for the trait data."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAMAN001" .
+
+# ---------------------------------------------------------------------------
+# Organism category
+# ---------------------------------------------------------------------------
+
+vocab:Population a owl:Class ;
+    rdfs:label "Population"@en ;
+    rdfs:comment "A group of organisms of the same species observed or collected together. A population may represent individual-level measurements (ind_measure) or population-level aggregates (pop_measure)."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAPOP001" .
+
+vocab:Individual a owl:Class ;
+    rdfs:label "Individual"@en ;
+    rdfs:comment "A single organism or specimen belonging to a population. Individuals carry attributes such as sex, life stage, type (parent/offspring), and size metrics."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAIN000001" .
+
+vocab:Measurement a owl:Class ;
+    rdfs:label "Measurement"@en ;
+    rdfs:comment "A single trait measurement observation for an individual, recording the trait value, unit, error estimates, and contextual information such as life stage and body size at time of measurement."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAMEA000001" .
+
+vocab:Trait a owl:Class ;
+    rdfs:label "Trait"@en ;
+    rdfs:comment "A defined functional trait type (e.g., development time, metabolic rate, fecundity). Each trait has a formal definition, preferred unit, and may have parent-child relationships with other traits."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRATRA001" .
+
+# ---------------------------------------------------------------------------
+# Taxonomy category
+# ---------------------------------------------------------------------------
+
+vocab:Taxonomy a owl:Class ;
+    rdfs:label "Taxonomy"@en ;
+    rdfs:comment "A reference taxonomy entry providing the full taxonomic classification of a species (phylum through species), linked to an external taxonomic database such as the Catalogue of Life."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRATAX001" .
+
+# ---------------------------------------------------------------------------
+# Environment / Location category
+# ---------------------------------------------------------------------------
+
+vocab:Site a owl:Class ;
+    rdfs:label "Site"@en ;
+    rdfs:comment "A specific geographic or ecological site where organisms were observed or collected. Sites have attributes for realm (terrestrial, aquatic, etc.), elevation, and depth."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRASIT001" .
+
+vocab:Place a owl:Class ;
+    rdfs:label "Place"@en ;
+    rdfs:comment "A named geographic location (city, region, area) with country and continent information. Places contain one or more sites and may be linked to GeoNames identifiers."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAPLA018" .
+
+# ---------------------------------------------------------------------------
+# Method category
+# ---------------------------------------------------------------------------
+
+vocab:Condition a owl:Class ;
+    rdfs:label "Condition"@en ;
+    rdfs:comment "A set of experimental or environmental conditions (temperature, photoperiod, humidity, oxygen, CO2, salinity, pH, food type) under which measurements were taken. Conditions are categorised as test, maintenance, or acclimation."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRACON000001" .
+
+vocab:Technique a owl:Class ;
+    rdfs:label "Technique"@en ;
+    rdfs:comment "A respirometry technique specification describing the equipment and methodology used for metabolic rate measurements, including sensor type, chamber material, respirometry type, and breathing mode."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRATEC000001" .
+
+vocab:Acclimation a owl:Class ;
+    rdfs:label "Acclimation"@en ;
+    rdfs:comment "An acclimation protocol specification describing conditions prior to respirometry measurements, including mating allowance, chamber acclimation time, and fasting duration."@en ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> ;
+    skos:example "TRAACC000001" .
+
+# =============================================================================
+# OBJECT PROPERTIES (entity-to-entity relationships)
+# =============================================================================
+
+# --- Source relationships ---
+
+vocab:hasManuscript a owl:ObjectProperty ;
+    rdfs:label "has manuscript"@en ;
+    rdfs:comment "Links a dataset to its associated manuscript (via the publication junction)."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range vocab:Manuscript ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# --- Organism relationships ---
+
+vocab:describesPopulation a owl:ObjectProperty ;
+    rdfs:label "describes population"@en ;
+    rdfs:comment "Links a dataset to a population it describes (via the describe junction, which also carries date metadata)."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range vocab:Population ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:containsIndividual a owl:ObjectProperty ;
+    rdfs:label "contains individual"@en ;
+    rdfs:comment "Links a population to an individual organism belonging to it."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range vocab:Individual ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasIndividual a owl:ObjectProperty ;
+    rdfs:label "has individual"@en ;
+    rdfs:comment "Links a measurement to the individual it was taken from."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Individual ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTrait a owl:ObjectProperty ;
+    rdfs:label "has trait"@en ;
+    rdfs:comment "Links a measurement to the trait type being measured."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Trait ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# --- Taxonomy relationships ---
+
+vocab:labelsPopulation a owl:ObjectProperty ;
+    rdfs:label "labels population"@en ;
+    rdfs:comment "Links a taxonomy entry to a population it taxonomically identifies (via the taxonomic_label junction, which carries date, source, and version metadata)."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range vocab:Population ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# --- Environment relationships ---
+
+vocab:occurredAt a owl:ObjectProperty ;
+    rdfs:label "occurred at"@en ;
+    rdfs:comment "Links a population to the site where it was observed or collected (via the occurrence junction, which carries observation dates and origin)."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range vocab:Site ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:locatedIn a owl:ObjectProperty ;
+    rdfs:label "located in"@en ;
+    rdfs:comment "Links a place to a site it contains, carrying geographic coordinates and location description."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range vocab:Site ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# --- Method relationships ---
+
+vocab:hasCondition a owl:ObjectProperty ;
+    rdfs:label "has condition"@en ;
+    rdfs:comment "Links a measurement to experimental conditions under which it was performed (via the experiment_setup junction, which carries condition_label, setup_date, and experiment_location)."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Condition ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:usesTechnique a owl:ObjectProperty ;
+    rdfs:label "uses technique"@en ;
+    rdfs:comment "Links a measurement to the respirometry technique used (via the chamber_describe junction)."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Technique ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasAcclimation a owl:ObjectProperty ;
+    rdfs:label "has acclimation"@en ;
+    rdfs:comment "Links a measurement to an acclimation protocol applied before the measurement (via the acclimation_describe junction)."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Acclimation ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# =============================================================================
+# DATATYPE PROPERTIES
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Dataset properties
+# ---------------------------------------------------------------------------
+
+vocab:hasTitle a owl:DatatypeProperty ;
+    rdfs:label "has title"@en ;
+    rdfs:comment "Title of a dataset or manuscript."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDOI a owl:DatatypeProperty ;
+    rdfs:label "has DOI"@en ;
+    rdfs:comment "Digital Object Identifier (DOI) provided as a URL."@en ;
+    rdfs:range xsd:anyURI ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasShareTraitDatasetID a owl:DatatypeProperty ;
+    rdfs:label "has ShareTrait dataset ID"@en ;
+    rdfs:comment "Reference identifier linking to the ShareTrait dataset (e.g., 'Alfaro_Tapia_et_al_2022')."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasReferenceType a owl:DatatypeProperty ;
+    rdfs:label "has reference type"@en ;
+    rdfs:comment "Indicates whether the reference is primary or secondary."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDatasetType a owl:DatatypeProperty ;
+    rdfs:label "has dataset type"@en ;
+    rdfs:comment "Type of dataset (e.g., 'dataset')."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPublisher a owl:DatatypeProperty ;
+    rdfs:label "has publisher"@en ;
+    rdfs:comment "Name of the publisher or repository (e.g., 'zenodo', 'figshare')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasYearPublication a owl:DatatypeProperty ;
+    rdfs:label "has year of publication"@en ;
+    rdfs:comment "Year of publication."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDateContribution a owl:DatatypeProperty ;
+    rdfs:label "has date of contribution"@en ;
+    rdfs:comment "Date when the dataset was contributed to ShareTrait."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:date ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDatasetTrait a owl:DatatypeProperty ;
+    rdfs:label "has dataset trait"@en ;
+    rdfs:comment "Reference trait term used for the dataset (e.g., 'development', 'metabolic_rate')."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasComment a owl:DatatypeProperty ;
+    rdfs:label "has comment"@en ;
+    rdfs:comment "Free-text remark or note."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommentsReference a owl:DatatypeProperty ;
+    rdfs:label "has comments reference"@en ;
+    rdfs:comment "Notes about the reference, e.g., whether the dataset has been published."@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Manuscript properties
+# ---------------------------------------------------------------------------
+
+vocab:hasType a owl:DatatypeProperty ;
+    rdfs:label "has type"@en ;
+    rdfs:comment "Type of manuscript (e.g., 'article', 'data paper')."@en ;
+    rdfs:domain vocab:Manuscript ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCitation a owl:DatatypeProperty ;
+    rdfs:label "has citation"@en ;
+    rdfs:comment "Full bibliographic citation string."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Population properties
+# ---------------------------------------------------------------------------
+
+vocab:hasPopulationName a owl:DatatypeProperty ;
+    rdfs:label "has population name"@en ;
+    rdfs:comment "Reference name or identifier used for the population in the dataset."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPopulationLabel a owl:DatatypeProperty ;
+    rdfs:label "has population label"@en ;
+    rdfs:comment "Defines whether the population provides individual-level measurements ('ind_measure') or population-level aggregates ('pop_measure')."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPopulationDescription a owl:DatatypeProperty ;
+    rdfs:label "has population description"@en ;
+    rdfs:comment "Free-text characteristics of the population."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSpeciesReported a owl:DatatypeProperty ;
+    rdfs:label "has species reported"@en ;
+    rdfs:comment "Species name as given in the original study."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasAuthority a owl:DatatypeProperty ;
+    rdfs:label "has authority"@en ;
+    rdfs:comment "Taxonomic authority (author and year) associated with the species name."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPopulationFacts a owl:DatatypeProperty ;
+    rdfs:label "has population facts"@en ;
+    rdfs:comment "Relevant information specific to the population as mentioned by the author."@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasComments a owl:DatatypeProperty ;
+    rdfs:label "has comments"@en ;
+    rdfs:comment "General remarks or comments."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Individual properties
+# ---------------------------------------------------------------------------
+
+vocab:hasRepresentativeStage a owl:DatatypeProperty ;
+    rdfs:label "has representative stage"@en ;
+    rdfs:comment "Life stage at which the individual was observed (e.g., 'egg', 'larvae', 'adult')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSex a owl:DatatypeProperty ;
+    rdfs:label "has sex"@en ;
+    rdfs:comment "Sex of the individual as indicated in the study (e.g., 'female', 'male')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasIndividualType a owl:DatatypeProperty ;
+    rdfs:label "has individual type"@en ;
+    rdfs:comment "Indicates whether the individual is a 'parent' or 'offspring', used to control parenthood relationships."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasMatingMethod a owl:DatatypeProperty ;
+    rdfs:label "has mating method"@en ;
+    rdfs:comment "Indicates whether mating was allowed or not during the acclimation period."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasMethodType a owl:DatatypeProperty ;
+    rdfs:label "has method type"@en ;
+    rdfs:comment "Method used to estimate fecundity (e.g., 'counting')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasStrategyOfProtection a owl:DatatypeProperty ;
+    rdfs:label "has strategy of protection"@en ;
+    rdfs:comment "Indicates whether eggs are protected or not after laying."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDescription a owl:DatatypeProperty ;
+    rdfs:label "has description"@en ;
+    rdfs:comment "Free-text description and remarks relevant to the individual."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentSizeType a owl:DatatypeProperty ;
+    rdfs:label "has parent size type"@en ;
+    rdfs:comment "Type of size metric for the parent (e.g., 'fresh body mass')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has parent size units"@en ;
+    rdfs:comment "Unit of measurement for the parent's size metric (e.g., 'millimeter')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentalSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has parental size value"@en ;
+    rdfs:comment "Numeric size value of the parent individual when collected."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentAge a owl:DatatypeProperty ;
+    rdfs:label "has parent age"@en ;
+    rdfs:comment "Age of the parent individual."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentAgeUnits a owl:DatatypeProperty ;
+    rdfs:label "has parent age units"@en ;
+    rdfs:comment "Units used to define the parent's age (e.g., 'year')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOffspringDevelopmentalStage a owl:DatatypeProperty ;
+    rdfs:label "has offspring developmental stage"@en ;
+    rdfs:comment "Category for each developmental stage of the offspring (e.g., 'egg stage I')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOffspringSizeType a owl:DatatypeProperty ;
+    rdfs:label "has offspring size type"@en ;
+    rdfs:comment "Type of size metric for the offspring (e.g., 'egg volume')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOffspringSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has offspring size units"@en ;
+    rdfs:comment "Unit of the offspring size metric (e.g., 'milligram')."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOffspringSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has offspring size value"@en ;
+    rdfs:comment "Numeric size value of the offspring."@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Measurement properties
+# ---------------------------------------------------------------------------
+
+vocab:hasTraitType a owl:DatatypeProperty ;
+    rdfs:label "has trait type"@en ;
+    rdfs:comment "Generic type category for trait measurements (e.g., 'development', 'fecundity', 'metabolic_rate')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitValue a owl:DatatypeProperty ;
+    rdfs:label "has trait value"@en ;
+    rdfs:comment "Measured numeric value of the trait."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitUnit a owl:DatatypeProperty ;
+    rdfs:label "has trait unit"@en ;
+    rdfs:comment "Unit of measurement for the trait value (e.g., 'mLO2/h/ind', 'offspring number', 'day')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitErrorEstimate a owl:DatatypeProperty ;
+    rdfs:label "has trait error estimate"@en ;
+    rdfs:comment "Error value associated with the trait estimate."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitErrorType a owl:DatatypeProperty ;
+    rdfs:label "has trait error type"@en ;
+    rdfs:comment "Type of error metric used (e.g., standard deviation, standard error)."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitConverted a owl:DatatypeProperty ;
+    rdfs:label "has trait converted"@en ;
+    rdfs:comment "Trait measurement value that has been converted for standardisation and data integration purposes."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasIndividualDevelopmentalStage a owl:DatatypeProperty ;
+    rdfs:label "has individual developmental stage"@en ;
+    rdfs:comment "Developmental stage of the individual at time of measurement (specific for development trait)."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFreshMass a owl:DatatypeProperty ;
+    rdfs:label "has fresh mass"@en ;
+    rdfs:comment "Fresh body mass of the individual at time of measurement."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFreshMassUnit a owl:DatatypeProperty ;
+    rdfs:label "has fresh mass unit"@en ;
+    rdfs:comment "Unit used for the fresh body mass measurement."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSampleSize a owl:DatatypeProperty ;
+    rdfs:label "has sample size"@en ;
+    rdfs:comment "Number of individuals tested for the trait estimate."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has size value"@en ;
+    rdfs:comment "Body size value of the individual at time of measurement."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has size units"@en ;
+    rdfs:comment "Unit of the body size metric (e.g., 'milligram', 'millimeter')."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSizeType a owl:DatatypeProperty ;
+    rdfs:label "has size type"@en ;
+    rdfs:comment "Type of body size metric (e.g., 'tibia size', 'snout-vent length')."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSizeValueInitial a owl:DatatypeProperty ;
+    rdfs:label "has size value initial"@en ;
+    rdfs:comment "Body size value at the start of the developmental stage. Specific for developmental trait measurements."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSizeValueFinal a owl:DatatypeProperty ;
+    rdfs:label "has size value final"@en ;
+    rdfs:comment "Body size value at the end of the developmental stage. Specific for developmental trait measurements."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifeStageGeneral a owl:DatatypeProperty ;
+    rdfs:label "has life stage general"@en ;
+    rdfs:comment "General life stage during the experiment (e.g., 'adult', 'larvae', 'embryo')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifeStageSpecific a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific"@en ;
+    rdfs:comment "Specific life stage as defined by the researcher (e.g., '98 dpf', 'Gosner stage 25')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifestageSpecificInitial a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific initial"@en ;
+    rdfs:comment "Specific life stage at the start of the trial."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifestageSpecificFinal a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific final"@en ;
+    rdfs:comment "Specific life stage at the end of the trial."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommentTrait a owl:DatatypeProperty ;
+    rdfs:label "has comment trait"@en ;
+    rdfs:comment "Comments and notes regarding the trait measurement."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasMeasureDate a owl:DatatypeProperty ;
+    rdfs:label "has measure date"@en ;
+    rdfs:comment "Date when the measurement was recorded."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFecundityTemporalUnit a owl:DatatypeProperty ;
+    rdfs:label "has fecundity temporal unit"@en ;
+    rdfs:comment "Temporal scale that the fecundity unit encompasses (e.g., 'early fecundity (5 to 12 days old)')."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasReproductiveStage a owl:DatatypeProperty ;
+    rdfs:label "has reproductive stage"@en ;
+    rdfs:comment "Reproductive stage of the individual (e.g., 'virgin')."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasExperimentLocation a owl:DatatypeProperty ;
+    rdfs:label "has experiment location"@en ;
+    rdfs:comment "Indicates where the experiment was carried out (e.g., 'laboratory', 'field')."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommentsExperimentalConditions a owl:DatatypeProperty ;
+    rdfs:label "has comments experimental conditions"@en ;
+    rdfs:comment "Relevant notes about the experimental conditions."@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Trait properties
+# ---------------------------------------------------------------------------
+
+vocab:hasTraitName a owl:DatatypeProperty ;
+    rdfs:label "has trait name"@en ;
+    rdfs:comment "Name of the defined trait (e.g., 'development', 'metabolic_rate', 'fecundity')."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitID a owl:DatatypeProperty ;
+    rdfs:label "has trait ID"@en ;
+    rdfs:comment "Short identifier for the trait (e.g., 'DEVTIME')."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasShareTraitType a owl:DatatypeProperty ;
+    rdfs:label "has ShareTrait type"@en ;
+    rdfs:comment "Reference trait term used in the ShareTrait dataset."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitCondition a owl:DatatypeProperty ;
+    rdfs:label "has trait condition"@en ;
+    rdfs:comment "Functional expression used for defining the trait measurement, reducing ambiguity."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitParentID a owl:DatatypeProperty ;
+    rdfs:label "has trait parent ID"@en ;
+    rdfs:comment "Parent trait identifier for hierarchical trait relationships."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifeStageGeneralInitial a owl:DatatypeProperty ;
+    rdfs:label "has life stage general initial"@en ;
+    rdfs:comment "Initial general life stage for the trait (e.g., 'egg')."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLifeStageGeneralFinal a owl:DatatypeProperty ;
+    rdfs:label "has life stage general final"@en ;
+    rdfs:comment "Final general life stage for the trait (e.g., 'adult')."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitDefinition a owl:DatatypeProperty ;
+    rdfs:label "has trait definition"@en ;
+    rdfs:comment "Full textual definition of the trait."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitDefinitionSource a owl:DatatypeProperty ;
+    rdfs:label "has trait definition source"@en ;
+    rdfs:comment "Source (expert name or citation) of the trait definition."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTraitComment a owl:DatatypeProperty ;
+    rdfs:label "has trait comment"@en ;
+    rdfs:comment "Free-text comment with specific references or resources for the trait."@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Taxonomy (ref_taxonomy) properties
+# ---------------------------------------------------------------------------
+
+vocab:hasScientificName a owl:DatatypeProperty ;
+    rdfs:label "has scientific name"@en ;
+    rdfs:comment "Full scientific name including authority (e.g., 'Aphidius platensis Brethes, 1913')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTaxonomyIDRef a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy ID reference"@en ;
+    rdfs:comment "Identifier from the reference taxonomy database (e.g., Open Tree of Life ID)."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTaxonomyDBName a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database name"@en ;
+    rdfs:comment "Full name of the reference taxonomy database (e.g., 'Catalogue of Life')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTaxonomyDBUrl a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database URL"@en ;
+    rdfs:comment "URL mapping to the taxonomic name in the reference database."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:anyURI ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasTaxonomyDBVersion a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database version"@en ;
+    rdfs:comment "Version of the taxonomy reference database used."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentID a owl:DatatypeProperty ;
+    rdfs:label "has parent ID"@en ;
+    rdfs:comment "Parent taxon identifier in the taxonomic hierarchy."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasParentName a owl:DatatypeProperty ;
+    rdfs:label "has parent name"@en ;
+    rdfs:comment "Scientific name of the parent taxon."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasRankLevel a owl:DatatypeProperty ;
+    rdfs:label "has rank level"@en ;
+    rdfs:comment "Taxonomic rank of the scientific name (e.g., 'species', 'genus')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPhylumName a owl:DatatypeProperty ;
+    rdfs:label "has phylum name"@en ;
+    rdfs:comment "Phylum of the organism (e.g., 'Arthropoda', 'Chordata')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasClassName a owl:DatatypeProperty ;
+    rdfs:label "has class name"@en ;
+    rdfs:comment "Taxonomic class of the organism (e.g., 'Insecta', 'Amphibia')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOrderName a owl:DatatypeProperty ;
+    rdfs:label "has order name"@en ;
+    rdfs:comment "Taxonomic order (e.g., 'Hymenoptera', 'Anura')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFamilyName a owl:DatatypeProperty ;
+    rdfs:label "has family name"@en ;
+    rdfs:comment "Taxonomic family (e.g., 'Braconidae')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasGenusName a owl:DatatypeProperty ;
+    rdfs:label "has genus name"@en ;
+    rdfs:comment "Genus name (e.g., 'Aphidius')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSpeciesName a owl:DatatypeProperty ;
+    rdfs:label "has species name"@en ;
+    rdfs:comment "Species-level name (e.g., 'Aphidius platensis')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommonNames a owl:DatatypeProperty ;
+    rdfs:label "has common names"@en ;
+    rdfs:comment "Common names used for the species (e.g., 'frog')."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommentTaxonomy a owl:DatatypeProperty ;
+    rdfs:label "has comment taxonomy"@en ;
+    rdfs:comment "Comments on the taxonomy naming."@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Taxonomic label (junction) properties
+# ---------------------------------------------------------------------------
+
+vocab:hasNameDate a owl:DatatypeProperty ;
+    rdfs:label "has name date"@en ;
+    rdfs:comment "ISO date used for taxonomic labelling."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasReferenceSource a owl:DatatypeProperty ;
+    rdfs:label "has reference source"@en ;
+    rdfs:comment "Reference label for the taxonomy database used (e.g., 'COL')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasVersionTaxa a owl:DatatypeProperty ;
+    rdfs:label "has version taxa"@en ;
+    rdfs:comment "Version of the taxonomic mapping."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Site properties
+# ---------------------------------------------------------------------------
+
+vocab:hasSiteName a owl:DatatypeProperty ;
+    rdfs:label "has site name"@en ;
+    rdfs:comment "Name of the site."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSiteRealmGeneral a owl:DatatypeProperty ;
+    rdfs:label "has site realm general"@en ;
+    rdfs:comment "General realm where the species inhabits (e.g., 'terrestrial', 'aquatic')."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSiteRealmSpecific a owl:DatatypeProperty ;
+    rdfs:label "has site realm specific"@en ;
+    rdfs:comment "Specific habitat details."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasElevationValue a owl:DatatypeProperty ;
+    rdfs:label "has elevation value"@en ;
+    rdfs:comment "Elevation value at the observation position."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasElevationUnit a owl:DatatypeProperty ;
+    rdfs:label "has elevation unit"@en ;
+    rdfs:comment "Unit of elevation (e.g., 'meter')."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDepthValue a owl:DatatypeProperty ;
+    rdfs:label "has depth value"@en ;
+    rdfs:comment "Depth value where the organism was observed."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDepthUnit a owl:DatatypeProperty ;
+    rdfs:label "has depth unit"@en ;
+    rdfs:comment "Unit of depth (e.g., 'meter')."@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLatitude a owl:DatatypeProperty ;
+    rdfs:label "has latitude"@en ;
+    rdfs:comment "Latitude in decimal degrees. South is negative, North is positive."@en ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLongitude a owl:DatatypeProperty ;
+    rdfs:label "has longitude"@en ;
+    rdfs:comment "Longitude in decimal degrees."@en ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Place properties
+# ---------------------------------------------------------------------------
+
+vocab:hasPlaceName a owl:DatatypeProperty ;
+    rdfs:label "has place name"@en ;
+    rdfs:comment "Name of the place (e.g., 'Amsterdam')."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLocationName a owl:DatatypeProperty ;
+    rdfs:label "has location name"@en ;
+    rdfs:comment "Free-text location tracking note (e.g., 'Lesina_Italy')."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLocationLabel a owl:DatatypeProperty ;
+    rdfs:label "has location label"@en ;
+    rdfs:comment "How the place name was obtained: 'comment-based' or 'gps-based'."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCountryName a owl:DatatypeProperty ;
+    rdfs:label "has country name"@en ;
+    rdfs:comment "Country where the place is located (e.g., 'Chile')."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasContinentName a owl:DatatypeProperty ;
+    rdfs:label "has continent name"@en ;
+    rdfs:comment "Continent where the place is located (e.g., 'South America')."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasGeonameCountryID a owl:DatatypeProperty ;
+    rdfs:label "has GeoName country ID"@en ;
+    rdfs:comment "GeoNames identifier for the country (e.g., '3895114')."@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLocationDescription a owl:DatatypeProperty ;
+    rdfs:label "has location description"@en ;
+    rdfs:comment "Free-text notes about the location."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasLocationCheck a owl:DatatypeProperty ;
+    rdfs:label "has location check"@en ;
+    rdfs:comment "Verification check linking the location term back to the dataset reference."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Occurrence properties (on Population via occurrence junction)
+# ---------------------------------------------------------------------------
+
+vocab:hasObservationDateInitial a owl:DatatypeProperty ;
+    rdfs:label "has observation date initial"@en ;
+    rdfs:comment "Initial date of population collection in YYYYMMDD format."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasObservationDateFinal a owl:DatatypeProperty ;
+    rdfs:label "has observation date final"@en ;
+    rdfs:comment "Final date of population collection in YYYYMMDD format."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasYearCollectionInitial a owl:DatatypeProperty ;
+    rdfs:label "has year collection initial"@en ;
+    rdfs:comment "Initial year when the population was collected."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasYearCollectionFinal a owl:DatatypeProperty ;
+    rdfs:label "has year collection final"@en ;
+    rdfs:comment "Final year when the population was collected."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCommentLocation a owl:DatatypeProperty ;
+    rdfs:label "has comment location"@en ;
+    rdfs:comment "Contextual free-text about the collection point."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOrigin a owl:DatatypeProperty ;
+    rdfs:label "has origin"@en ;
+    rdfs:comment "Source where individuals were collected (e.g., 'field')."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Condition properties
+# ---------------------------------------------------------------------------
+
+vocab:hasTemperature a owl:DatatypeProperty ;
+    rdfs:label "has temperature"@en ;
+    rdfs:comment "Temperature value of the experimental condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPhotoperiod a owl:DatatypeProperty ;
+    rdfs:label "has photoperiod"@en ;
+    rdfs:comment "Photoperiod schedule of daylight and night hours (e.g., '14L_10D')."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasHumidity a owl:DatatypeProperty ;
+    rdfs:label "has humidity"@en ;
+    rdfs:comment "Humidity level measured during the condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOxygen a owl:DatatypeProperty ;
+    rdfs:label "has oxygen"@en ;
+    rdfs:comment "Oxygen level measured during the condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasOxygenUnit a owl:DatatypeProperty ;
+    rdfs:label "has oxygen unit"@en ;
+    rdfs:comment "Unit used for the oxygen measurement (e.g., 'kPa')."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCarbonDioxide a owl:DatatypeProperty ;
+    rdfs:label "has carbon dioxide"@en ;
+    rdfs:comment "Carbon dioxide level measured during the condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasCarbonDioxideUnit a owl:DatatypeProperty ;
+    rdfs:label "has carbon dioxide unit"@en ;
+    rdfs:comment "Unit used for the CO2 measurement (e.g., 'ppm')."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSalinity a owl:DatatypeProperty ;
+    rdfs:label "has salinity"@en ;
+    rdfs:comment "Salinity level of the experimental condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasPH a owl:DatatypeProperty ;
+    rdfs:label "has pH"@en ;
+    rdfs:comment "pH value of the experimental condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFoodType a owl:DatatypeProperty ;
+    rdfs:label "has food type"@en ;
+    rdfs:comment "Food type or description of the food used during testing (e.g., 'Honey')."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDuration a owl:DatatypeProperty ;
+    rdfs:label "has duration"@en ;
+    rdfs:comment "Duration period of the condition in days."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDurationGenerations a owl:DatatypeProperty ;
+    rdfs:label "has duration generations"@en ;
+    rdfs:comment "Number of generations during the condition."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasMethodCheck a owl:DatatypeProperty ;
+    rdfs:label "has method check"@en ;
+    rdfs:comment "Internal metadata indicating the type of condition label (e.g., 'test', 'maintenance', 'acclimation')."@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Experiment setup (junction) properties
+# ---------------------------------------------------------------------------
+
+vocab:hasConditionLabel a owl:DatatypeProperty ;
+    rdfs:label "has condition label"@en ;
+    rdfs:comment "Type of experimental condition: 'test', 'maintenance', or 'acclimation'."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSetupDate a owl:DatatypeProperty ;
+    rdfs:label "has setup date"@en ;
+    rdfs:comment "ISO date when the experimental setup was conducted."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Technique (respiratory chamber) properties
+# ---------------------------------------------------------------------------
+
+vocab:hasSensorType a owl:DatatypeProperty ;
+    rdfs:label "has sensor type"@en ;
+    rdfs:comment "Sensor type used to measure oxygen during the experiment (e.g., 'fiber optic-based oxygen analyzer')."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasRespirationVolume a owl:DatatypeProperty ;
+    rdfs:label "has respiration volume"@en ;
+    rdfs:comment "Volume of the empty respirometric chamber."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDelayTime a owl:DatatypeProperty ;
+    rdfs:label "has delay time"@en ;
+    rdfs:comment "Wait (delay) time excluded from closed measurement cycles, also called equilibration period."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasRespiratoryChamberMaterial a owl:DatatypeProperty ;
+    rdfs:label "has respiratory chamber material"@en ;
+    rdfs:comment "Material of the respirometer (e.g., 'glass', 'plastic')."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasIncubationTime a owl:DatatypeProperty ;
+    rdfs:label "has incubation time"@en ;
+    rdfs:comment "Time spent in the respirometry chamber."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:decimal ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasRespirometryType a owl:DatatypeProperty ;
+    rdfs:label "has respirometry type"@en ;
+    rdfs:comment "Type of respirometry as defined by the researcher (e.g., 'closed')."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasBreathingMode a owl:DatatypeProperty ;
+    rdfs:label "has breathing mode"@en ;
+    rdfs:comment "Breathing mode based on the respiratory medium (e.g., 'aquatic')."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasMetabolicRateType a owl:DatatypeProperty ;
+    rdfs:label "has metabolic rate type"@en ;
+    rdfs:comment "Type of metabolic rate measured (e.g., 'standard')."@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Acclimation properties
+# ---------------------------------------------------------------------------
+
+vocab:hasMating a owl:DatatypeProperty ;
+    rdfs:label "has mating"@en ;
+    rdfs:comment "Whether mating was allowed during the acclimation period."@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasChamber a owl:DatatypeProperty ;
+    rdfs:label "has chamber"@en ;
+    rdfs:comment "Acclimation time after transfer to the respirometry chamber."@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasFastingTime a owl:DatatypeProperty ;
+    rdfs:label "has fasting time"@en ;
+    rdfs:comment "Duration of animal fasting before placement in the respirometry chamber."@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasSpecificationDate a owl:DatatypeProperty ;
+    rdfs:label "has specification date"@en ;
+    rdfs:comment "ISO date when the acclimation or chamber specification was conducted."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# ---------------------------------------------------------------------------
+# Describe (Dataset-Population junction) properties
+# ---------------------------------------------------------------------------
+
+vocab:hasDateDescribe a owl:DatatypeProperty ;
+    rdfs:label "has date describe"@en ;
+    rdfs:comment "Date when a population was described."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasDateIso a owl:DatatypeProperty ;
+    rdfs:label "has date ISO"@en ;
+    rdfs:comment "Standard ISO-formatted date."@en ;
+    rdfs:range xsd:date ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+vocab:hasYear a owl:DatatypeProperty ;
+    rdfs:label "has year"@en ;
+    rdfs:comment "Year value."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy <https://sharetrait.org/vocab/> .
+
+# =============================================================================
+# CONTROLLED VOCABULARIES (as SKOS Concept Schemes)
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Trait Type Scheme
+# ---------------------------------------------------------------------------
+
+vocab:TraitTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Trait Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for trait type categories used in ShareTrait."@en .
+
+vocab:Development a skos:Concept ;
+    skos:inScheme vocab:TraitTypeScheme ;
+    skos:prefLabel "development"@en ;
+    skos:definition "Traits related to developmental time and processes."@en .
+
+vocab:Fecundity a skos:Concept ;
+    skos:inScheme vocab:TraitTypeScheme ;
+    skos:prefLabel "fecundity"@en ;
+    skos:definition "Traits related to reproductive output and offspring production."@en .
+
+vocab:MetabolicRate a skos:Concept ;
+    skos:inScheme vocab:TraitTypeScheme ;
+    skos:prefLabel "metabolic_rate"@en ;
+    skos:definition "Traits related to the rate of energy expenditure, typically measured as oxygen consumption or CO2 production."@en .
+
+# ---------------------------------------------------------------------------
+# Trait Category Scheme
+# ---------------------------------------------------------------------------
+
+vocab:TraitCategoryScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Trait Category Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for the broad trait category."@en .
+
+vocab:Functional a skos:Concept ;
+    skos:inScheme vocab:TraitCategoryScheme ;
+    skos:prefLabel "functional"@en ;
+    skos:definition "Functional traits that affect organism performance."@en .
+
+# ---------------------------------------------------------------------------
+# Condition Label Scheme
+# ---------------------------------------------------------------------------
+
+vocab:ConditionLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Condition Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for experimental condition types."@en .
+
+vocab:TestCondition a skos:Concept ;
+    skos:inScheme vocab:ConditionLabelScheme ;
+    skos:prefLabel "test"@en ;
+    skos:definition "Testing condition under which trait measurements are taken."@en .
+
+vocab:MaintenanceCondition a skos:Concept ;
+    skos:inScheme vocab:ConditionLabelScheme ;
+    skos:prefLabel "maintenance"@en ;
+    skos:definition "Maintenance condition under which organisms are kept before experiments."@en .
+
+vocab:AcclimationCondition a skos:Concept ;
+    skos:inScheme vocab:ConditionLabelScheme ;
+    skos:prefLabel "acclimation"@en ;
+    skos:definition "Acclimation condition used to adapt organisms before testing."@en .
+
+# ---------------------------------------------------------------------------
+# Population Label Scheme
+# ---------------------------------------------------------------------------
+
+vocab:PopulationLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Population Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for population measurement level."@en .
+
+vocab:IndividualMeasure a skos:Concept ;
+    skos:inScheme vocab:PopulationLabelScheme ;
+    skos:prefLabel "ind_measure"@en ;
+    skos:definition "Population providing individual-level measurements."@en .
+
+vocab:PopulationMeasure a skos:Concept ;
+    skos:inScheme vocab:PopulationLabelScheme ;
+    skos:prefLabel "pop_measure"@en ;
+    skos:definition "Population providing population-level aggregate measurements."@en .
+
+# ---------------------------------------------------------------------------
+# Reference Type Scheme
+# ---------------------------------------------------------------------------
+
+vocab:ReferenceTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Reference Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for dataset reference types."@en .
+
+vocab:PrimaryReference a skos:Concept ;
+    skos:inScheme vocab:ReferenceTypeScheme ;
+    skos:prefLabel "primary"@en ;
+    skos:definition "The primary reference for the data."@en .
+
+vocab:SecondaryReference a skos:Concept ;
+    skos:inScheme vocab:ReferenceTypeScheme ;
+    skos:prefLabel "secondary"@en ;
+    skos:definition "A secondary reference for the data."@en .
+
+# ---------------------------------------------------------------------------
+# Individual Type Scheme
+# ---------------------------------------------------------------------------
+
+vocab:IndividualTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Individual Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for individual type (parent/offspring)."@en .
+
+vocab:ParentType a skos:Concept ;
+    skos:inScheme vocab:IndividualTypeScheme ;
+    skos:prefLabel "parent"@en ;
+    skos:definition "The individual is a parent in a parent-offspring relationship."@en .
+
+vocab:OffspringType a skos:Concept ;
+    skos:inScheme vocab:IndividualTypeScheme ;
+    skos:prefLabel "offspring"@en ;
+    skos:definition "The individual is an offspring in a parent-offspring relationship."@en .
+
+# ---------------------------------------------------------------------------
+# Location Label Scheme
+# ---------------------------------------------------------------------------
+
+vocab:LocationLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Location Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for how a place name was obtained."@en .
+
+vocab:CommentBased a skos:Concept ;
+    skos:inScheme vocab:LocationLabelScheme ;
+    skos:prefLabel "comment-based"@en ;
+    skos:definition "Place name obtained from textual comments in the dataset."@en .
+
+vocab:GpsBased a skos:Concept ;
+    skos:inScheme vocab:LocationLabelScheme ;
+    skos:prefLabel "gps-based"@en ;
+    skos:definition "Place name derived from GPS coordinates."@en .
+
+# ---------------------------------------------------------------------------
+# Origin Scheme
+# ---------------------------------------------------------------------------
+
+vocab:OriginScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Origin Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for the origin of collected individuals."@en .
+
+vocab:FieldOrigin a skos:Concept ;
+    skos:inScheme vocab:OriginScheme ;
+    skos:prefLabel "field"@en ;
+    skos:definition "Individuals collected from the field."@en .
+
+# ---------------------------------------------------------------------------
+# Realm Scheme
+# ---------------------------------------------------------------------------
+
+vocab:RealmScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Realm Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for general ecological realm."@en .
+
+vocab:Terrestrial a skos:Concept ;
+    skos:inScheme vocab:RealmScheme ;
+    skos:prefLabel "terrestrial"@en ;
+    skos:definition "Terrestrial (land-based) realm."@en .
+
+vocab:Aquatic a skos:Concept ;
+    skos:inScheme vocab:RealmScheme ;
+    skos:prefLabel "aquatic"@en ;
+    skos:definition "Aquatic (water-based) realm."@en .
+
+# ---------------------------------------------------------------------------
+# Respirometry Type Scheme
+# ---------------------------------------------------------------------------
+
+vocab:RespirometryTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Respirometry Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for types of respirometry."@en .
+
+vocab:ClosedRespirometry a skos:Concept ;
+    skos:inScheme vocab:RespirometryTypeScheme ;
+    skos:prefLabel "closed"@en ;
+    skos:definition "Closed-system respirometry."@en .
+
+# ---------------------------------------------------------------------------
+# Metabolic Rate Type Scheme
+# ---------------------------------------------------------------------------
+
+vocab:MetabolicRateTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Metabolic Rate Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for metabolic rate types."@en .
+
+vocab:StandardMetabolicRate a skos:Concept ;
+    skos:inScheme vocab:MetabolicRateTypeScheme ;
+    skos:prefLabel "standard"@en ;
+    skos:definition "Standard metabolic rate (minimal rate of energy expenditure in a resting, post-absorptive ectotherm)."@en .
+
+# ---------------------------------------------------------------------------
+# Breathing Mode Scheme
+# ---------------------------------------------------------------------------
+
+vocab:BreathingModeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Breathing Mode Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for breathing modes in respirometry."@en .
+
+vocab:AquaticBreathing a skos:Concept ;
+    skos:inScheme vocab:BreathingModeScheme ;
+    skos:prefLabel "aquatic"@en ;
+    skos:definition "Breathing mode using an aquatic respiratory medium."@en .
+
+# =============================================================================
+# ENTITY ID PATTERNS (documented as annotations)
+# =============================================================================
+
+vocab:Dataset rdfs:comment "A published or contributed dataset containing functional trait measurements. Each dataset is identified by a DOI and a ShareTrait dataset ID, and may be linked to one or more manuscripts."@en ;
+    skos:note "Primary key pattern: TRADAT + 3-digit number (e.g., TRADAT001). IRI template: https://sharetrait.org/dataset/{dataset_pk}" .
+
+vocab:Manuscript skos:note "Primary key pattern: TRAMAN + 3-digit number (e.g., TRAMAN001). IRI template: https://sharetrait.org/manuscript/{manuscript_pk}" .
+
+vocab:Population skos:note "Primary key pattern: TRAPOP + 3-digit number (e.g., TRAPOP001). IRI template: https://sharetrait.org/population/{population_pk}" .
+
+vocab:Individual skos:note "Primary key pattern: TRAIN + 6-digit number (e.g., TRAIN000001). IRI template: https://sharetrait.org/individual/{individual_pk}" .
+
+vocab:Measurement skos:note "Primary key pattern: TRAMEA + 6-digit number (e.g., TRAMEA000001). IRI template: https://sharetrait.org/measurement/{measurement_pk}" .
+
+vocab:Trait skos:note "Primary key pattern: TRATRA + 3-digit number (e.g., TRATRA001). IRI template: https://sharetrait.org/trait/{trait_pk}" .
+
+vocab:Taxonomy skos:note "Primary key pattern: TRATAX + 3-digit number (e.g., TRATAX001). IRI template: https://sharetrait.org/taxonomy/{taxonomy_pk}" .
+
+vocab:Site skos:note "Primary key pattern: TRASIT + 3-digit number (e.g., TRASIT001). IRI template: https://sharetrait.org/site/{site_pk}" .
+
+vocab:Place skos:note "Primary key pattern: TRAPLA + 3-digit number (e.g., TRAPLA018). IRI template: https://sharetrait.org/place/{place_pk}" .
+
+vocab:Condition skos:note "Primary key pattern: TRACON + 6-digit number (e.g., TRACON000001). IRI template: https://sharetrait.org/condition/{condition_pk}" .
+
+vocab:Technique skos:note "Primary key pattern: TRATEC + 6-digit number (e.g., TRATEC000001). IRI template: https://sharetrait.org/technique/{technique_pk}" .
+
+vocab:Acclimation skos:note "Primary key pattern: TRAACC + 6-digit number (e.g., TRAACC000001). IRI template: https://sharetrait.org/acclimation/{acclimation_pk}" .
