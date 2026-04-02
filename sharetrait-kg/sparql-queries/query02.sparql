@@ -12,9 +12,9 @@ SELECT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTrait_type  ?trait_type ;
-    vocab:hasTrait_value ?trait_value ;
-    vocab:measuresIndividual ?individual .
+    vocab:hasTraitType  ?trait_type ;
+    vocab:hasTraitValue ?trait_value ;
+    vocab:hasIndividual ?individual .
 
   FILTER(?trait_type = "development")
 
@@ -23,7 +23,7 @@ WHERE {
 
   ?taxonomy a vocab:Taxonomy ;
     vocab:labelsPopulation ?population ;
-    vocab:hasGenus_name    ?genus_name .
+    vocab:hasGenusName    ?genus_name .
 }
 GROUP BY ?genus_name
 ORDER BY DESC(?TRAIT_MEASURE)

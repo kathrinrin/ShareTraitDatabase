@@ -15,8 +15,8 @@ SELECT DISTINCT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTrait_type      ?trait_type ;
-    vocab:measuresIndividual ?individual .
+    vocab:hasTraitType      ?trait_type ;
+    vocab:hasIndividual ?individual .
 
   FILTER(?trait_type = "fecundity")
 
@@ -28,10 +28,10 @@ WHERE {
 
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
-  OPTIONAL { ?dataset    vocab:hasDoi_dataset       ?doi_dataset }
-  OPTIONAL { ?dataset    vocab:hasDataset_publisher ?dataset_publisher }
+  OPTIONAL { ?dataset    vocab:hasDOI       ?doi_dataset }
+  OPTIONAL { ?dataset    vocab:hasPublisher ?dataset_publisher }
   OPTIONAL {
     ?dataset vocab:hasManuscript ?manuscript .
-    OPTIONAL { ?manuscript vocab:hasDoi_manuscript ?doi_manuscript }
+    OPTIONAL { ?manuscript vocab:hasDOI ?doi_manuscript }
   }
 }

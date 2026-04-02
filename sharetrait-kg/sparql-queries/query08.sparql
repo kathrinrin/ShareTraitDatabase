@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
 
 # ============================================================
 # Query 8
@@ -15,12 +16,12 @@ SELECT
   ?scientific_name
   ?genus_name
   ?trait_type
-  (MAX(?trait_value) AS ?max_trait_value)
+  (MAX(xsd:decimal(?trait_value)) AS ?max_trait_value)
   ?trait_unit
 
 WHERE {
   ?taxonomy a vocab:Taxonomy ;
-    vocab:hasGenus_name ?genus_name .
+    vocab:hasGenusName ?genus_name .
 
   FILTER(?genus_name = "Rana")
 
@@ -33,20 +34,20 @@ WHERE {
     vocab:describesPopulation ?population .
 
   ?measurement a vocab:Measurement ;
-    vocab:measuresIndividual ?individual ;
-    vocab:hasTrait_type      ?trait_type ;
-    vocab:hasTrait_value     ?trait_value .
+    vocab:hasIndividual ?individual ;
+    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitValue     ?trait_value .
 
   FILTER(?trait_type = "development")
 
   BIND(STRAFTER(STR(?dataset),    "dataset/")    AS ?dataset_pk)
   BIND(STRAFTER(STR(?population), "population/") AS ?population_pk)
 
-  OPTIONAL { ?dataset    vocab:hasTitle_dataset        ?title_dataset }
-  OPTIONAL { ?dataset    vocab:hasDoi_dataset          ?doi_dataset }
-  OPTIONAL { ?dataset    vocab:hasSharetrait_datasetid ?sharetrait_datasetid }
-  OPTIONAL { ?taxonomy   vocab:hasScientific_name      ?scientific_name }
-  OPTIONAL { ?measurement vocab:hasTrait_unit          ?trait_unit }
+  OPTIONAL { ?dataset    vocab:hasTitle        ?title_dataset }
+  OPTIONAL { ?dataset    vocab:hasDOI          ?doi_dataset }
+  OPTIONAL { ?dataset    vocab:hasShareTraitDatasetID ?sharetrait_datasetid }
+  OPTIONAL { ?taxonomy   vocab:hasScientificName      ?scientific_name }
+  OPTIONAL { ?measurement vocab:hasTraitUnit          ?trait_unit }
 }
 GROUP BY
   ?dataset_pk ?title_dataset ?doi_dataset ?sharetrait_datasetid

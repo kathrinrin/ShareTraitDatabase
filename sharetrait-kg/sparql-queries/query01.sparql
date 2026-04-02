@@ -20,8 +20,8 @@ SELECT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTrait_type ?trait_type ;
-    vocab:measuresIndividual ?individual_iri .
+    vocab:hasTraitType ?trait_type ;
+    vocab:hasIndividual ?individual_iri .
 
   FILTER(?trait_type = "development")
 
@@ -30,7 +30,7 @@ WHERE {
 
   ?taxonomy a vocab:Taxonomy ;
     vocab:labelsPopulation ?population ;
-    vocab:hasGenus_name    ?genus_name .
+    vocab:hasGenusName    ?genus_name .
 
   FILTER(?genus_name = "Aphidius")
 
@@ -38,10 +38,10 @@ WHERE {
 
   BIND(STRAFTER(STR(?individual_iri), "individual/") AS ?individual)
 
-  OPTIONAL { ?taxonomy    vocab:hasScientific_name            ?scientific_name }
-  OPTIONAL { ?population  vocab:hasSpecies_reported           ?species_reported }
-  OPTIONAL { ?trait       vocab:hasLife_stage_general_initial ?life_stage_general_initial }
-  OPTIONAL { ?trait       vocab:hasLife_stage_general_final   ?life_stage_general_final }
-  OPTIONAL { ?measurement vocab:hasTrait_value                ?trait_value }
-  OPTIONAL { ?measurement vocab:hasTrait_unit                 ?trait_unit }
+  OPTIONAL { ?taxonomy    vocab:hasScientificName            ?scientific_name }
+  OPTIONAL { ?population  vocab:hasSpeciesReported           ?species_reported }
+  OPTIONAL { ?trait       vocab:hasLifeStageGeneralInitial ?life_stage_general_initial }
+  OPTIONAL { ?trait       vocab:hasLifeStageGeneralFinal   ?life_stage_general_final }
+  OPTIONAL { ?measurement vocab:hasTraitValue                ?trait_value }
+  OPTIONAL { ?measurement vocab:hasTraitUnit                 ?trait_unit }
 }

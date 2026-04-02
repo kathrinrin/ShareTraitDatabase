@@ -15,7 +15,7 @@ SELECT
 
 WHERE {
   ?taxonomy a vocab:Taxonomy ;
-    vocab:hasGenus_name ?genus_name .
+    vocab:hasGenusName ?genus_name .
 
   FILTER(?genus_name = "Danio")
 
@@ -28,13 +28,13 @@ WHERE {
     vocab:describesPopulation ?population .
 
   ?measurement a vocab:Measurement ;
-    vocab:measuresIndividual ?individual ;
-    vocab:hasTrait_type      ?trait_type ;
-    vocab:hasTrait_value     ?trait_value ;
-    vocab:hasTrait_unit      ?trait_unit .
+    vocab:hasIndividual ?individual ;
+    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitValue     ?trait_value ;
+    vocab:hasTraitUnit      ?trait_unit .
 
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
-  OPTIONAL { ?population vocab:hasSpecies_reported ?species_reported }
+  OPTIONAL { ?population vocab:hasSpeciesReported ?species_reported }
 }
 GROUP BY ?dataset_pk ?species_reported ?trait_type ?trait_unit

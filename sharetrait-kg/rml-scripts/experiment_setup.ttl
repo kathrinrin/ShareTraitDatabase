@@ -47,3 +47,22 @@
         ] ;
         rr:condition "experiment_location != ''"
     ] .
+
+<#ConditionLabelMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/experiment_setup.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "condition/{condition_pk}"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasConditionLabel ;
+        rr:objectMap [
+            rml:reference "condition_label" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "condition_label != ''"
+    ] .

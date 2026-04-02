@@ -17,7 +17,7 @@ SELECT
 
 WHERE {
   ?dataset a vocab:Dataset ;
-    vocab:hasDataset_trait ?dataset_trait .
+    vocab:hasDatasetTrait ?dataset_trait .
 
   FILTER(?dataset_trait = "fecundity")
 
@@ -28,8 +28,8 @@ WHERE {
 
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
-  OPTIONAL { ?dataset    vocab:hasDoi_dataset      ?doi_dataset }
-  OPTIONAL { ?population vocab:hasSpecies_reported  ?species_reported }
-  OPTIONAL { ?taxonomy   vocab:hasScientific_name   ?scientific_name }
+  OPTIONAL { ?dataset    vocab:hasDOI      ?doi_dataset }
+  OPTIONAL { ?population vocab:hasSpeciesReported  ?species_reported }
+  OPTIONAL { ?taxonomy   vocab:hasScientificName   ?scientific_name }
 }
 GROUP BY ?dataset_pk ?scientific_name ?doi_dataset ?dataset_trait

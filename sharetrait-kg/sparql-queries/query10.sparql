@@ -20,7 +20,7 @@ SELECT
 
 WHERE {
   ?taxonomy a vocab:Taxonomy ;
-    vocab:hasGenus_name ?genus_name .
+    vocab:hasGenusName ?genus_name .
 
   FILTER(?genus_name = "Chalcolestes")
 
@@ -30,19 +30,20 @@ WHERE {
     vocab:containsIndividual ?individual .
 
   ?measurement a vocab:Measurement ;
-    vocab:measuresIndividual ?individual ;
-    vocab:hasTrait_type      ?trait_type ;
-    vocab:hasTrait_value     ?trait_value ;
-    vocab:hasCondition       ?condition ;
-    vocab:hasConditionLabel  ?condition_label .
+    vocab:hasIndividual ?individual ;
+    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitValue     ?trait_value ;
+    vocab:hasCondition       ?condition .
 
   FILTER(?trait_type      = "development")
+
+  ?condition vocab:hasConditionLabel ?condition_label ;
+             vocab:hasTemperature    ?temperature .
+
   FILTER(?condition_label = "test")
 
-  ?condition vocab:hasTemperature ?temperature .
-
-  OPTIONAL { ?measurement vocab:hasTrait_unit      ?trait_unit }
-  OPTIONAL { ?measurement vocab:hasSize_value_final ?size_value_final }
-  OPTIONAL { ?measurement vocab:hasSize_units       ?size_units }
-  OPTIONAL { ?measurement vocab:hasSize_type        ?size_type }
+  OPTIONAL { ?measurement vocab:hasTraitUnit      ?trait_unit }
+  OPTIONAL { ?measurement vocab:hasSizeValueFinal ?size_value_final }
+  OPTIONAL { ?measurement vocab:hasSizeUnits       ?size_units }
+  OPTIONAL { ?measurement vocab:hasSizeType        ?size_type }
 }

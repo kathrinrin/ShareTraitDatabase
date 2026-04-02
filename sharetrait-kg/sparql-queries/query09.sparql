@@ -18,7 +18,7 @@ SELECT
 
 WHERE {
   ?taxonomy a vocab:Taxonomy ;
-    vocab:hasGenus_name ?genus_name .
+    vocab:hasGenusName ?genus_name .
 
   FILTER(?genus_name = "Rana")
 
@@ -28,18 +28,19 @@ WHERE {
     vocab:containsIndividual ?individual .
 
   ?measurement a vocab:Measurement ;
-    vocab:measuresIndividual ?individual ;
-    vocab:hasTrait_type      ?trait_type ;
-    vocab:hasTrait_value     ?trait_value ;
-    vocab:hasCondition       ?condition ;
-    vocab:hasConditionLabel  ?condition_label .
+    vocab:hasIndividual ?individual ;
+    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitValue     ?trait_value ;
+    vocab:hasCondition       ?condition .
 
   FILTER(?trait_type   = "development")
+
+  ?condition vocab:hasConditionLabel ?condition_label ;
+             vocab:hasTemperature    ?temperature .
+
   FILTER(?condition_label = "test")
 
-  ?condition vocab:hasTemperature ?temperature .
-
-  OPTIONAL { ?measurement vocab:hasTrait_unit ?trait_unit }
+  OPTIONAL { ?measurement vocab:hasTraitUnit ?trait_unit }
 }
 GROUP BY ?genus_name ?trait_type ?trait_unit ?temperature ?condition_label
 
@@ -49,16 +50,16 @@ GROUP BY ?genus_name ?trait_type ?trait_unit ?temperature ?condition_label
 # SELECT DISTINCT ?temperature ?condition_label
 # WHERE {
 #   ?taxonomy a vocab:Taxonomy ;
-#     vocab:hasGenus_name ?genus_name .
+#     vocab:hasGenusName ?genus_name .
 #   FILTER(?genus_name = "Rana")
 #   ?taxonomy vocab:labelsPopulation ?population .
 #   ?population a vocab:Population ;
 #     vocab:containsIndividual ?individual .
 #   ?measurement a vocab:Measurement ;
-#     vocab:measuresIndividual ?individual ;
-#     vocab:hasTrait_type      "development" ;
-#     vocab:hasCondition       ?condition ;
-#     vocab:hasConditionLabel  ?condition_label .
+#     vocab:hasIndividual ?individual ;
+#     vocab:hasTraitType      "development" ;
+#     vocab:hasCondition       ?condition .
+#   ?condition vocab:hasConditionLabel ?condition_label ;
+#              vocab:hasTemperature    ?temperature .
 #   FILTER(?condition_label = "test")
-#   ?condition vocab:hasTemperature ?temperature .
 # }
