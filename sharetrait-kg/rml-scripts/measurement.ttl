@@ -216,4 +216,40 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "comments_experimental_conditions != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifestageSpecificInitial ;
+        rr:objectMap [
+            rml:reference "lifestage_specific_initial" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "lifestage_specific_initial != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLifestageSpecificFinal ;
+        rr:objectMap [
+            rml:reference "lifestage_specific_final" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "lifestage_specific_final != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSizeValueInitial ;
+        rr:objectMap [
+            rml:reference "size_value_initial" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "size_value_initial != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasSizeValueFinal ;
+        rr:objectMap [
+            rml:reference "size_value_final" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "size_value_final != ''"
     ] .

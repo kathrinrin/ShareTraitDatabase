@@ -22,24 +22,6 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasLatitude ;
-        rr:objectMap [
-            rml:reference "latitude" ;
-            rr:termType rr:Literal
-        ] ;
-        rr:condition "latitude != ''"
-    ] ;
-
-    rr:predicateObjectMap [
-        rr:predicate vocab:hasLongitude ;
-        rr:objectMap [
-            rml:reference "longitude" ;
-            rr:termType rr:Literal
-        ] ;
-        rr:condition "longitude != ''"
-    ] ;
-
-    rr:predicateObjectMap [
         rr:predicate vocab:hasLocationDescription ;
         rr:objectMap [
             rml:reference "location_description" ;
@@ -55,4 +37,32 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "location_check != ''"
+    ] .
+
+<#SiteLatLonMap>
+    rml:logicalSource [
+        rml:source "../../tables/table_values_v04/located_in.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+
+    rr:subjectMap [
+        rr:template "site/{site_pk}"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLatitude ;
+        rr:objectMap [
+            rml:reference "latitude" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "latitude != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasLongitude ;
+        rr:objectMap [
+            rml:reference "longitude" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "longitude != ''"
     ] .

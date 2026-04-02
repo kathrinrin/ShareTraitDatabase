@@ -1,0 +1,239 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# master-query: full flat export of the ShareTrait knowledge graph
+# Replicates the SQL view master-query-all.
+# The three experiment-setup condition types (maintenance / acclimation / test)
+# are retrieved via separate OPTIONAL blocks matching on vocab:hasMethodCheck.
+
+SELECT
+  ?sharetrait_datasetid
+  ?date_contribution
+  ?reference_type
+  ?doi_dataset
+  ?doi_manuscript
+  ?comments_reference
+  ?species_reported
+  ?phylum_name ?class_name ?order_name ?family_name ?genus_name ?species_name
+  ?taxonomy_db_name ?rank_level ?comment_taxonomy
+  ?site_realm_general ?site_realm_specific ?elevation_value ?depth_value
+  ?origin
+  ?location_description
+  ?location_name
+  ?latitude ?longitude
+  ?year_collection_initial ?year_collection_final
+  ?observation_date_initial ?observation_date_final
+  ?comment_location
+  ?experiment_location
+  # maintenance condition fields
+  ?maint_method_check ?maint_duration ?maint_duration_generations
+  ?maint_temperature ?maint_photoperiod ?maint_humidity
+  ?maint_oxygen ?maint_carbon_dioxide ?maint_salinity ?maint_ph
+  ?maint_oxygen_units ?maint_carbon_dioxide_units ?maint_food_type
+  # acclimation condition fields
+  ?accl_method_check ?accl_duration
+  ?accl_temperature ?accl_salinity ?accl_ph
+  ?accl_oxygen ?accl_carbon_dioxide
+  ?accl_photoperiod ?accl_humidity
+  ?accl_oxygen_units ?accl_carbon_dioxide_units ?accl_food_type
+  # test condition fields
+  ?test_temperature ?test_oxygen ?test_carbon_dioxide
+  ?test_oxygen_units ?test_carbon_dioxide_units
+  ?test_photoperiod ?test_humidity ?test_food_type ?test_salinity ?test_ph
+  ?sharetrait_type
+  ?comments_experimental_conditions
+  ?strategy_of_protection ?sex
+  ?life_stage_general_initial ?life_stage_general_final
+  ?lifestage_specific_initial ?lifestage_specific_final
+  ?life_stage_general ?life_stage_specific
+  ?size_type ?size_units ?size_value_initial ?size_value_final ?size_value
+  ?parent_size_type ?parent_size_units ?parental_size_value
+  ?parent_age ?parent_age_units
+  ?mating_method ?method_type
+  ?fecundity_temporal_unit ?reproductive_stage
+  ?offspring_developmental_stage ?offspring_size_type ?offspring_size_units ?offspring_size_value
+  ?metabolic_rate_type
+  ?acclimation_chamber ?fasting_time
+  ?sensor_type ?respiration_volume ?delay_time
+  ?respiratory_chamber_material ?incubation_time
+  ?respirometry_type ?breathing_mode
+  ?trait_value ?trait_unit ?comment_trait
+  ?trait_error_estimate ?trait_error_type
+  ?sample_size ?trait_converted ?fresh_mass
+
+WHERE {
+  # core measurement
+  ?measurement a vocab:Measurement ;
+    vocab:hasTrait ?trait .
+
+  # individual -> population -> taxonomy -> site -> dataset chain
+  ?individual a vocab:Individual .
+  ?measurement vocab:hasIndividual ?individual .
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual .
+
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:labelsPopulation ?population .
+
+  ?site a vocab:Site .
+  ?population vocab:occurredAt ?site .
+
+  ?dataset a vocab:Dataset ;
+    vocab:describesPopulation ?population .
+
+  # mandatory fields
+  ?trait vocab:hasShareTraitType ?sharetrait_type .
+  ?dataset vocab:hasShareTraitDatasetID ?sharetrait_datasetid .
+
+  # --- optional scalar fields ---
+
+  OPTIONAL { ?dataset       vocab:hasDateContribution          ?date_contribution }
+  OPTIONAL { ?dataset       vocab:hasReferenceType             ?reference_type }
+  OPTIONAL { ?dataset       vocab:hasDOI                       ?doi_dataset }
+  OPTIONAL { ?dataset       vocab:hasCommentsReference          ?comments_reference }
+  OPTIONAL { ?population    vocab:hasSpeciesReported            ?species_reported }
+  OPTIONAL { ?taxonomy      vocab:hasPhylumName                ?phylum_name }
+  OPTIONAL { ?taxonomy      vocab:hasClassName                 ?class_name }
+  OPTIONAL { ?taxonomy      vocab:hasOrderName                 ?order_name }
+  OPTIONAL { ?taxonomy      vocab:hasFamilyName                ?family_name }
+  OPTIONAL { ?taxonomy      vocab:hasGenusName                 ?genus_name }
+  OPTIONAL { ?taxonomy      vocab:hasSpeciesName               ?species_name }
+  OPTIONAL { ?taxonomy      vocab:hasTaxonomyDBName            ?taxonomy_db_name }
+  OPTIONAL { ?taxonomy      vocab:hasRankLevel                 ?rank_level }
+  OPTIONAL { ?taxonomy      vocab:hasCommentTaxonomy           ?comment_taxonomy }
+  OPTIONAL { ?site          vocab:hasSiteRealmGeneral          ?site_realm_general }
+  OPTIONAL { ?site          vocab:hasSiteRealmSpecific         ?site_realm_specific }
+  OPTIONAL { ?site          vocab:hasElevationValue            ?elevation_value }
+  OPTIONAL { ?site          vocab:hasDepthValue                ?depth_value }
+  OPTIONAL { ?population    vocab:hasOrigin                    ?origin }
+  OPTIONAL {
+    ?place a vocab:Place ;
+      vocab:locatedIn ?site .
+    OPTIONAL { ?place vocab:hasLocationDescription ?location_description }
+    OPTIONAL { ?place vocab:hasLocationName        ?location_name }
+  }
+  OPTIONAL { ?site vocab:hasLatitude  ?latitude }
+  OPTIONAL { ?site vocab:hasLongitude ?longitude }
+  OPTIONAL { ?population    vocab:hasYearCollectionInitial     ?year_collection_initial }
+  OPTIONAL { ?population    vocab:hasYearCollectionFinal       ?year_collection_final }
+  OPTIONAL { ?population    vocab:hasObservationDateInitial    ?observation_date_initial }
+  OPTIONAL { ?population    vocab:hasObservationDateFinal      ?observation_date_final }
+  OPTIONAL { ?population    vocab:hasCommentLocation           ?comment_location }
+  OPTIONAL { ?measurement   vocab:hasExperimentLocation        ?experiment_location }
+  OPTIONAL { ?measurement   vocab:hasCommentsExperimentalConditions ?comments_experimental_conditions }
+  OPTIONAL { ?individual    vocab:hasStrategyOfProtection      ?strategy_of_protection }
+  OPTIONAL { ?individual    vocab:hasSex                       ?sex }
+  OPTIONAL { ?individual    vocab:hasParentSizeType            ?parent_size_type }
+  OPTIONAL { ?individual    vocab:hasParentSizeUnits           ?parent_size_units }
+  OPTIONAL { ?individual    vocab:hasParentalSizeValue         ?parental_size_value }
+  OPTIONAL { ?individual    vocab:hasParentAge                 ?parent_age }
+  OPTIONAL { ?individual    vocab:hasParentAgeUnits            ?parent_age_units }
+  OPTIONAL { ?individual    vocab:hasOffspringDevelopmentalStage ?offspring_developmental_stage }
+  OPTIONAL { ?individual    vocab:hasOffspringSizeType          ?offspring_size_type }
+  OPTIONAL { ?individual    vocab:hasOffspringSizeUnits         ?offspring_size_units }
+  OPTIONAL { ?individual    vocab:hasOffspringSizeValue         ?offspring_size_value }
+  OPTIONAL { ?trait         vocab:hasLifeStageGeneralInitial   ?life_stage_general_initial }
+  OPTIONAL { ?trait         vocab:hasLifeStageGeneralFinal     ?life_stage_general_final }
+  OPTIONAL { ?measurement   vocab:hasLifeStageGeneral         ?life_stage_general }
+  OPTIONAL { ?measurement   vocab:hasLifeStageSpecific        ?life_stage_specific }
+  OPTIONAL { ?measurement   vocab:hasSizeType                  ?size_type }
+  OPTIONAL { ?measurement   vocab:hasSizeUnits                 ?size_units }
+  OPTIONAL { ?measurement   vocab:hasSizeValue                 ?size_value }
+  OPTIONAL { ?individual    vocab:hasMatingMethod              ?mating_method }
+  OPTIONAL { ?individual    vocab:hasMethodType                ?method_type }
+  OPTIONAL { ?measurement   vocab:hasFecundityTemporalUnit    ?fecundity_temporal_unit }
+  OPTIONAL { ?measurement   vocab:hasReproductiveStage        ?reproductive_stage }
+  OPTIONAL { ?measurement   vocab:hasTraitValue                ?trait_value }
+  OPTIONAL { ?measurement   vocab:hasTraitUnit                 ?trait_unit }
+  OPTIONAL { ?measurement   vocab:hasCommentTrait              ?comment_trait }
+  OPTIONAL { ?measurement   vocab:hasTraitConverted            ?trait_converted }
+  OPTIONAL { ?measurement   vocab:hasTraitErrorEstimate        ?trait_error_estimate }
+  OPTIONAL { ?measurement   vocab:hasTraitErrorType            ?trait_error_type }
+  OPTIONAL { ?measurement   vocab:hasSampleSize                ?sample_size }
+  OPTIONAL { ?measurement   vocab:hasFreshMass                 ?fresh_mass }
+  OPTIONAL { ?measurement   vocab:hasLifestageSpecificInitial  ?lifestage_specific_initial }
+  OPTIONAL { ?measurement   vocab:hasLifestageSpecificFinal    ?lifestage_specific_final }
+  OPTIONAL { ?measurement   vocab:hasSizeValueInitial          ?size_value_initial }
+  OPTIONAL { ?measurement   vocab:hasSizeValueFinal            ?size_value_final }
+
+  # manuscript (via publication junction)
+  OPTIONAL {
+    ?dataset vocab:hasManuscript ?manuscript .
+    OPTIONAL { ?manuscript vocab:hasDOI ?doi_manuscript }
+  }
+
+  # respiratory chamber (via chamber_describe junction)
+  OPTIONAL {
+    ?measurement vocab:usesTechnique ?technique .
+    ?technique a vocab:Technique .
+    OPTIONAL { ?technique vocab:hasMetabolicRateType            ?metabolic_rate_type }
+    OPTIONAL { ?technique vocab:hasSensorType                   ?sensor_type }
+    OPTIONAL { ?technique vocab:hasRespirationVolume            ?respiration_volume }
+    OPTIONAL { ?technique vocab:hasDelayTime                    ?delay_time }
+    OPTIONAL { ?technique vocab:hasRespiratoryChamberMaterial   ?respiratory_chamber_material }
+    OPTIONAL { ?technique vocab:hasIncubationTime               ?incubation_time }
+    OPTIONAL { ?technique vocab:hasRespirometryType             ?respirometry_type }
+    OPTIONAL { ?technique vocab:hasBreathingMode                ?breathing_mode }
+  }
+
+  # acclimation specification (via acclimation_describe junction)
+  OPTIONAL {
+    ?measurement vocab:hasAcclimation ?acclimation .
+    ?acclimation a vocab:Acclimation .
+    OPTIONAL { ?acclimation vocab:hasChamber      ?acclimation_chamber }
+    OPTIONAL { ?acclimation vocab:hasFastingTime   ?fasting_time }
+  }
+
+  # experiment_setup -> maintenance condition
+  OPTIONAL {
+    ?measurement vocab:hasCondition ?cond_maint .
+    ?cond_maint vocab:hasMethodCheck "maintenance" .
+    OPTIONAL { ?cond_maint vocab:hasMethodCheck       ?maint_method_check }
+    OPTIONAL { ?cond_maint vocab:hasDuration           ?maint_duration }
+    OPTIONAL { ?cond_maint vocab:hasDurationGenerations ?maint_duration_generations }
+    OPTIONAL { ?cond_maint vocab:hasTemperature        ?maint_temperature }
+    OPTIONAL { ?cond_maint vocab:hasPhotoperiod        ?maint_photoperiod }
+    OPTIONAL { ?cond_maint vocab:hasHumidity           ?maint_humidity }
+    OPTIONAL { ?cond_maint vocab:hasOxygen             ?maint_oxygen }
+    OPTIONAL { ?cond_maint vocab:hasCarbonDioxide      ?maint_carbon_dioxide }
+    OPTIONAL { ?cond_maint vocab:hasSalinity           ?maint_salinity }
+    OPTIONAL { ?cond_maint vocab:hasPH                 ?maint_ph }
+    OPTIONAL { ?cond_maint vocab:hasOxygenUnit         ?maint_oxygen_units }
+    OPTIONAL { ?cond_maint vocab:hasCarbonDioxideUnit  ?maint_carbon_dioxide_units }
+    OPTIONAL { ?cond_maint vocab:hasFoodType           ?maint_food_type }
+  }
+
+  # experiment_setup -> acclimation condition
+  OPTIONAL {
+    ?measurement vocab:hasCondition ?cond_accl .
+    ?cond_accl vocab:hasMethodCheck "acclimation" .
+    OPTIONAL { ?cond_accl vocab:hasMethodCheck       ?accl_method_check }
+    OPTIONAL { ?cond_accl vocab:hasDuration           ?accl_duration }
+    OPTIONAL { ?cond_accl vocab:hasTemperature        ?accl_temperature }
+    OPTIONAL { ?cond_accl vocab:hasSalinity           ?accl_salinity }
+    OPTIONAL { ?cond_accl vocab:hasPH                 ?accl_ph }
+    OPTIONAL { ?cond_accl vocab:hasOxygen             ?accl_oxygen }
+    OPTIONAL { ?cond_accl vocab:hasCarbonDioxide      ?accl_carbon_dioxide }
+    OPTIONAL { ?cond_accl vocab:hasPhotoperiod        ?accl_photoperiod }
+    OPTIONAL { ?cond_accl vocab:hasHumidity           ?accl_humidity }
+    OPTIONAL { ?cond_accl vocab:hasOxygenUnit         ?accl_oxygen_units }
+    OPTIONAL { ?cond_accl vocab:hasCarbonDioxideUnit  ?accl_carbon_dioxide_units }
+    OPTIONAL { ?cond_accl vocab:hasFoodType           ?accl_food_type }
+  }
+
+  # experiment_setup -> test condition
+  OPTIONAL {
+    ?measurement vocab:hasCondition ?cond_test .
+    ?cond_test vocab:hasMethodCheck "test" .
+    OPTIONAL { ?cond_test vocab:hasTemperature        ?test_temperature }
+    OPTIONAL { ?cond_test vocab:hasOxygen             ?test_oxygen }
+    OPTIONAL { ?cond_test vocab:hasCarbonDioxide      ?test_carbon_dioxide }
+    OPTIONAL { ?cond_test vocab:hasOxygenUnit         ?test_oxygen_units }
+    OPTIONAL { ?cond_test vocab:hasCarbonDioxideUnit  ?test_carbon_dioxide_units }
+    OPTIONAL { ?cond_test vocab:hasPhotoperiod        ?test_photoperiod }
+    OPTIONAL { ?cond_test vocab:hasHumidity           ?test_humidity }
+    OPTIONAL { ?cond_test vocab:hasFoodType           ?test_food_type }
+    OPTIONAL { ?cond_test vocab:hasSalinity           ?test_salinity }
+    OPTIONAL { ?cond_test vocab:hasPH                 ?test_ph }
+  }
+}

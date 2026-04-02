@@ -1,0 +1,47 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# ============================================================
+# Query 1
+# Provide all development trait measurements, their specifications
+# and the scientific names and names reported of individuals
+# belonging to the genus "Aphidius"
+# (same as Aphidius.sparql — duplicated here for completeness)
+# ============================================================
+
+SELECT
+  ?trait_type
+  ?trait_value
+  ?trait_unit
+  ?individual
+  ?life_stage_general_initial
+  ?life_stage_general_final
+  ?species_reported
+  ?scientific_name
+
+WHERE {
+  ?measurement a vocab:Measurement ;
+    vocab:hasTrait_type ?trait_type ;
+    vocab:measuresIndividual ?individual_iri .
+
+  FILTER(?trait_type = "development")
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual_iri .
+
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:labelsPopulation ?population ;
+    vocab:hasGenus_name    ?genus_name .
+
+  FILTER(?genus_name = "Aphidius")
+
+  ?measurement vocab:hasTrait ?trait .
+
+  BIND(STRAFTER(STR(?individual_iri), "individual/") AS ?individual)
+
+  OPTIONAL { ?taxonomy    vocab:hasScientific_name            ?scientific_name }
+  OPTIONAL { ?population  vocab:hasSpecies_reported           ?species_reported }
+  OPTIONAL { ?trait       vocab:hasLife_stage_general_initial ?life_stage_general_initial }
+  OPTIONAL { ?trait       vocab:hasLife_stage_general_final   ?life_stage_general_final }
+  OPTIONAL { ?measurement vocab:hasTrait_value                ?trait_value }
+  OPTIONAL { ?measurement vocab:hasTrait_unit                 ?trait_unit }
+}

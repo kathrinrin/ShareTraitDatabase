@@ -1,0 +1,37 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# ============================================================
+# Query 3
+# Which datasets describe fecundity traits?
+# Returns dataset PKs, DOIs, repositories, and related
+# manuscript DOIs (if any).
+# ============================================================
+
+SELECT DISTINCT
+  ?dataset_pk
+  ?doi_dataset
+  ?dataset_publisher
+  ?doi_manuscript
+
+WHERE {
+  ?measurement a vocab:Measurement ;
+    vocab:hasTrait_type      ?trait_type ;
+    vocab:measuresIndividual ?individual .
+
+  FILTER(?trait_type = "fecundity")
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual .
+
+  ?dataset a vocab:Dataset ;
+    vocab:describesPopulation ?population .
+
+  BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
+
+  OPTIONAL { ?dataset    vocab:hasDoi_dataset       ?doi_dataset }
+  OPTIONAL { ?dataset    vocab:hasDataset_publisher ?dataset_publisher }
+  OPTIONAL {
+    ?dataset vocab:hasManuscript ?manuscript .
+    OPTIONAL { ?manuscript vocab:hasDoi_manuscript ?doi_manuscript }
+  }
+}

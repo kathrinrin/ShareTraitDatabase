@@ -1,0 +1,29 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# ============================================================
+# Query 2
+# How many development trait measurements exist in ShareTrait
+# for each genus?
+# ============================================================
+
+SELECT
+  ?genus_name
+  (COUNT(?trait_value) AS ?TRAIT_MEASURE)
+
+WHERE {
+  ?measurement a vocab:Measurement ;
+    vocab:hasTrait_type  ?trait_type ;
+    vocab:hasTrait_value ?trait_value ;
+    vocab:measuresIndividual ?individual .
+
+  FILTER(?trait_type = "development")
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual .
+
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:labelsPopulation ?population ;
+    vocab:hasGenus_name    ?genus_name .
+}
+GROUP BY ?genus_name
+ORDER BY DESC(?TRAIT_MEASURE)

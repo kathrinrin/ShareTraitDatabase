@@ -1,0 +1,29 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# ============================================================
+# Query 7
+# All species available in ShareTrait measured for the
+# development trait.
+# ============================================================
+
+SELECT DISTINCT
+  ?scientific_name
+  ?genus_name
+  ?trait_type
+
+WHERE {
+  ?measurement a vocab:Measurement ;
+    vocab:hasTrait_type      ?trait_type ;
+    vocab:measuresIndividual ?individual .
+
+  FILTER(?trait_type = "development")
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual .
+
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:labelsPopulation ?population .
+
+  OPTIONAL { ?taxonomy vocab:hasScientific_name ?scientific_name }
+  OPTIONAL { ?taxonomy vocab:hasGenus_name      ?genus_name }
+}

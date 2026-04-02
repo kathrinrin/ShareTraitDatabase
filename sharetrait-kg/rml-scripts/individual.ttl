@@ -85,4 +85,85 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "comment != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentSizeType ;
+        rr:objectMap [
+            rml:reference "parent_size_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_size_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentSizeUnits ;
+        rr:objectMap [
+            rml:reference "parent_size_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_size_units != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentalSizeValue ;
+        rr:objectMap [
+            rml:reference "parental_size_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parental_size_value != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentAge ;
+        rr:objectMap [
+            rml:reference "parent_age" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_age != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasParentAgeUnits ;
+        rr:objectMap [
+            rml:reference "parent_age_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "parent_age_units != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOffspringDevelopmentalStage ;
+        rr:objectMap [
+            rml:reference "offspring_developmental_stage" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "offspring_developmental_stage != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOffspringSizeType ;
+        rr:objectMap [
+            rml:reference "offspring_size_type" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "offspring_size_type != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOffspringSizeUnits ;
+        rr:objectMap [
+            rml:reference "offspring_size_units" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "offspring_size_units != ''"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasOffspringSizeValue ;
+        rr:objectMap [
+            rml:reference "offspring_size_value" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "offspring_size_value != ''"
     ] .

@@ -1,0 +1,44 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# Aphidius: development trait measurements for genus Aphidius
+# Replicates the SQL view "Aphidius"
+
+SELECT
+  ?trait_type
+  ?trait_value
+  ?trait_unit
+  ?individual
+  ?life_stage_general_initial
+  ?life_stage_general_final
+  ?species_reported
+  ?scientific_name
+
+WHERE {
+  ?measurement a vocab:Measurement ;
+    vocab:hasTraitType ?trait_type ;
+    vocab:hasIndividual ?individual_iri .
+
+  FILTER(?trait_type = "development")
+
+  ?individual_iri a vocab:Individual .
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual_iri .
+
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:labelsPopulation ?population ;
+    vocab:hasGenusName   ?genus_name .
+
+  FILTER(?genus_name = "Aphidius")
+
+  ?measurement vocab:hasTrait ?trait .
+
+  BIND(STRAFTER(STR(?individual_iri), "individual/") AS ?individual)
+
+  OPTIONAL { ?taxonomy    vocab:hasScientificName             ?scientific_name }
+  OPTIONAL { ?population  vocab:hasSpeciesReported            ?species_reported }
+  OPTIONAL { ?trait       vocab:hasLifeStageGeneralInitial    ?life_stage_general_initial }
+  OPTIONAL { ?trait       vocab:hasLifeStageGeneralFinal      ?life_stage_general_final }
+  OPTIONAL { ?measurement vocab:hasTraitValue                 ?trait_value }
+  OPTIONAL { ?measurement vocab:hasTraitUnit                  ?trait_unit }
+}

@@ -106,4 +106,13 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "dataset_comment != '' AND dataset_comment != 'NA'"
+    ] ;
+
+    rr:predicateObjectMap [
+        rr:predicate vocab:hasCommentsReference ;
+        rr:objectMap [
+            rml:reference "comments_reference" ;
+            rr:termType rr:Literal
+        ] ;
+        rr:condition "comments_reference != '' AND comments_reference != 'NA'"
     ] .

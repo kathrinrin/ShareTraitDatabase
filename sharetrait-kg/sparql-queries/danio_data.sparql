@@ -1,0 +1,43 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# danio_data: datasets and trait types for genus Danio
+# Replicates the SQL view "danio_data"
+
+SELECT DISTINCT
+  ?dataset_pk
+  ?title_dataset
+  ?dataset_publisher
+  ?doi_dataset
+  ?year_publication
+  ?species_reported
+  ?trait_type
+
+WHERE {
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:hasGenusName ?genus_name .
+
+  FILTER(?genus_name = "Danio")
+
+  ?taxonomy vocab:labelsPopulation ?population .
+
+  ?population a vocab:Population .
+
+  ?dataset a vocab:Dataset ;
+    vocab:describesPopulation ?population .
+
+  ?population vocab:containsIndividual ?individual .
+
+  ?individual a vocab:Individual .
+
+  ?measurement a vocab:Measurement ;
+    vocab:hasIndividual ?individual ;
+    vocab:hasTraitType  ?trait_type .
+
+  BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
+
+  OPTIONAL { ?dataset    vocab:hasTitle       ?title_dataset }
+  OPTIONAL { ?dataset    vocab:hasPublisher   ?dataset_publisher }
+  OPTIONAL { ?dataset    vocab:hasDOI         ?doi_dataset }
+  OPTIONAL { ?dataset    vocab:hasYearPublication ?year_publication }
+  OPTIONAL { ?population vocab:hasSpeciesReported ?species_reported }
+}

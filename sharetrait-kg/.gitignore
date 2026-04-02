@@ -1,0 +1,17 @@
+# OS files
+.DS_Store
+
+# Downloadable tools
+rmlmapper.jar
+
+# Derived: RML mapper output
+ttl-output/
+
+# Derived: concatenated knowledge graph
+sharetrait-kg.ttl
+
+# Derived: QLever index
+sharetrait-kg-index/
+
+# Derived: query output CSVs
+sparql-queries/*-output.csv

@@ -1,0 +1,40 @@
+PREFIX vocab: <https://sharetrait.org/vocab/>
+
+# ============================================================
+# Query 5
+# How many measurement values exist per Danio dataset,
+# and what units are used for metabolic_rate traits?
+# ============================================================
+
+SELECT
+  ?dataset_pk
+  ?species_reported
+  ?trait_type
+  (COUNT(?trait_value) AS ?count_measurements)
+  ?trait_unit
+
+WHERE {
+  ?taxonomy a vocab:Taxonomy ;
+    vocab:hasGenus_name ?genus_name .
+
+  FILTER(?genus_name = "Danio")
+
+  ?taxonomy vocab:labelsPopulation ?population .
+
+  ?population a vocab:Population ;
+    vocab:containsIndividual ?individual .
+
+  ?dataset a vocab:Dataset ;
+    vocab:describesPopulation ?population .
+
+  ?measurement a vocab:Measurement ;
+    vocab:measuresIndividual ?individual ;
+    vocab:hasTrait_type      ?trait_type ;
+    vocab:hasTrait_value     ?trait_value ;
+    vocab:hasTrait_unit      ?trait_unit .
+
+  BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
+
+  OPTIONAL { ?population vocab:hasSpecies_reported ?species_reported }
+}
+GROUP BY ?dataset_pk ?species_reported ?trait_type ?trait_unit
