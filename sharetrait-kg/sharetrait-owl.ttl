@@ -3,6 +3,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -727,6 +728,11 @@ vocab:hasLongitude a owl:DatatypeProperty ;
     rdfs:label "has longitude"@en ;
     rdfs:range xsd:decimal ;
     skos:scopeNote "Decimal degrees, WGS 84. West is negative, east is positive."@en .
+
+# Geometry — GeoSPARQL (external vocabulary, not re-declared)
+# Sites with valid coordinates get a geo:Geometry node carrying a
+# geo:asWKT literal ("POINT(lon lat)"^^geo:wktLiteral, WGS 84).
+# See RML script: located_in.ttl / SiteGeoMap + SiteGeometryMap.
 
 # Datatype Properties — Place
 
