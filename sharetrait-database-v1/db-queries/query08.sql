@@ -1,0 +1,4 @@
+select dataset.dataset_pk, dataset.title_dataset, dataset.doi_dataset, dataset.sharetrait_datasetid, population.population_pk, ref_taxonomy.scientific_name, ref_taxonomy.genus_name, measurement.trait_type, max(measurement.trait_value), measurement.trait_unit
+From ref_taxonomy, taxonomic_label, population, contains, individual, measurement, describe, dataset
+Where ref_taxonomy.taxonomy_pk = taxonomic_label.taxonomy_pk and taxonomic_label.population_pk = population.population_pk and population.population_pk = contains.population_pk and contains.individual_pk = individual.individual_pk and individual.individual_pk = measurement.individual_pk and measurement.trait_type = "development" AND ref_taxonomy.genus_name =  "Rana" AND population.population_pk = describe.population_pk and describe.dataset_pk = dataset.dataset_pk
+Group by population.population_pk;

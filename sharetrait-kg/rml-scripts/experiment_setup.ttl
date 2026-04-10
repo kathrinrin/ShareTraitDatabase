@@ -24,8 +24,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasConditionLabel ;
         rr:objectMap [
-            rml:reference "condition_label" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{condition_label}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "condition_label != ''"
     ] ;
@@ -42,8 +42,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasExperimentLocation ;
         rr:objectMap [
-            rml:reference "experiment_location" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{experiment_location}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "experiment_location != ''"
     ] .

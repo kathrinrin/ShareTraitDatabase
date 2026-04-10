@@ -12,11 +12,11 @@ SELECT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTraitType  ?trait_type ;
+    vocab:hasTraitType  ?trait_type_iri ;
     vocab:hasTraitValue ?trait_value ;
     vocab:hasIndividual ?individual .
 
-  FILTER(?trait_type = "development")
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual .

@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#MeasurementMap>
     rml:logicalSource [
@@ -32,8 +33,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasTraitType ;
         rr:objectMap [
-            rml:reference "trait_type" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{trait_type}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "trait_type != ''"
     ] ;
@@ -165,7 +166,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCommentTrait ;
+        rr:predicate vocab:hasTraitComment ;
         rr:objectMap [
             rml:reference "comment_trait" ;
             rr:termType rr:Literal
@@ -210,7 +211,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCommentsExperimentalConditions ;
+        rr:predicate vocab:hasExperimentalConditionsComment ;
         rr:objectMap [
             rml:reference "comments_experimental_conditions" ;
             rr:termType rr:Literal

@@ -1,0 +1,1003 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@base <https://sharetrait.org/vocab/> .
+
+# ShareTrait OWL Ontology
+# SKOS controlled vocabularies: sharetrait-skos.ttl
+
+# Ontology Metadata
+
+<https://sharetrait.org/vocab/> a owl:Ontology ;
+    dcterms:title "ShareTrait Vocabulary"@en ;
+    dcterms:description "Vocabulary for the ShareTrait Database and Knowledge Graph. ShareTrait is a relational database developed for standardising and integrating functional trait datasets across species. It covers organism traits (development, fecundity, metabolic rate), taxonomy, geographic occurrence, experimental conditions, and measurement methodology."@en ;
+    dcterms:created "2025-01-01"^^xsd:date ;
+    dcterms:modified "2025-07-24"^^xsd:date ;
+    owl:versionInfo "1.0.0" ;
+    vann:preferredNamespacePrefix "vocab" ;
+    vann:preferredNamespaceUri "https://sharetrait.org/vocab/" .
+
+# Classes — Source
+
+vocab:Dataset a owl:Class ;
+    rdfs:label "Dataset"@en ;
+    skos:scopeNote "A published or contributed dataset containing functional trait measurements, identified by a DOI and a ShareTrait dataset ID. Entry point for data integration; may link to one or more manuscripts."@en .
+
+vocab:Manuscript a owl:Class ;
+    rdfs:label "Manuscript"@en ;
+    skos:scopeNote "A scientific publication (journal article, data paper, etc.) providing scholarly context for trait data. A dataset may link to zero or more manuscripts via hasManuscript."@en .
+
+# Classes — Organism
+
+vocab:Population a owl:Class ;
+    rdfs:label "Population"@en ;
+    skos:scopeNote "A group of organisms of the same species observed or collected together. Central linking entity; check hasPopulationLabel (ind_measure or pop_measure) to determine data granularity before querying measurements."@en .
+
+vocab:Individual a owl:Class ;
+    rdfs:label "Individual"@en ;
+    skos:scopeNote "A single organism or specimen belonging to exactly one population, with attributes for sex, life stage, type (parent/offspring), and size metrics. Parent-offspring relationships tracked via hasIndividualType."@en .
+
+vocab:Measurement a owl:Class ;
+    rdfs:label "Measurement"@en ;
+    skos:scopeNote "Core observation entity recording a trait value, unit, error estimates, and contextual body size and life stage. Always linked to one Individual and one Trait; optionally to Condition, Technique, and Acclimation."@en .
+
+vocab:Trait a owl:Class ;
+    rdfs:label "Trait"@en ;
+    skos:scopeNote "A defined functional trait type (e.g., development time, metabolic rate, fecundity) with a formal definition and preferred unit. Traits form a hierarchy via hasTraitParentID; use hasTraitCondition to disambiguate similar definitions."@en .
+
+# Classes — Taxonomy
+
+vocab:Taxonomy a owl:Class ;
+    rdfs:label "Taxonomy"@en ;
+    skos:scopeNote "Full taxonomic classification (phylum through species) validated against the Catalogue of Life. Use hasScientificName for the binomial with authority; individual rank fields for higher-taxonomy queries."@en .
+
+# Classes — Environment / Location
+
+vocab:Site a owl:Class ;
+    rdfs:label "Site"@en ;
+    skos:scopeNote "Ecological sampling location with realm, elevation, and depth attributes. Belongs to one Place; coordinates are stored on the locatedIn relationship, not on the site directly."@en .
+
+vocab:Place a owl:Class ;
+    rdfs:label "Place"@en ;
+    skos:scopeNote "Named geographic location (city, region, area) with country and continent. Contains one or more sites; use hasGeonameCountryID to link to GeoNames."@en .
+
+# Classes — Method
+
+vocab:Condition a owl:Class ;
+    rdfs:label "Condition"@en ;
+    skos:scopeNote "Reusable set of experimental conditions (temperature, photoperiod, humidity, oxygen, CO2, salinity, pH, food type). A single condition can apply to many measurements; use hasConditionLabel to distinguish test, maintenance, and acclimation contexts."@en .
+
+vocab:Technique a owl:Class ;
+    rdfs:label "Technique"@en ;
+    skos:scopeNote "Respirometry equipment and methodology (sensor type, chamber material, respirometry type, breathing mode). Only applicable to metabolic rate measurements."@en .
+
+vocab:Acclimation a owl:Class ;
+    rdfs:label "Acclimation"@en ;
+    skos:scopeNote "Pre-measurement acclimation protocol (mating allowance, chamber acclimation time, fasting duration). Only applicable to metabolic rate measurements."@en .
+
+# Object Properties
+
+vocab:hasManuscript a owl:ObjectProperty ;
+    rdfs:label "has manuscript"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range vocab:Manuscript ;
+    skos:scopeNote "Links a dataset to one or more manuscripts via the publication junction. The inverse is not modelled."@en .
+
+vocab:describesPopulation a owl:ObjectProperty ;
+    rdfs:label "describes population"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range vocab:Population ;
+    skos:scopeNote "Links a dataset to a population via the describe junction, which also carries date metadata (hasDateDescribe, hasDateIso, hasYear)."@en .
+
+vocab:containsIndividual a owl:ObjectProperty ;
+    rdfs:label "contains individual"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range vocab:Individual ;
+    skos:scopeNote "Each individual belongs to exactly one population."@en .
+
+vocab:hasIndividual a owl:ObjectProperty ;
+    rdfs:label "has individual"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Individual ;
+    skos:scopeNote "Every measurement must reference exactly one individual."@en .
+
+vocab:hasTrait a owl:ObjectProperty ;
+    rdfs:label "has trait"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Trait ;
+    skos:scopeNote "Every measurement must reference exactly one trait definition."@en .
+
+vocab:labelsPopulation a owl:ObjectProperty ;
+    rdfs:label "labels population"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range vocab:Population ;
+    skos:scopeNote "Links a taxonomy entry to a population via the taxonomic_label junction, which carries hasNameDate, hasReferenceSource, and hasVersionTaxa."@en .
+
+vocab:occurredAt a owl:ObjectProperty ;
+    rdfs:label "occurred at"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range vocab:Site ;
+    skos:scopeNote "Links a population to a site via the occurrence junction, which carries observation dates, collection years, and origin."@en .
+
+vocab:locatedIn a owl:ObjectProperty ;
+    rdfs:label "located in"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range vocab:Site ;
+    skos:scopeNote "Links a place to a site via a junction carrying latitude, longitude (decimal degrees, WGS 84), and location description."@en .
+
+vocab:hasCondition a owl:ObjectProperty ;
+    rdfs:label "has condition"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Condition ;
+    skos:scopeNote "Links a measurement to experimental conditions via the experiment_setup junction. Use hasConditionLabel to distinguish test, maintenance, and acclimation."@en .
+
+vocab:usesTechnique a owl:ObjectProperty ;
+    rdfs:label "uses technique"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Technique ;
+    skos:scopeNote "Links a measurement to a respirometry technique via the chamber_describe junction. Only for metabolic rate measurements."@en .
+
+vocab:hasAcclimation a owl:ObjectProperty ;
+    rdfs:label "has acclimation"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range vocab:Acclimation ;
+    skos:scopeNote "Links a measurement to an acclimation protocol via the acclimation_describe junction. Only for metabolic rate measurements."@en .
+
+# Datatype Properties — Dataset
+
+vocab:hasTitle a owl:DatatypeProperty ;
+    rdfs:label "has title"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Title of the resource. Used on both Dataset and Manuscript."@en .
+
+vocab:hasDOI a owl:DatatypeProperty ;
+    rdfs:label "has DOI"@en ;
+    rdfs:range xsd:anyURI ;
+    skos:scopeNote "Full DOI URL (e.g., https://doi.org/10.1234/abc). Used on both Dataset and Manuscript."@en .
+
+vocab:hasShareTraitDatasetID a owl:DatatypeProperty ;
+    rdfs:label "has ShareTrait dataset ID"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Internal identifier following the pattern Author_et_al_Year (e.g., Alfaro_Tapia_et_al_2022)."@en .
+
+vocab:hasReferenceType a owl:DatatypeProperty ;
+    rdfs:label "has reference type"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: primary, secondary."@en .
+
+vocab:hasDatasetType a owl:DatatypeProperty ;
+    rdfs:label "has dataset type"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Typically set to 'dataset'. May be extended for other resource types."@en .
+
+vocab:hasPublisher a owl:DatatypeProperty ;
+    rdfs:label "has publisher"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Name of the data repository (e.g., zenodo, figshare, dryad). Used on both Dataset and Manuscript."@en .
+
+vocab:hasYearPublication a owl:DatatypeProperty ;
+    rdfs:label "has year of publication"@en ;
+    rdfs:range xsd:gYear ;
+    skos:scopeNote "Four-digit publication year."@en .
+
+vocab:hasDateContribution a owl:DatatypeProperty ;
+    rdfs:label "has date of contribution"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:date ;
+    skos:scopeNote "Date when the dataset was contributed to ShareTrait, in ISO 8601 format."@en .
+
+vocab:hasDatasetTrait a owl:DatatypeProperty ;
+    rdfs:label "has dataset trait"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Primary trait category covered by the dataset. Values align with Trait types (e.g., development, metabolic_rate, fecundity)."@en .
+
+vocab:hasDatasetComment a owl:DatatypeProperty ;
+    rdfs:label "has dataset comment"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text comment about the dataset itself."@en .
+
+vocab:hasReferenceComment a owl:DatatypeProperty ;
+    rdfs:label "has reference comment"@en ;
+    rdfs:domain vocab:Dataset ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text comment about the reference or source of the dataset."@en .
+
+# Datatype Properties — Manuscript
+
+vocab:hasType a owl:DatatypeProperty ;
+    rdfs:label "has type"@en ;
+    rdfs:domain vocab:Manuscript ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Type of manuscript (e.g., article, data paper, book chapter)."@en .
+
+vocab:hasCitation a owl:DatatypeProperty ;
+    rdfs:label "has citation"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Full bibliographic citation as a single string. Used on both Dataset and Manuscript."@en .
+
+# Datatype Properties — Population
+
+vocab:hasPopulationName a owl:DatatypeProperty ;
+    rdfs:label "has population name"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Internal reference name as assigned in the dataset (e.g., dat001pop001)."@en .
+
+vocab:hasPopulationLabel a owl:DatatypeProperty ;
+    rdfs:label "has population label"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: ind_measure (individual-level data) or pop_measure (population-level aggregates). Determines how downstream measurements should be interpreted."@en .
+
+vocab:hasPopulationDescription a owl:DatatypeProperty ;
+    rdfs:label "has population description"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text field for population characteristics not captured by other properties."@en .
+
+vocab:hasSpeciesReported a owl:DatatypeProperty ;
+    rdfs:label "has species reported"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Verbatim species name from the original study, before taxonomic validation. May differ from the validated name in Taxonomy."@en .
+
+vocab:hasAuthority a owl:DatatypeProperty ;
+    rdfs:label "has authority"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Taxonomic authority as cited by the original study (e.g., Brethes, 1913)."@en .
+
+vocab:hasPopulationFacts a owl:DatatypeProperty ;
+    rdfs:label "has population facts"@en ;
+    rdfs:domain vocab:Population ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Author-provided contextual information about the population that does not fit other structured fields."@en .
+
+# Datatype Properties — Individual
+
+vocab:hasRepresentativeStage a owl:DatatypeProperty ;
+    rdfs:label "has representative stage"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Life stage at time of observation (e.g., egg, larvae, adult). Use hasLifeStageGeneral on Measurement for time-of-measurement stage."@en .
+
+vocab:hasSex a owl:DatatypeProperty ;
+    rdfs:label "has sex"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "As reported in the study. Common values: female, male, mixed, unknown."@en .
+
+vocab:hasIndividualType a owl:DatatypeProperty ;
+    rdfs:label "has individual type"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: parent, offspring. Controls parenthood relationships."@en .
+
+vocab:hasMatingMethod a owl:DatatypeProperty ;
+    rdfs:label "has mating method"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Whether mating was allowed during the acclimation period."@en .
+
+vocab:hasMethodType a owl:DatatypeProperty ;
+    rdfs:label "has method type"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Fecundity-specific. Method used to estimate fecundity (e.g., counting)."@en .
+
+vocab:hasStrategyOfProtection a owl:DatatypeProperty ;
+    rdfs:label "has strategy of protection"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Fecundity-specific. Whether eggs are protected or unprotected after laying."@en .
+
+vocab:hasDescription a owl:DatatypeProperty ;
+    rdfs:label "has description"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text field for remarks not captured by other structured properties."@en .
+
+vocab:hasParentSizeType a owl:DatatypeProperty ;
+    rdfs:label "has parent size type"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Type of parent size metric (e.g., fresh body mass). Use with hasParentSizeUnits and hasParentalSizeValue."@en .
+
+vocab:hasParentSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has parent size units"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for parent size (e.g., millimeter, milligram). Use with hasParentSizeType and hasParentalSizeValue."@en .
+
+vocab:hasParentalSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has parental size value"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Numeric parent size value. Use with hasParentSizeType and hasParentSizeUnits."@en .
+
+vocab:hasParentAge a owl:DatatypeProperty ;
+    rdfs:label "has parent age"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:integer ;
+    skos:scopeNote "Age of the parent individual. Use with hasParentAgeUnits."@en .
+
+vocab:hasParentAgeUnits a owl:DatatypeProperty ;
+    rdfs:label "has parent age units"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for parent age (e.g., year, day)."@en .
+
+vocab:hasOffspringDevelopmentalStage a owl:DatatypeProperty ;
+    rdfs:label "has offspring developmental stage"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Fecundity-specific. Developmental stage of the offspring (e.g., egg stage I)."@en .
+
+vocab:hasOffspringSizeType a owl:DatatypeProperty ;
+    rdfs:label "has offspring size type"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Type of offspring size metric (e.g., egg volume). Use with hasOffspringSizeUnits and hasOffspringSizeValue."@en .
+
+vocab:hasOffspringSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has offspring size units"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for offspring size (e.g., milligram)."@en .
+
+vocab:hasOffspringSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has offspring size value"@en ;
+    rdfs:domain vocab:Individual ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Numeric offspring size value. Use with hasOffspringSizeType and hasOffspringSizeUnits."@en .
+
+# Datatype Properties — Measurement
+
+vocab:hasTraitType a owl:DatatypeProperty ;
+    rdfs:label "has trait type"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Broad category grouping measurements (e.g., development, fecundity, metabolic_rate). Values should align with Trait definitions."@en .
+
+vocab:hasTraitValue a owl:DatatypeProperty ;
+    rdfs:label "has trait value"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Primary numeric observation. Always pair with hasTraitUnit."@en .
+
+vocab:hasTraitUnit a owl:DatatypeProperty ;
+    rdfs:label "has trait unit"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for the trait value (e.g., day, mLO2/h/ind, offspring number). Must accompany hasTraitValue."@en .
+
+vocab:hasTraitErrorEstimate a owl:DatatypeProperty ;
+    rdfs:label "has trait error estimate"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Numeric error value. Interpret using hasTraitErrorType."@en .
+
+vocab:hasTraitErrorType a owl:DatatypeProperty ;
+    rdfs:label "has trait error type"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Type of error (e.g., standard deviation, standard error, confidence interval). Required when hasTraitErrorEstimate is provided."@en .
+
+vocab:hasTraitConverted a owl:DatatypeProperty ;
+    rdfs:label "has trait converted"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Standardised value derived from hasTraitValue for cross-dataset integration."@en .
+
+vocab:hasIndividualDevelopmentalStage a owl:DatatypeProperty ;
+    rdfs:label "has individual developmental stage"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Development-specific. Developmental stage at time of measurement; distinct from hasRepresentativeStage on Individual."@en .
+
+vocab:hasFreshMass a owl:DatatypeProperty ;
+    rdfs:label "has fresh mass"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Fresh body mass at time of measurement. Use with hasFreshMassUnit."@en .
+
+vocab:hasFreshMassUnit a owl:DatatypeProperty ;
+    rdfs:label "has fresh mass unit"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for fresh body mass (e.g., milligram, gram)."@en .
+
+vocab:hasSampleSize a owl:DatatypeProperty ;
+    rdfs:label "has sample size"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Number of individuals tested. Relevant for population-level aggregates."@en .
+
+vocab:hasSizeValue a owl:DatatypeProperty ;
+    rdfs:label "has size value"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Body size at time of measurement. Use with hasSizeUnits and hasSizeType."@en .
+
+vocab:hasSizeUnits a owl:DatatypeProperty ;
+    rdfs:label "has size units"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit of body size (e.g., milligram, millimeter)."@en .
+
+vocab:hasSizeType a owl:DatatypeProperty ;
+    rdfs:label "has size type"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Which body dimension was measured (e.g., tibia size, snout-vent length, fresh body mass)."@en .
+
+vocab:hasSizeValueInitial a owl:DatatypeProperty ;
+    rdfs:label "has size value initial"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Development-specific. Body size at start of the developmental stage."@en .
+
+vocab:hasSizeValueFinal a owl:DatatypeProperty ;
+    rdfs:label "has size value final"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Development-specific. Body size at end of the developmental stage."@en .
+
+vocab:hasLifeStageGeneral a owl:DatatypeProperty ;
+    rdfs:label "has life stage general"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Broad life stage category (e.g., adult, larvae, embryo). Distinct from hasLifeStageSpecific."@en .
+
+vocab:hasLifeStageSpecific a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Researcher-defined life stage (e.g., 98 dpf, Gosner stage 25). More precise than hasLifeStageGeneral."@en .
+
+vocab:hasLifestageSpecificInitial a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific initial"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Development-specific. Life stage at trial start."@en .
+
+vocab:hasLifestageSpecificFinal a owl:DatatypeProperty ;
+    rdfs:label "has life stage specific final"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Development-specific. Life stage at trial end."@en .
+
+vocab:hasMeasureDate a owl:DatatypeProperty ;
+    rdfs:label "has measure date"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Date of the measurement observation. Prefer ISO 8601 format."@en .
+
+vocab:hasFecundityTemporalUnit a owl:DatatypeProperty ;
+    rdfs:label "has fecundity temporal unit"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Fecundity-specific. Time window over which fecundity was counted (e.g., early fecundity, 5 to 12 days old)."@en .
+
+vocab:hasReproductiveStage a owl:DatatypeProperty ;
+    rdfs:label "has reproductive stage"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Reproductive status at time of measurement (e.g., virgin, mated)."@en .
+
+vocab:hasExperimentLocation a owl:DatatypeProperty ;
+    rdfs:label "has experiment location"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: laboratory, field."@en .
+
+vocab:hasTraitComment a owl:DatatypeProperty ;
+    rdfs:label "has trait comment"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text comment about the trait measurement."@en .
+
+vocab:hasExperimentalConditionsComment a owl:DatatypeProperty ;
+    rdfs:label "has experimental conditions comment"@en ;
+    rdfs:domain vocab:Measurement ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text comment about the experimental conditions of the measurement."@en .
+
+# Datatype Properties — Trait
+
+vocab:hasTraitName a owl:DatatypeProperty ;
+    rdfs:label "has trait name"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Human-readable trait name (e.g., development time, metabolic rate, fecundity)."@en .
+
+vocab:hasTraitID a owl:DatatypeProperty ;
+    rdfs:label "has trait ID"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Short mnemonic identifier (e.g., DEVTIME, MR, FECUND)."@en .
+
+vocab:hasShareTraitType a owl:DatatypeProperty ;
+    rdfs:label "has ShareTrait type"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Reference trait term used in the ShareTrait dataset. Values should match hasDatasetTrait on Dataset."@en .
+
+vocab:hasTraitCondition a owl:DatatypeProperty ;
+    rdfs:label "has trait condition"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Functional expression disambiguating the measurement (e.g., development time = age at stage 2 - age at stage 1)."@en .
+
+vocab:hasTraitParentID a owl:DatatypeProperty ;
+    rdfs:label "has trait parent ID"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "References another Trait by its hasTraitID to build the trait hierarchy."@en .
+
+vocab:hasLifeStageGeneralInitial a owl:DatatypeProperty ;
+    rdfs:label "has life stage general initial"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Starting life stage for the trait definition (e.g., egg). Paired with hasLifeStageGeneralFinal."@en .
+
+vocab:hasLifeStageGeneralFinal a owl:DatatypeProperty ;
+    rdfs:label "has life stage general final"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Ending life stage for the trait definition (e.g., adult). Paired with hasLifeStageGeneralInitial."@en .
+
+vocab:hasTraitDefinition a owl:DatatypeProperty ;
+    rdfs:label "has trait definition"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Full textual definition. Should be precise enough to distinguish from related traits."@en .
+
+vocab:hasTraitDefinitionSource a owl:DatatypeProperty ;
+    rdfs:label "has trait definition source"@en ;
+    rdfs:domain vocab:Trait ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expert name or citation from which the trait definition originates."@en .
+
+# Datatype Properties — Taxonomy
+
+vocab:hasScientificName a owl:DatatypeProperty ;
+    rdfs:label "has scientific name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Full binomial with authority (e.g., Aphidius platensis Brethes, 1913). Validated name, not the original study name."@en .
+
+vocab:hasTaxonomyIDRef a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy ID reference"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Identifier in the reference database (e.g., Open Tree of Life ID)."@en .
+
+vocab:hasTaxonomyDBName a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Full name of the reference database (e.g., Catalogue of Life)."@en .
+
+vocab:hasTaxonomyDBUrl a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database URL"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:anyURI ;
+    skos:scopeNote "Full URL resolving to the taxon page in the reference database."@en .
+
+vocab:hasTaxonomyDBVersion a owl:DatatypeProperty ;
+    rdfs:label "has taxonomy database version"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Version or release date of the reference database used for validation."@en .
+
+vocab:hasParentID a owl:DatatypeProperty ;
+    rdfs:label "has parent ID"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "References the parent taxon in the hierarchy within the reference database."@en .
+
+vocab:hasParentName a owl:DatatypeProperty ;
+    rdfs:label "has parent name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Scientific name of the immediate parent taxon."@en .
+
+vocab:hasRankLevel a owl:DatatypeProperty ;
+    rdfs:label "has rank level"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Taxonomic rank (e.g., species, genus, family)."@en .
+
+vocab:hasPhylumName a owl:DatatypeProperty ;
+    rdfs:label "has phylum name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Phylum (e.g., Arthropoda, Chordata). Use for filtering by major taxonomic group."@en .
+
+vocab:hasClassName a owl:DatatypeProperty ;
+    rdfs:label "has class name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Taxonomic class (e.g., Insecta, Amphibia). Not to be confused with OWL classes."@en .
+
+vocab:hasOrderName a owl:DatatypeProperty ;
+    rdfs:label "has order name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Taxonomic order (e.g., Hymenoptera, Anura)."@en .
+
+vocab:hasFamilyName a owl:DatatypeProperty ;
+    rdfs:label "has family name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Taxonomic family (e.g., Braconidae)."@en .
+
+vocab:hasGenusName a owl:DatatypeProperty ;
+    rdfs:label "has genus name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Genus name without authority (e.g., Aphidius)."@en .
+
+vocab:hasSpeciesName a owl:DatatypeProperty ;
+    rdfs:label "has species name"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Binomial without authority (e.g., Aphidius platensis). Distinct from hasScientificName which includes authority."@en .
+
+vocab:hasCommonNames a owl:DatatypeProperty ;
+    rdfs:label "has common names"@en ;
+    rdfs:domain vocab:Taxonomy ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "May contain multiple comma-separated common names (e.g., frog)."@en .
+
+# Datatype Properties — Taxonomic Label (junction)
+
+vocab:hasNameDate a owl:DatatypeProperty ;
+    rdfs:label "has name date"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "ISO date when the taxonomic label was applied."@en .
+
+vocab:hasReferenceSource a owl:DatatypeProperty ;
+    rdfs:label "has reference source"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Short label for the taxonomy database (e.g., COL for Catalogue of Life)."@en .
+
+vocab:hasVersionTaxa a owl:DatatypeProperty ;
+    rdfs:label "has version taxa"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Version of the taxonomic mapping (e.g., v1.0)."@en .
+
+# Datatype Properties — Site
+
+vocab:hasSiteName a owl:DatatypeProperty ;
+    rdfs:label "has site name"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Name of the sampling site. May be absent if only coordinates are available."@en .
+
+vocab:hasSiteRealmGeneral a owl:DatatypeProperty ;
+    rdfs:label "has site realm general"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Broad habitat classification. Expected values: terrestrial, aquatic, marine."@en .
+
+vocab:hasSiteRealmSpecific a owl:DatatypeProperty ;
+    rdfs:label "has site realm specific"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Detailed habitat descriptor, complementing hasSiteRealmGeneral."@en .
+
+vocab:hasElevationValue a owl:DatatypeProperty ;
+    rdfs:label "has elevation value"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Elevation at the observation position. Typically meters above sea level. Use with hasElevationUnit."@en .
+
+vocab:hasElevationUnit a owl:DatatypeProperty ;
+    rdfs:label "has elevation unit"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for elevation (typically meter)."@en .
+
+vocab:hasDepthValue a owl:DatatypeProperty ;
+    rdfs:label "has depth value"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Depth where the organism was observed. For aquatic/marine sites. Use with hasDepthUnit."@en .
+
+vocab:hasDepthUnit a owl:DatatypeProperty ;
+    rdfs:label "has depth unit"@en ;
+    rdfs:domain vocab:Site ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for depth (typically meter)."@en .
+
+vocab:hasLatitude a owl:DatatypeProperty ;
+    rdfs:label "has latitude"@en ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Decimal degrees, WGS 84. South is negative, north is positive."@en .
+
+vocab:hasLongitude a owl:DatatypeProperty ;
+    rdfs:label "has longitude"@en ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Decimal degrees, WGS 84. West is negative, east is positive."@en .
+
+# Datatype Properties — Place
+
+vocab:hasPlaceName a owl:DatatypeProperty ;
+    rdfs:label "has place name"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Name of the city, region, or area (e.g., Amsterdam)."@en .
+
+vocab:hasLocationName a owl:DatatypeProperty ;
+    rdfs:label "has location name"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text tracking note combining place and country (e.g., Lesina_Italy)."@en .
+
+vocab:hasLocationLabel a owl:DatatypeProperty ;
+    rdfs:label "has location label"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "How the place was determined. Expected values: comment-based, gps-based, term-based."@en .
+
+vocab:hasCountryName a owl:DatatypeProperty ;
+    rdfs:label "has country name"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Country name in English (e.g., Chile)."@en .
+
+vocab:hasContinentName a owl:DatatypeProperty ;
+    rdfs:label "has continent name"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Continent name in English (e.g., South America)."@en .
+
+vocab:hasGeonameCountryID a owl:DatatypeProperty ;
+    rdfs:label "has GeoName country ID"@en ;
+    rdfs:domain vocab:Place ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Numeric GeoNames ID for the country (e.g., 3895114). Use for linking to the GeoNames knowledge base."@en .
+
+vocab:hasLocationDescription a owl:DatatypeProperty ;
+    rdfs:label "has location description"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text notes about the geographic context."@en .
+
+vocab:hasLocationCheck a owl:DatatypeProperty ;
+    rdfs:label "has location check"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Internal verification field linking the location term back to the dataset reference for quality control."@en .
+
+# Datatype Properties — Occurrence (junction)
+
+vocab:hasObservationDateInitial a owl:DatatypeProperty ;
+    rdfs:label "has observation date initial"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Start date of population collection in YYYYMMDD format."@en .
+
+vocab:hasObservationDateFinal a owl:DatatypeProperty ;
+    rdfs:label "has observation date final"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "End date of population collection in YYYYMMDD format."@en .
+
+vocab:hasYearCollectionInitial a owl:DatatypeProperty ;
+    rdfs:label "has year collection initial"@en ;
+    rdfs:range xsd:gYear ;
+    skos:scopeNote "Four-digit year when collection started."@en .
+
+vocab:hasYearCollectionFinal a owl:DatatypeProperty ;
+    rdfs:label "has year collection final"@en ;
+    rdfs:range xsd:gYear ;
+    skos:scopeNote "Four-digit year when collection ended. Same as initial for single-year collections."@en .
+
+vocab:hasOrigin a owl:DatatypeProperty ;
+    rdfs:label "has origin"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Where individuals were sourced. Expected values: field, laboratory, culture."@en .
+
+# Datatype Properties — Condition
+
+vocab:hasTemperature a owl:DatatypeProperty ;
+    rdfs:label "has temperature"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Temperature in degrees Celsius."@en .
+
+vocab:hasPhotoperiod a owl:DatatypeProperty ;
+    rdfs:label "has photoperiod"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Light/dark schedule (e.g., 14L_10D for 14h light, 10h dark)."@en .
+
+vocab:hasHumidity a owl:DatatypeProperty ;
+    rdfs:label "has humidity"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Relative humidity as a percentage."@en .
+
+vocab:hasOxygen a owl:DatatypeProperty ;
+    rdfs:label "has oxygen"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Oxygen level. Use with hasOxygenUnit."@en .
+
+vocab:hasOxygenUnit a owl:DatatypeProperty ;
+    rdfs:label "has oxygen unit"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for oxygen (e.g., kPa, mg/L, % saturation)."@en .
+
+vocab:hasCarbonDioxide a owl:DatatypeProperty ;
+    rdfs:label "has carbon dioxide"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "CO2 level. Use with hasCarbonDioxideUnit."@en .
+
+vocab:hasCarbonDioxideUnit a owl:DatatypeProperty ;
+    rdfs:label "has carbon dioxide unit"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Unit for CO2 (e.g., ppm)."@en .
+
+vocab:hasSalinity a owl:DatatypeProperty ;
+    rdfs:label "has salinity"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Salinity, typically in parts per thousand (ppt) for aquatic conditions."@en .
+
+vocab:hasPH a owl:DatatypeProperty ;
+    rdfs:label "has pH"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Standard pH scale (0–14)."@en .
+
+vocab:hasFoodType a owl:DatatypeProperty ;
+    rdfs:label "has food type"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Free-text description of diet during the condition period (e.g., Honey)."@en .
+
+vocab:hasDuration a owl:DatatypeProperty ;
+    rdfs:label "has duration"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Duration of the condition in days."@en .
+
+vocab:hasDurationGenerations a owl:DatatypeProperty ;
+    rdfs:label "has duration generations"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Number of generations the condition was maintained."@en .
+
+vocab:hasMethodCheck a owl:DatatypeProperty ;
+    rdfs:label "has method check"@en ;
+    rdfs:domain vocab:Condition ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Internal metadata flag mirroring hasConditionLabel for cross-validation."@en .
+
+# Datatype Properties — Experiment Setup (junction)
+
+vocab:hasConditionLabel a owl:DatatypeProperty ;
+    rdfs:label "has condition label"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: test, maintenance, acclimation. Determines the role of the linked Condition."@en .
+
+vocab:hasSetupDate a owl:DatatypeProperty ;
+    rdfs:label "has setup date"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Date when the experimental setup was conducted, in ISO 8601 format."@en .
+
+# Datatype Properties — Technique
+
+vocab:hasSensorType a owl:DatatypeProperty ;
+    rdfs:label "has sensor type"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Oxygen sensor type (e.g., fiber optic-based oxygen analyzer). Only for metabolic rate measurements."@en .
+
+vocab:hasRespirationVolume a owl:DatatypeProperty ;
+    rdfs:label "has respiration volume"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Volume of the empty respirometric chamber in millilitres."@en .
+
+vocab:hasDelayTime a owl:DatatypeProperty ;
+    rdfs:label "has delay time"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Equilibration period excluded from closed measurement cycles."@en .
+
+vocab:hasRespiratoryChamberMaterial a owl:DatatypeProperty ;
+    rdfs:label "has respiratory chamber material"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Material of the respirometer (e.g., glass, plastic)."@en .
+
+vocab:hasIncubationTime a owl:DatatypeProperty ;
+    rdfs:label "has incubation time"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:decimal ;
+    skos:scopeNote "Total time the organism spent in the respirometry chamber."@en .
+
+vocab:hasRespirometryType a owl:DatatypeProperty ;
+    rdfs:label "has respirometry type"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Type of respirometry setup (e.g., closed, flow-through, intermittent-flow)."@en .
+
+vocab:hasBreathingMode a owl:DatatypeProperty ;
+    rdfs:label "has breathing mode"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Based on respiratory medium. Expected values: aquatic, aerial."@en .
+
+vocab:hasMetabolicRateType a owl:DatatypeProperty ;
+    rdfs:label "has metabolic rate type"@en ;
+    rdfs:domain vocab:Technique ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Expected values: standard, routine, maximum."@en .
+
+# Datatype Properties — Acclimation
+
+vocab:hasMating a owl:DatatypeProperty ;
+    rdfs:label "has mating"@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Whether mating was allowed during acclimation. Typical values: yes, no, NA."@en .
+
+vocab:hasChamber a owl:DatatypeProperty ;
+    rdfs:label "has chamber"@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Acclimation time in hours after transfer to the respirometry chamber."@en .
+
+vocab:hasFastingTime a owl:DatatypeProperty ;
+    rdfs:label "has fasting time"@en ;
+    rdfs:domain vocab:Acclimation ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Fasting duration before respirometry. Include units in the value string."@en .
+
+vocab:hasSpecificationDate a owl:DatatypeProperty ;
+    rdfs:label "has specification date"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "ISO date when the specification was applied. Used for both chamber and acclimation descriptions."@en .
+
+# Datatype Properties — Describe (junction)
+
+vocab:hasDateDescribe a owl:DatatypeProperty ;
+    rdfs:label "has date describe"@en ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "Date when the population-dataset link was established."@en .
+
+vocab:hasDateIso a owl:DatatypeProperty ;
+    rdfs:label "has date ISO"@en ;
+    rdfs:range xsd:date ;
+    skos:scopeNote "Standardised ISO 8601 date for the describe record."@en .
+
+vocab:hasYear a owl:DatatypeProperty ;
+    rdfs:label "has year"@en ;
+    rdfs:range xsd:gYear ;
+    skos:scopeNote "Four-digit year extracted from the describe date."@en .
+
+# Entity ID Patterns
+
+vocab:Dataset skos:note "Primary key pattern: TRADAT + 3-digit number (e.g., TRADAT001). IRI template: https://sharetrait.org/dataset/{dataset_pk}" .
+vocab:Manuscript skos:note "Primary key pattern: TRAMAN + 3-digit number (e.g., TRAMAN001). IRI template: https://sharetrait.org/manuscript/{manuscript_pk}" .
+vocab:Population skos:note "Primary key pattern: TRAPOP + 3-digit number (e.g., TRAPOP001). IRI template: https://sharetrait.org/population/{population_pk}" .
+vocab:Individual skos:note "Primary key pattern: TRAIN + 6-digit number (e.g., TRAIN000001). IRI template: https://sharetrait.org/individual/{individual_pk}" .
+vocab:Measurement skos:note "Primary key pattern: TRAMEA + 6-digit number (e.g., TRAMEA000001). IRI template: https://sharetrait.org/measurement/{measurement_pk}" .
+vocab:Trait skos:note "Primary key pattern: TRATRA + 3-digit number (e.g., TRATRA001). IRI template: https://sharetrait.org/trait/{trait_pk}" .
+vocab:Taxonomy skos:note "Primary key pattern: TRATAX + 3-digit number (e.g., TRATAX001). IRI template: https://sharetrait.org/taxonomy/{taxonomy_pk}" .
+vocab:Site skos:note "Primary key pattern: TRASIT + 3-digit number (e.g., TRASIT001). IRI template: https://sharetrait.org/site/{site_pk}" .
+vocab:Place skos:note "Primary key pattern: TRAPLA + 3-digit number (e.g., TRAPLA018). IRI template: https://sharetrait.org/place/{place_pk}" .
+vocab:Condition skos:note "Primary key pattern: TRACON + 6-digit number (e.g., TRACON000001). IRI template: https://sharetrait.org/condition/{condition_pk}" .
+vocab:Technique skos:note "Primary key pattern: TRATEC + 6-digit number (e.g., TRATEC000001). IRI template: https://sharetrait.org/technique/{technique_pk}" .
+vocab:Acclimation skos:note "Primary key pattern: TRAACC + 6-digit number (e.g., TRAACC000001). IRI template: https://sharetrait.org/acclimation/{acclimation_pk}" .

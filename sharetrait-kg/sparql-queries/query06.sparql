@@ -11,15 +11,16 @@ SELECT
   ?dataset_pk
   (COUNT(DISTINCT ?population) AS ?population_count)
   (GROUP_CONCAT(DISTINCT ?species_reported ; separator=",") AS ?species_list)
-  ?scientific_name
+  (SAMPLE(?scientific_name_val) AS ?scientific_name)
   ?doi_dataset
   ?dataset_trait
 
 WHERE {
   ?dataset a vocab:Dataset ;
-    vocab:hasDatasetTrait ?dataset_trait .
+    vocab:hasDatasetTrait ?dataset_trait_iri .
 
-  FILTER(?dataset_trait = "fecundity")
+  FILTER(?dataset_trait_iri = <https://sharetrait.org/concept/fecundity>)
+  BIND(STRAFTER(STR(?dataset_trait_iri), "concept/") AS ?dataset_trait)
 
   ?dataset vocab:describesPopulation ?population .
 
@@ -30,6 +31,6 @@ WHERE {
 
   OPTIONAL { ?dataset    vocab:hasDOI      ?doi_dataset }
   OPTIONAL { ?population vocab:hasSpeciesReported  ?species_reported }
-  OPTIONAL { ?taxonomy   vocab:hasScientificName   ?scientific_name }
+  OPTIONAL { ?taxonomy   vocab:hasScientificName   ?scientific_name_val }
 }
-GROUP BY ?dataset_pk ?scientific_name ?doi_dataset ?dataset_trait
+GROUP BY ?dataset_pk ?doi_dataset ?dataset_trait

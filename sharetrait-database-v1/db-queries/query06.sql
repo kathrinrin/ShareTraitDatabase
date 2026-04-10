@@ -1,0 +1,3 @@
+Select dataset.dataset_pk, count(population.population_pk), group_concat(population.species_reported), ref_taxonomy.scientific_name, dataset.doi_dataset, dataset.dataset_trait 
+from dataset, describe, population, taxonomic_label, ref_taxonomy where dataset.dataset_trait = "fecundity" AND dataset.dataset_pk = describe.dataset_pk AND describe.population_pk = population.population_pk AND population.population_pk = taxonomic_label.population_pk AND taxonomic_label.taxonomy_pk = ref_taxonomy.taxonomy_pk
+Group by dataset.title_dataset;

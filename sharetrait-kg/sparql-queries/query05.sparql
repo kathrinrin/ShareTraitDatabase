@@ -29,10 +29,11 @@ WHERE {
 
   ?measurement a vocab:Measurement ;
     vocab:hasIndividual ?individual ;
-    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitType      ?trait_type_iri ;
     vocab:hasTraitValue     ?trait_value ;
     vocab:hasTraitUnit      ?trait_unit .
 
+  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
   OPTIONAL { ?population vocab:hasSpeciesReported ?species_reported }

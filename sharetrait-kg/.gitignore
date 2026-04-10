@@ -1,6 +1,11 @@
 # OS files
 .DS_Store
 
+# Editor and database files
+../sharetrait-database-v1/sharetrait.db
+../ST_all.db
+.vscode/
+
 # Downloadable tools
 rmlmapper.jar
 
@@ -14,4 +19,4 @@ sharetrait-kg.ttl
 sharetrait-kg-index/
 
 # Derived: query output CSVs
-sparql-queries/*-output.csv
+*-output.csv

@@ -4,6 +4,7 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#DatasetMap>
     rml:logicalSource [
@@ -46,8 +47,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasReferenceType ;
         rr:objectMap [
-            rml:reference "reference_type" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{reference_type}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "reference_type != '' AND reference_type != 'NA'"
     ] ;
@@ -74,7 +75,7 @@
         rr:predicate vocab:hasYearPublication ;
         rr:objectMap [
             rml:reference "year_publication" ;
-            rr:datatype xsd:integer ;
+            rr:datatype xsd:gYear ;
             rr:termType rr:Literal
         ] ;
         rr:condition "year_publication != '' AND year_publication != 'NA'"
@@ -93,14 +94,14 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasDatasetTrait ;
         rr:objectMap [
-            rml:reference "dataset_trait" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{dataset_trait}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "dataset_trait != '' AND dataset_trait != 'NA'"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasComment ;
+        rr:predicate vocab:hasDatasetComment ;
         rr:objectMap [
             rml:reference "dataset_comment" ;
             rr:termType rr:Literal
@@ -109,7 +110,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCommentsReference ;
+        rr:predicate vocab:hasReferenceComment ;
         rr:objectMap [
             rml:reference "comments_reference" ;
             rr:termType rr:Literal

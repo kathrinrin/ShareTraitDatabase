@@ -3,6 +3,8 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#ManuscriptMap>
     rml:logicalSource [
@@ -64,13 +66,14 @@
         rr:predicate vocab:hasYearPublication ;
         rr:objectMap [
             rml:reference "year_publication" ;
+            rr:datatype xsd:gYear ;
             rr:termType rr:Literal
         ] ;
         rr:condition "year_publication != ''"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasComment ;
+        rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "manuscript_comment" ;
             rr:termType rr:Literal

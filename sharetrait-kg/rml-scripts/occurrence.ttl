@@ -3,6 +3,8 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#PopulationSiteMap>
     rml:logicalSource [
@@ -43,6 +45,7 @@
         rr:predicate vocab:hasYearCollectionInitial ;
         rr:objectMap [
             rml:reference "year_collection_initial" ;
+            rr:datatype xsd:gYear ;
             rr:termType rr:Literal
         ] ;
         rr:condition "year_collection_initial != ''"
@@ -52,13 +55,14 @@
         rr:predicate vocab:hasYearCollectionFinal ;
         rr:objectMap [
             rml:reference "year_collection_final" ;
+            rr:datatype xsd:gYear ;
             rr:termType rr:Literal
         ] ;
         rr:condition "year_collection_final != ''"
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCommentLocation ;
+        rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment_location" ;
             rr:termType rr:Literal

@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#IndividualMap>
     rml:logicalSource [
@@ -36,8 +37,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasIndividualType ;
         rr:objectMap [
-            rml:reference "individual_type" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{individual_type}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "individual_type != ''"
     ] ;
@@ -79,7 +80,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasComment ;
+        rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment" ;
             rr:termType rr:Literal

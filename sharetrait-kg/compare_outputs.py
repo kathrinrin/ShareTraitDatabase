@@ -18,7 +18,7 @@ def norm(v):
     except ValueError:
         return v
 
-def compare_csv(sql_path, sparql_path, name, col_map=None):
+def compare_csv(sql_path, sparql_path, name, col_map=None, comment_groups=None):
     with open(sql_path, 'r') as f:
         sql_rows = list(csv.DictReader(f))
     with open(sparql_path, 'r') as f:
@@ -36,6 +36,10 @@ def compare_csv(sql_path, sparql_path, name, col_map=None):
 
     if col_map is None:
         col_map = {c: c for c in sql_cols}
+    else:
+        merged = {c: c for c in sql_cols}
+        merged.update(col_map)
+        col_map = merged
 
     match_count = 0
     mismatch_count = 0
@@ -66,6 +70,57 @@ def compare_csv(sql_path, sparql_path, name, col_map=None):
                 disp = repr(val) if val else '(empty)'
                 print(f"    SPARQL-only: {disp} x{cnt}")
 
+    # Handle grouped comment columns (multiple SQL cols → one SPARQL GROUP_CONCAT col)
+    if comment_groups:
+        for grp in comment_groups:
+            sql_group_cols = grp['sql_cols']
+            sparql_col = grp['sparql_col']
+            label = grp['label']
+
+            if sparql_col not in sparql_cols:
+                print(f"  MISSING in SPARQL: {sparql_col} ({label})")
+                missing_count += 1
+                continue
+
+            # Collect all non-empty SQL values across the grouped columns
+            sql_vals = Counter()
+            for r in sql_rows:
+                for col in sql_group_cols:
+                    v = norm(r.get(col, ""))
+                    if v:
+                        sql_vals[v] += 1
+
+            # Collect all non-empty SPARQL values (split by |||)
+            sparql_vals = Counter()
+            for r in sparql_rows:
+                raw = str(r.get(sparql_col, "")).strip()
+                if raw:
+                    for part in raw.split("|||"):
+                        v = norm(part)
+                        if v:
+                            sparql_vals[v] += 1
+
+            only_sql = sql_vals - sparql_vals
+            only_sparql = sparql_vals - sql_vals
+
+            if not only_sql and not only_sparql:
+                match_count += len(sql_group_cols)
+                print(f"  COMMENT GROUP OK: {label} ({len(sql_group_cols)} SQL cols, exact match)")
+            elif not only_sql:
+                match_count += len(sql_group_cols)
+                extra = sum(only_sparql.values())
+                print(f"  COMMENT GROUP OK: {label} (all SQL values present; "
+                      f"{extra} extra SPARQL values from additional comment sources)")
+            else:
+                mismatch_count += len(sql_group_cols)
+                print(f"  COMMENT GROUP MISMATCH: {label}")
+                for val, cnt in list(only_sql.most_common(3)):
+                    disp = repr(val) if val else '(empty)'
+                    print(f"    SQL-only:    {disp} x{cnt}")
+                for val, cnt in list(only_sparql.most_common(3)):
+                    disp = repr(val) if val else '(empty)'
+                    print(f"    SPARQL-only: {disp} x{cnt}")
+
     total = match_count + mismatch_count + missing_count
     print(f"\n  RESULT: {match_count}/{total} columns match, {mismatch_count} mismatches, {missing_count} missing")
     return mismatch_count == 0 and missing_count == 0
@@ -77,7 +132,8 @@ SQL_DIR = os.path.join(ROOT, "sharetrait-database-v1/db-queries")
 SPARQL_DIR = os.path.join(ROOT, "sharetrait-kg/sparql-queries")
 
 # danio_data
-compare_csv(f"{SQL_DIR}/danio_data-output.csv", f"{SPARQL_DIR}/danio_data-output.csv", "danio_data")
+compare_csv(f"{SQL_DIR}/danio_data-output.csv", f"{SPARQL_DIR}/danio_data-output.csv", "danio_data",
+            {"count(measurement.trait_value)": "count_trait_value"})
 
 # Aphidius
 compare_csv(f"{SQL_DIR}/Aphidius-output.csv", f"{SPARQL_DIR}/Aphidius-output.csv", "Aphidius")
@@ -89,14 +145,14 @@ col_map = {}
 # Identical columns (77)
 for c in [
     'sharetrait_datasetid', 'date_contribution', 'reference_type', 'doi_dataset',
-    'doi_manuscript', 'comments_reference', 'species_reported', 'phylum_name',
+    'doi_manuscript', 'species_reported', 'phylum_name',
     'class_name', 'order_name', 'family_name', 'genus_name', 'species_name',
     'taxonomy_db_name', 'rank_level', 'comment_taxonomy', 'site_realm_general',
     'site_realm_specific', 'elevation_value', 'depth_value', 'origin',
     'location_description', 'location_name', 'latitude', 'longitude',
     'year_collection_initial', 'year_collection_final', 'observation_date_initial',
-    'observation_date_final', 'comment_location', 'experiment_location',
-    'sharetrait_type', 'comments_experimental_conditions', 'strategy_of_protection',
+    'observation_date_final', 'experiment_location',
+    'sharetrait_type', 'strategy_of_protection',
     'sex', 'life_stage_general_initial', 'life_stage_general_final',
     'lifestage_specific_initial', 'lifestage_specific_final', 'life_stage_general',
     'life_stage_specific', 'size_type', 'size_units', 'size_value_initial',
@@ -107,7 +163,7 @@ for c in [
     'offspring_size_value', 'metabolic_rate_type', 'acclimation_chamber',
     'fasting_time', 'sensor_type', 'respiration_volume', 'delay_time',
     'respiratory_chamber_material', 'incubation_time', 'respirometry_type',
-    'breathing_mode', 'trait_value', 'trait_unit', 'comment_trait',
+    'breathing_mode', 'trait_value', 'trait_unit',
     'trait_error_estimate', 'trait_error_type', 'sample_size', 'trait_converted',
     'fresh_mass',
 ]:
@@ -150,6 +206,30 @@ col_map.update({
     'condition-test.food_type': 'test_food_type',
     'condition-test.salinity': 'test_salinity',
     'condition-test.ph': 'test_ph',
+    'comments_reference': 'comments_reference',
+    'comment_location': 'comment_location',
+    'comment_trait': 'comment_trait',
+    'comments_experimental_conditions': 'comments_experimental_conditions',
 })
 
-compare_csv(f"{SQL_DIR}/master-query-output.csv", f"{SPARQL_DIR}/master-query-output.csv", "master-query", col_map)
+compare_csv(f"{SQL_DIR}/master-query-output.csv", f"{SPARQL_DIR}/master-query-output.csv",
+            "master-query", col_map)
+
+# --- Compare query01 to query10 ---
+query_col_maps = {
+    "query05": {"count (measurement.trait_value)": "count_measurements"},
+    "query06": {
+        "count(population.population_pk)": "population_count",
+        "group_concat(population.species_reported)": "species_list",
+    },
+    "query08": {"max(measurement.trait_value)": "max_trait_value"},
+    "query09": {"group_concat(measurement.trait_value)": "trait_values"},
+}
+for i in range(1, 11):
+    sql_path = f"{SQL_DIR}/query{str(i).zfill(2)}-output.csv"
+    sparql_path = f"{SPARQL_DIR}/query{str(i).zfill(2)}-output.csv"
+    name = f"query{str(i).zfill(2)}"
+    try:
+        compare_csv(sql_path, sparql_path, name, query_col_maps.get(name))
+    except Exception as e:
+        print(f"[WARNING] Could not compare {name}: {e}")

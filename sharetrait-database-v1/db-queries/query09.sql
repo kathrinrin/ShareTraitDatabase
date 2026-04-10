@@ -1,0 +1,4 @@
+Select ref_taxonomy.genus_name, measurement.trait_type, group_concat(measurement.trait_value), measurement.trait_unit, condition.temperature, experiment_setup.condition_label
+From ref_taxonomy, taxonomic_label, population, contains, individual, measurement, experiment_setup, condition
+Where ref_taxonomy.taxonomy_pk = taxonomic_label.taxonomy_pk and taxonomic_label.population_pk = population.population_pk and population.population_pk = contains.population_pk and contains.individual_pk = individual.individual_pk and individual.individual_pk = measurement.individual_pk and measurement.trait_type = "development" and ref_taxonomy.genus_name =  "Rana" and measurement.measurement_pk = experiment_setup.measurement_pk AND experiment_setup.condition_label = "test" AND experiment_setup.condition_pk = condition.condition_pk
+Group by condition.temperature;

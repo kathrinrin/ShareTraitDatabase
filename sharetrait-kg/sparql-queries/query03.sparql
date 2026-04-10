@@ -18,7 +18,7 @@ WHERE {
     vocab:hasTraitType      ?trait_type ;
     vocab:hasIndividual ?individual .
 
-  FILTER(?trait_type = "fecundity")
+  FILTER(?trait_type = <https://sharetrait.org/concept/fecundity>)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual .

@@ -1,0 +1,207 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix con: <https://sharetrait.org/concept/> .
+@base <https://sharetrait.org/concept/> .
+
+# ShareTrait SKOS Controlled Vocabularies
+# OWL ontology: sharetrait-owl.ttl
+
+# Trait Type
+con:TraitTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Trait Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for trait type categories used in ShareTrait."@en .
+
+con:Development a skos:Concept ;
+    skos:inScheme con:TraitTypeScheme ;
+    skos:prefLabel "development"@en ;
+    skos:definition "Traits related to developmental time and processes."@en .
+
+con:Fecundity a skos:Concept ;
+    skos:inScheme con:TraitTypeScheme ;
+    skos:prefLabel "fecundity"@en ;
+    skos:definition "Traits related to reproductive output and offspring production."@en .
+
+con:MetabolicRate a skos:Concept ;
+    skos:inScheme con:TraitTypeScheme ;
+    skos:prefLabel "metabolic_rate"@en ;
+    skos:definition "Traits related to the rate of energy expenditure, typically measured as oxygen consumption or CO2 production."@en .
+
+# Trait Category
+con:TraitCategoryScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Trait Category Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for the broad trait category."@en .
+
+con:Functional a skos:Concept ;
+    skos:inScheme con:TraitCategoryScheme ;
+    skos:prefLabel "functional"@en ;
+    skos:definition "Functional traits that affect organism performance."@en .
+
+# Condition Label
+con:ConditionLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Condition Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for experimental condition types."@en .
+
+con:TestCondition a skos:Concept ;
+    skos:inScheme con:ConditionLabelScheme ;
+    skos:prefLabel "test"@en ;
+    skos:definition "Testing condition under which trait measurements are taken."@en .
+
+con:MaintenanceCondition a skos:Concept ;
+    skos:inScheme con:ConditionLabelScheme ;
+    skos:prefLabel "maintenance"@en ;
+    skos:definition "Maintenance condition under which organisms are kept before experiments."@en .
+
+con:AcclimationCondition a skos:Concept ;
+    skos:inScheme con:ConditionLabelScheme ;
+    skos:prefLabel "acclimation"@en ;
+    skos:definition "Acclimation condition used to adapt organisms before testing."@en .
+
+# Population Label
+con:PopulationLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Population Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for population measurement level."@en .
+
+con:IndividualMeasure a skos:Concept ;
+    skos:inScheme con:PopulationLabelScheme ;
+    skos:prefLabel "ind_measure"@en ;
+    skos:definition "Population providing individual-level measurements."@en .
+
+con:PopulationMeasure a skos:Concept ;
+    skos:inScheme con:PopulationLabelScheme ;
+    skos:prefLabel "pop_measure"@en ;
+    skos:definition "Population providing population-level aggregate measurements."@en .
+
+# Reference Type
+con:ReferenceTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Reference Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for dataset reference types."@en .
+
+con:PrimaryReference a skos:Concept ;
+    skos:inScheme con:ReferenceTypeScheme ;
+    skos:prefLabel "primary"@en ;
+    skos:definition "The primary reference for the data."@en .
+
+con:SecondaryReference a skos:Concept ;
+    skos:inScheme con:ReferenceTypeScheme ;
+    skos:prefLabel "secondary"@en ;
+    skos:definition "A secondary reference for the data."@en .
+
+# Individual Type
+con:IndividualTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Individual Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for individual type (parent/offspring)."@en .
+
+con:ParentType a skos:Concept ;
+    skos:inScheme con:IndividualTypeScheme ;
+    skos:prefLabel "parent"@en ;
+    skos:definition "The individual is a parent in a parent-offspring relationship."@en .
+
+con:OffspringType a skos:Concept ;
+    skos:inScheme con:IndividualTypeScheme ;
+    skos:prefLabel "offspring"@en ;
+    skos:definition "The individual is an offspring in a parent-offspring relationship."@en .
+
+# Location Label
+con:LocationLabelScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Location Label Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for how a place name was obtained."@en .
+
+con:CommentBased a skos:Concept ;
+    skos:inScheme con:LocationLabelScheme ;
+    skos:prefLabel "comment-based"@en ;
+    skos:definition "Place name obtained from textual comments in the dataset."@en .
+
+con:GpsBased a skos:Concept ;
+    skos:inScheme con:LocationLabelScheme ;
+    skos:prefLabel "gps-based"@en ;
+    skos:definition "Place name derived from GPS coordinates."@en .
+
+# Origin
+con:OriginScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Origin Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for the origin of collected individuals."@en .
+
+con:FieldOrigin a skos:Concept ;
+    skos:inScheme con:OriginScheme ;
+    skos:prefLabel "field"@en ;
+    skos:definition "Individuals collected from the field."@en .
+
+# Realm
+con:RealmScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Realm Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for general ecological realm."@en .
+
+con:Terrestrial a skos:Concept ;
+    skos:inScheme con:RealmScheme ;
+    skos:prefLabel "terrestrial"@en ;
+    skos:definition "Terrestrial (land-based) realm."@en .
+
+con:Aquatic a skos:Concept ;
+    skos:inScheme con:RealmScheme ;
+    skos:prefLabel "aquatic"@en ;
+    skos:definition "Aquatic (water-based) realm."@en .
+
+# Respirometry Type
+con:RespirometryTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Respirometry Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for types of respirometry."@en .
+
+con:ClosedRespirometry a skos:Concept ;
+    skos:inScheme con:RespirometryTypeScheme ;
+    skos:prefLabel "closed"@en ;
+    skos:definition "Closed-system respirometry."@en .
+
+con:OpenRespirometry a skos:Concept ;
+    skos:inScheme con:RespirometryTypeScheme ;
+    skos:prefLabel "open"@en ;
+    skos:definition "Open-system respirometry."@en .
+
+con:IntermittentFlowThrough a skos:Concept ;
+    skos:inScheme con:RespirometryTypeScheme ;
+    skos:prefLabel "intermittent flow-through"@en ;
+    skos:definition "Intermittent flow-through respirometry."@en .
+
+# Metabolic Rate Type
+con:MetabolicRateTypeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Metabolic Rate Type Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for metabolic rate types."@en .
+
+con:StandardMetabolicRate a skos:Concept ;
+    skos:inScheme con:MetabolicRateTypeScheme ;
+    skos:prefLabel "standard"@en ;
+    skos:definition "Standard metabolic rate (minimal rate of energy expenditure in a resting, post-absorptive ectotherm)."@en .
+
+con:ActiveMetabolicRate a skos:Concept ;
+    skos:inScheme con:MetabolicRateTypeScheme ;
+    skos:prefLabel "active"@en ;
+    skos:definition "Active metabolic rate (rate of energy expenditure during maximum sustained activity)."@en .
+
+con:RestingMetabolicRate a skos:Concept ;
+    skos:inScheme con:MetabolicRateTypeScheme ;
+    skos:prefLabel "resting"@en ;
+    skos:definition "Resting metabolic rate (rate of energy expenditure of a resting organism)."@en .
+
+con:RoutineMetabolicRate a skos:Concept ;
+    skos:inScheme con:MetabolicRateTypeScheme ;
+    skos:prefLabel "routine"@en ;
+    skos:definition "Routine metabolic rate (rate of energy expenditure during normal, spontaneous activity)."@en .
+
+# Breathing Mode
+con:BreathingModeScheme a skos:ConceptScheme ;
+    rdfs:label "ShareTrait Breathing Mode Scheme"@en ;
+    rdfs:comment "Controlled vocabulary for breathing modes in respirometry."@en .
+
+con:AquaticBreathing a skos:Concept ;
+    skos:inScheme con:BreathingModeScheme ;
+    skos:prefLabel "aquatic"@en ;
+    skos:definition "Breathing mode using an aquatic respiratory medium."@en .
+
+con:AerialBreathing a skos:Concept ;
+    skos:inScheme con:BreathingModeScheme ;
+    skos:prefLabel "aerial"@en ;
+    skos:definition "Breathing mode using an aerial respiratory medium."@en .
+
+con:BimodalBreathing a skos:Concept ;
+    skos:inScheme con:BreathingModeScheme ;
+    skos:prefLabel "bimodal"@en ;
+    skos:definition "Bimodal breathing using both aquatic and aerial respiratory media."@en .

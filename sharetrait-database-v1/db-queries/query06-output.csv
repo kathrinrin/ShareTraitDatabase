@@ -1,0 +1,15 @@
+dataset_pk,count(population.population_pk),group_concat(population.species_reported),scientific_name,doi_dataset,dataset_trait
+TRADAT023,16,"Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla,Lithodes_santolla","Lithodes santolla (Molina, 1782)",https://doi.org/10.1016/j.fishres.2020.105803,fecundity
+TRADAT027,1,Gryllus_campestris,"Gryllus (Gryllus) campestris Linnaeus, 1758",https://doi.org/10.17026/dans-zsa-f3y9,fecundity
+TRADAT026,1,Gryllus_bimaculatus,"Gryllus (Gryllus) bimaculatus De Geer, 1773",https://doi.org/10.5061/dryad.72g06,fecundity
+TRADAT018,1,Aphidius_colemani,"Aphidius colemani Viereck, 1912",https://doi.org/10.5281/zenodo.4721086,fecundity
+TRADAT025,1,Dysaphis_plantaginea,"Dysaphis (Pomaphis) plantaginea (Passerini, 1860)",https://doi.org/10.5281/zenodo.5342664,fecundity
+TRADAT017,1,Aphidius_colemani,"Aphidius colemani Viereck, 1912",https://doi.org/10.5281/zenodo.7763964,fecundity
+TRADAT022,1,Drosophila_subobscura,"Drosophila (Sophophora) subobscura Collin, 1936",https://doi.org/10.5061/dryad.2v6wwpzsg,fecundity
+TRADAT015,1,Petrolisthes_laevigatus,"Petrolisthes laevigatus (Guerin, 1835)",https://doi.org/10.5281/zenodo.7313889,fecundity
+TRADAT020,1,Trechnites_insidiosus,"Trechnites insidiosus (Crawford, 1910)",https://doi.org/10.6084/m9.figshare.13187642.v1,fecundity
+TRADAT016,1,Lymnaea_stagnalis,"Lymnaea stagnalis (Linnaeus, 1758)",https://doi.org/10.48338/VU01-0OCUNQ,fecundity
+TRADAT014,5,"Aphidius_platensis,Aphidius_platensis,Aphidius_platensis,Aphidius_platensis,Aphidius_platensis","Aphidius platensis Brethes, 1913",https://doi.org/10.5281/zenodo.7774767,fecundity
+TRADAT021,4,"Asobara_tabida,Leptopilina_heterotoma,Spalangia_erythromera,Trichopria_drosophilae","Asobara tabida (Nees, 1834)",https://doi.org/10.5281/zenodo.7775047,fecundity
+TRADAT019,1,Copidosoma_koehleri,"Copidosoma koehleri Blanchard, 1940","",fecundity
+TRADAT024,1,Aphidius_ervi,"Aphidius ervi Haliday, 1834",https://doi.org/10.5281/zenodo.7764457,fecundity

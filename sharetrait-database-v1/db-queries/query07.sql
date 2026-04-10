@@ -1,0 +1,3 @@
+select distinct ref_taxonomy.scientific_name, ref_taxonomy.genus_name, measurement.trait_type
+From ref_taxonomy, taxonomic_label, population, contains, individual, measurement
+Where ref_taxonomy.taxonomy_pk = taxonomic_label.taxonomy_pk and taxonomic_label.population_pk = population.population_pk and population.population_pk = contains.population_pk and contains.individual_pk = individual.individual_pk and individual.individual_pk = measurement.individual_pk and measurement.trait_type = "development";

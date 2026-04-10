@@ -12,7 +12,7 @@ SELECT
   ?trait_type
   ?trait_value
   ?trait_unit
-  ?individual
+  ?individual_pk
   ?life_stage_general_initial
   ?life_stage_general_final
   ?species_reported
@@ -20,10 +20,11 @@ SELECT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTraitType ?trait_type ;
+    vocab:hasTraitType ?trait_type_iri ;
     vocab:hasIndividual ?individual_iri .
 
-  FILTER(?trait_type = "development")
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
+  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual_iri .
@@ -36,7 +37,7 @@ WHERE {
 
   ?measurement vocab:hasTrait ?trait .
 
-  BIND(STRAFTER(STR(?individual_iri), "individual/") AS ?individual)
+  BIND(STRAFTER(STR(?individual_iri), "individual/") AS ?individual_pk)
 
   OPTIONAL { ?taxonomy    vocab:hasScientificName            ?scientific_name }
   OPTIONAL { ?population  vocab:hasSpeciesReported           ?species_reported }

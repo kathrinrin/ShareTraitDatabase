@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#TaxonomyMap>
     rml:logicalSource [
@@ -151,7 +152,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasCommentTaxonomy ;
+        rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment_taxonomy" ;
             rr:termType rr:Literal

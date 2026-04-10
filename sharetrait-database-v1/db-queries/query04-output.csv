@@ -1,0 +1,5 @@
+dataset_pk,title_dataset,dataset_publisher,doi_dataset,year_publication,species_reported,trait_type
+TRADAT028,"dbarneche/zebrafishCostOfGrowth: Published version of paper data and code: Warming increases the cost of growth in a model vertebrate",zenodo,https://doi.org/10.5281/zenodo.2634100,2019,Danio_rerio,metabolic_rate
+TRADAT033,"Data from: Are acute and acclimated thermal effects on metabolic rate modulated by cell size? A comparison between diploid and triploid zebrafish larvae",dryad,https://doi.org/10.5061/dryad.2280gb5qw,2020,Danio_rerio,metabolic_rate
+TRADAT040,"The dataset is not published","","","",Danio_rerio,metabolic_rate
+TRADAT044,"Endocrine disruption from plastic pollution and warming interact to increase the energetic cost of growth in a fish",dryad,https://doi.org/10.5061/dryad.v6wwpzgxm,2022,Danio_rerio,metabolic_rate

@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 # master-query: full flat export of the ShareTrait knowledge graph
 # Replicates the SQL view master-query-all.
@@ -40,6 +41,7 @@ SELECT
   ?test_oxygen_units ?test_carbon_dioxide_units
   ?test_photoperiod ?test_humidity ?test_food_type ?test_salinity ?test_ph
   ?sharetrait_type
+  ?comment_trait
   ?comments_experimental_conditions
   ?strategy_of_protection ?sex
   ?life_stage_general_initial ?life_stage_general_final
@@ -56,7 +58,7 @@ SELECT
   ?sensor_type ?respiration_volume ?delay_time
   ?respiratory_chamber_material ?incubation_time
   ?respirometry_type ?breathing_mode
-  ?trait_value ?trait_unit ?comment_trait
+  ?trait_value ?trait_unit
   ?trait_error_estimate ?trait_error_type
   ?sample_size ?trait_converted ?fresh_mass
 
@@ -88,9 +90,10 @@ WHERE {
   # --- optional scalar fields ---
 
   OPTIONAL { ?dataset       vocab:hasDateContribution          ?date_contribution }
-  OPTIONAL { ?dataset       vocab:hasReferenceType             ?reference_type }
+  OPTIONAL { ?dataset       vocab:hasReferenceType             ?reference_type_iri }
+  BIND(IF(BOUND(?reference_type_iri), STRAFTER(STR(?reference_type_iri), "concept/"), ?undef) AS ?reference_type)
   OPTIONAL { ?dataset       vocab:hasDOI                       ?doi_dataset }
-  OPTIONAL { ?dataset       vocab:hasCommentsReference          ?comments_reference }
+  OPTIONAL { ?dataset       vocab:hasReferenceComment          ?comments_reference }
   OPTIONAL { ?population    vocab:hasSpeciesReported            ?species_reported }
   OPTIONAL { ?taxonomy      vocab:hasPhylumName                ?phylum_name }
   OPTIONAL { ?taxonomy      vocab:hasClassName                 ?class_name }
@@ -100,7 +103,7 @@ WHERE {
   OPTIONAL { ?taxonomy      vocab:hasSpeciesName               ?species_name }
   OPTIONAL { ?taxonomy      vocab:hasTaxonomyDBName            ?taxonomy_db_name }
   OPTIONAL { ?taxonomy      vocab:hasRankLevel                 ?rank_level }
-  OPTIONAL { ?taxonomy      vocab:hasCommentTaxonomy           ?comment_taxonomy }
+  OPTIONAL { ?taxonomy      rdfs:comment                       ?comment_taxonomy }
   OPTIONAL { ?site          vocab:hasSiteRealmGeneral          ?site_realm_general }
   OPTIONAL { ?site          vocab:hasSiteRealmSpecific         ?site_realm_specific }
   OPTIONAL { ?site          vocab:hasElevationValue            ?elevation_value }
@@ -118,9 +121,10 @@ WHERE {
   OPTIONAL { ?population    vocab:hasYearCollectionFinal       ?year_collection_final }
   OPTIONAL { ?population    vocab:hasObservationDateInitial    ?observation_date_initial }
   OPTIONAL { ?population    vocab:hasObservationDateFinal      ?observation_date_final }
-  OPTIONAL { ?population    vocab:hasCommentLocation           ?comment_location }
+  OPTIONAL { ?population    rdfs:comment                      ?comment_location }
   OPTIONAL { ?measurement   vocab:hasExperimentLocation        ?experiment_location }
-  OPTIONAL { ?measurement   vocab:hasCommentsExperimentalConditions ?comments_experimental_conditions }
+  OPTIONAL { ?measurement   vocab:hasTraitComment              ?comment_trait }
+  OPTIONAL { ?measurement   vocab:hasExperimentalConditionsComment ?comments_experimental_conditions }
   OPTIONAL { ?individual    vocab:hasStrategyOfProtection      ?strategy_of_protection }
   OPTIONAL { ?individual    vocab:hasSex                       ?sex }
   OPTIONAL { ?individual    vocab:hasParentSizeType            ?parent_size_type }
@@ -145,7 +149,6 @@ WHERE {
   OPTIONAL { ?measurement   vocab:hasReproductiveStage        ?reproductive_stage }
   OPTIONAL { ?measurement   vocab:hasTraitValue                ?trait_value }
   OPTIONAL { ?measurement   vocab:hasTraitUnit                 ?trait_unit }
-  OPTIONAL { ?measurement   vocab:hasCommentTrait              ?comment_trait }
   OPTIONAL { ?measurement   vocab:hasTraitConverted            ?trait_converted }
   OPTIONAL { ?measurement   vocab:hasTraitErrorEstimate        ?trait_error_estimate }
   OPTIONAL { ?measurement   vocab:hasTraitErrorType            ?trait_error_type }
@@ -166,15 +169,18 @@ WHERE {
   OPTIONAL {
     ?measurement vocab:usesTechnique ?technique .
     ?technique a vocab:Technique .
-    OPTIONAL { ?technique vocab:hasMetabolicRateType            ?metabolic_rate_type }
+    OPTIONAL { ?technique vocab:hasMetabolicRateType            ?metabolic_rate_type_iri }
     OPTIONAL { ?technique vocab:hasSensorType                   ?sensor_type }
     OPTIONAL { ?technique vocab:hasRespirationVolume            ?respiration_volume }
     OPTIONAL { ?technique vocab:hasDelayTime                    ?delay_time }
     OPTIONAL { ?technique vocab:hasRespiratoryChamberMaterial   ?respiratory_chamber_material }
     OPTIONAL { ?technique vocab:hasIncubationTime               ?incubation_time }
-    OPTIONAL { ?technique vocab:hasRespirometryType             ?respirometry_type }
-    OPTIONAL { ?technique vocab:hasBreathingMode                ?breathing_mode }
+    OPTIONAL { ?technique vocab:hasRespirometryType             ?respirometry_type_iri }
+    OPTIONAL { ?technique vocab:hasBreathingMode                ?breathing_mode_iri }
   }
+  BIND(IF(BOUND(?metabolic_rate_type_iri), STRAFTER(STR(?metabolic_rate_type_iri), "concept/"), ?undef) AS ?metabolic_rate_type)
+  BIND(IF(BOUND(?respirometry_type_iri), REPLACE(STRAFTER(STR(?respirometry_type_iri), "concept/"), "%20", " "), ?undef) AS ?respirometry_type)
+  BIND(IF(BOUND(?breathing_mode_iri), STRAFTER(STR(?breathing_mode_iri), "concept/"), ?undef) AS ?breathing_mode)
 
   # acclimation specification (via acclimation_describe junction)
   OPTIONAL {

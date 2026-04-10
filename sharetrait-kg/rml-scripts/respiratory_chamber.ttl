@@ -63,8 +63,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasRespirometryType ;
         rr:objectMap [
-            rml:reference "respirometry_type" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{respirometry_type}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "respirometry_type != ''"
     ] ;
@@ -72,8 +72,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasBreathingMode ;
         rr:objectMap [
-            rml:reference "breathing_mode" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{breathing_mode}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "breathing_mode != ''"
     ] ;
@@ -81,8 +81,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasMetabolicRateType ;
         rr:objectMap [
-            rml:reference "metabolic_rate_type" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{metabolic_rate_type}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "metabolic_rate_type != ''"
     ] .

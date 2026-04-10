@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#PopulationMap>
     rml:logicalSource [
@@ -27,8 +28,8 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasPopulationLabel ;
         rr:objectMap [
-            rml:reference "population_label" ;
-            rr:termType rr:Literal
+            rr:template "https://sharetrait.org/concept/{population_label}" ;
+            rr:termType rr:IRI
         ] ;
         rr:condition "population_label != ''"
     ] ;
@@ -70,7 +71,7 @@
     ] ;
 
     rr:predicateObjectMap [
-        rr:predicate vocab:hasComments ;
+        rr:predicate vocab:hasPopulationComment ;
         rr:objectMap [
             rml:reference "comments" ;
             rr:termType rr:Literal

@@ -31,17 +31,18 @@ WHERE {
 
   ?measurement a vocab:Measurement ;
     vocab:hasIndividual ?individual ;
-    vocab:hasTraitType      ?trait_type ;
-    vocab:hasTraitValue     ?trait_value ;
+    vocab:hasTraitType      ?trait_type_iri ;
     vocab:hasCondition       ?condition .
 
-  FILTER(?trait_type      = "development")
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
+  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
 
   ?condition vocab:hasConditionLabel ?condition_label ;
              vocab:hasTemperature    ?temperature .
 
   FILTER(?condition_label = "test")
 
+  OPTIONAL { ?measurement vocab:hasTraitValue     ?trait_value }
   OPTIONAL { ?measurement vocab:hasTraitUnit      ?trait_unit }
   OPTIONAL { ?measurement vocab:hasSizeValueFinal ?size_value_final }
   OPTIONAL { ?measurement vocab:hasSizeUnits       ?size_units }

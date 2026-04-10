@@ -13,10 +13,11 @@ SELECT DISTINCT
 
 WHERE {
   ?measurement a vocab:Measurement ;
-    vocab:hasTraitType      ?trait_type ;
+    vocab:hasTraitType      ?trait_type_iri ;
     vocab:hasIndividual ?individual .
 
-  FILTER(?trait_type = "development")
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
+  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual .
