@@ -57,24 +57,32 @@ done
 ### 2. Concatenate TTL files
 
 Use Python (not `cat`) to guarantee newline separators between files.
-Lines with invalid WKT literals (e.g. `POINT(NA …)`) are stripped during
-concatenation so they never enter the index.
+Lines with invalid WKT literals (e.g. `POINT(NA …)`) or invalid typed
+literals (e.g. `"NA"^^xsd:decimal`) are stripped during concatenation so
+they never enter the index. URL-encoded spaces (`%20`) in concept URIs
+are normalised to underscores so that concept IRIs stay readable and
+consistent with the SKOS vocabulary and SHACL shapes.
 
 ```bash
 python3 -c "
 import glob, pathlib, re
 files = sorted(glob.glob('sharetrait-kg/ttl-output/*.ttl'))
-bad = re.compile(r'POINT\([^)]*\bNA\b')
+bad_wkt = re.compile(r'POINT\([^)]*\bNA\b')
+bad_typed_na = re.compile(r'\"NA\"\^\^<')
+concept_pct20 = re.compile(r'(https://sharetrait\.org/concept/[^>]*)%20')
 dropped = 0
 with open('sharetrait-kg/sharetrait-kg.ttl', 'w') as out:
     for f in files:
         for line in pathlib.Path(f).read_text().splitlines(keepends=True):
-            if bad.search(line):
+            if bad_wkt.search(line) or bad_typed_na.search(line):
                 dropped += 1
             else:
+                # Replace %20 with _ in concept URIs (may occur more than once)
+                while concept_pct20.search(line):
+                    line = concept_pct20.sub(r'\1_', line)
                 out.write(line)
         out.write('\n')
-print(f'Concatenated {len(files)} files, dropped {dropped} invalid WKT lines')
+print(f'Concatenated {len(files)} files, dropped {dropped} invalid lines')
 "
 ```
 

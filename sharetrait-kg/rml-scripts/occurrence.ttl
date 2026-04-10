@@ -27,6 +27,7 @@
         rr:predicate vocab:hasObservationDateInitial ;
         rr:objectMap [
             rml:reference "observation_date_initial" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "observation_date_initial != ''"
@@ -36,6 +37,7 @@
         rr:predicate vocab:hasObservationDateFinal ;
         rr:objectMap [
             rml:reference "observation_date_final" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "observation_date_final != ''"
@@ -65,6 +67,7 @@
         rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment_location" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comment_location != ''"
@@ -74,6 +77,7 @@
         rr:predicate vocab:hasOrigin ;
         rr:objectMap [
             rml:reference "origin" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "origin != ''"

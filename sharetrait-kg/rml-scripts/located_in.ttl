@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 
 <#PlaceSiteMap>
@@ -26,6 +27,7 @@
         rr:predicate vocab:hasLocationDescription ;
         rr:objectMap [
             rml:reference "location_description" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "location_description != ''"
@@ -35,6 +37,7 @@
         rr:predicate vocab:hasLocationCheck ;
         rr:objectMap [
             rml:reference "location_check" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "location_check != ''"
@@ -54,6 +57,7 @@
         rr:predicate vocab:hasLatitude ;
         rr:objectMap [
             rml:reference "latitude" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "latitude != ''"
@@ -63,6 +67,7 @@
         rr:predicate vocab:hasLongitude ;
         rr:objectMap [
             rml:reference "longitude" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "longitude != ''"

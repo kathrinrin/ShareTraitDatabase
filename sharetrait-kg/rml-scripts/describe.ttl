@@ -26,6 +26,7 @@
         rr:predicate vocab:hasDateDescribe ;
         rr:objectMap [
             rml:reference "date_describe" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "date_describe != ''"
@@ -35,6 +36,7 @@
         rr:predicate vocab:hasDateIso ;
         rr:objectMap [
             rml:reference "date_iso" ;
+            rr:datatype xsd:date ;
             rr:termType rr:Literal
         ] ;
         rr:condition "date_iso != ''"

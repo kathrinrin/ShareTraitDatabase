@@ -3,7 +3,11 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#MeasurementMap>
     rml:logicalSource [
@@ -33,7 +37,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasTraitType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{trait_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{trait_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "trait_type != ''"
@@ -43,6 +64,7 @@
         rr:predicate vocab:hasTraitValue ;
         rr:objectMap [
             rml:reference "trait_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_value != ''"
@@ -52,6 +74,7 @@
         rr:predicate vocab:hasTraitUnit ;
         rr:objectMap [
             rml:reference "trait_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_unit != ''"
@@ -61,6 +84,7 @@
         rr:predicate vocab:hasTraitErrorEstimate ;
         rr:objectMap [
             rml:reference "trait_error_estimate" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_error_estimate != ''"
@@ -70,6 +94,7 @@
         rr:predicate vocab:hasTraitErrorType ;
         rr:objectMap [
             rml:reference "trait_error_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_error_type != ''"
@@ -79,6 +104,7 @@
         rr:predicate vocab:hasTraitConverted ;
         rr:objectMap [
             rml:reference "trait_converted" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_converted != ''"
@@ -88,6 +114,7 @@
         rr:predicate vocab:hasIndividualDevelopmentalStage ;
         rr:objectMap [
             rml:reference "individual_developmental_stage" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "individual_developmental_stage != ''"
@@ -97,6 +124,7 @@
         rr:predicate vocab:hasFreshMass ;
         rr:objectMap [
             rml:reference "fresh_mass" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "fresh_mass != ''"
@@ -106,6 +134,7 @@
         rr:predicate vocab:hasFreshMassUnit ;
         rr:objectMap [
             rml:reference "fresh_mass_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "fresh_mass_unit != ''"
@@ -115,6 +144,7 @@
         rr:predicate vocab:hasSampleSize ;
         rr:objectMap [
             rml:reference "sample_size" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "sample_size != ''"
@@ -124,6 +154,7 @@
         rr:predicate vocab:hasSizeValue ;
         rr:objectMap [
             rml:reference "size_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "size_value != ''"
@@ -133,6 +164,7 @@
         rr:predicate vocab:hasSizeUnits ;
         rr:objectMap [
             rml:reference "size_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "size_units != ''"
@@ -142,6 +174,7 @@
         rr:predicate vocab:hasSizeType ;
         rr:objectMap [
             rml:reference "size_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "size_type != ''"
@@ -151,6 +184,7 @@
         rr:predicate vocab:hasLifeStageGeneral ;
         rr:objectMap [
             rml:reference "life_stage_general" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "life_stage_general != ''"
@@ -160,6 +194,7 @@
         rr:predicate vocab:hasLifeStageSpecific ;
         rr:objectMap [
             rml:reference "life_stage_specific" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "life_stage_specific != ''"
@@ -169,6 +204,7 @@
         rr:predicate vocab:hasTraitComment ;
         rr:objectMap [
             rml:reference "comment_trait" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comment_trait != ''"
@@ -178,6 +214,7 @@
         rr:predicate vocab:hasMeasureDate ;
         rr:objectMap [
             rml:reference "measure_date" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "measure_date != ''"
@@ -187,6 +224,7 @@
         rr:predicate vocab:hasFecundityTemporalUnit ;
         rr:objectMap [
             rml:reference "fecundity_temporal_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "fecundity_temporal_unit != ''"
@@ -196,6 +234,7 @@
         rr:predicate vocab:hasReproductiveStage ;
         rr:objectMap [
             rml:reference "reproductive_stage" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "reproductive_stage != ''"
@@ -205,6 +244,7 @@
         rr:predicate vocab:hasExperimentLocation ;
         rr:objectMap [
             rml:reference "experiment_location" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "experiment_location != ''"
@@ -214,6 +254,7 @@
         rr:predicate vocab:hasExperimentalConditionsComment ;
         rr:objectMap [
             rml:reference "comments_experimental_conditions" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comments_experimental_conditions != ''"
@@ -223,6 +264,7 @@
         rr:predicate vocab:hasLifestageSpecificInitial ;
         rr:objectMap [
             rml:reference "lifestage_specific_initial" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "lifestage_specific_initial != ''"
@@ -232,6 +274,7 @@
         rr:predicate vocab:hasLifestageSpecificFinal ;
         rr:objectMap [
             rml:reference "lifestage_specific_final" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "lifestage_specific_final != ''"
@@ -241,6 +284,7 @@
         rr:predicate vocab:hasSizeValueInitial ;
         rr:objectMap [
             rml:reference "size_value_initial" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "size_value_initial != ''"
@@ -250,6 +294,7 @@
         rr:predicate vocab:hasSizeValueFinal ;
         rr:objectMap [
             rml:reference "size_value_final" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "size_value_final != ''"

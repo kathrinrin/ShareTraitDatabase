@@ -3,7 +3,11 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#IndividualMap>
     rml:logicalSource [
@@ -20,6 +24,7 @@
         rr:predicate vocab:hasRepresentativeStage ;
         rr:objectMap [
             rml:reference "representative_stage" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "representative_stage != ''"
@@ -29,6 +34,7 @@
         rr:predicate vocab:hasSex ;
         rr:objectMap [
             rml:reference "sex" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "sex != ''"
@@ -37,7 +43,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasIndividualType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{individual_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{individual_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "individual_type != ''"
@@ -47,6 +70,7 @@
         rr:predicate vocab:hasMatingMethod ;
         rr:objectMap [
             rml:reference "mating_method" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "mating_method != ''"
@@ -56,6 +80,7 @@
         rr:predicate vocab:hasMethodType ;
         rr:objectMap [
             rml:reference "method_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "method_type != ''"
@@ -65,6 +90,7 @@
         rr:predicate vocab:hasStrategyOfProtection ;
         rr:objectMap [
             rml:reference "strategy_of_protection" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "strategy_of_protection != ''"
@@ -74,6 +100,7 @@
         rr:predicate vocab:hasDescription ;
         rr:objectMap [
             rml:reference "description_individual" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "description_individual != ''"
@@ -83,6 +110,7 @@
         rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comment != ''"
@@ -92,6 +120,7 @@
         rr:predicate vocab:hasParentSizeType ;
         rr:objectMap [
             rml:reference "parent_size_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_size_type != ''"
@@ -101,6 +130,7 @@
         rr:predicate vocab:hasParentSizeUnits ;
         rr:objectMap [
             rml:reference "parent_size_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_size_units != ''"
@@ -110,6 +140,7 @@
         rr:predicate vocab:hasParentalSizeValue ;
         rr:objectMap [
             rml:reference "parental_size_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parental_size_value != ''"
@@ -119,6 +150,7 @@
         rr:predicate vocab:hasParentAge ;
         rr:objectMap [
             rml:reference "parent_age" ;
+            rr:datatype xsd:integer ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_age != ''"
@@ -128,6 +160,7 @@
         rr:predicate vocab:hasParentAgeUnits ;
         rr:objectMap [
             rml:reference "parent_age_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_age_units != ''"
@@ -137,6 +170,7 @@
         rr:predicate vocab:hasOffspringDevelopmentalStage ;
         rr:objectMap [
             rml:reference "offspring_developmental_stage" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "offspring_developmental_stage != ''"
@@ -146,6 +180,7 @@
         rr:predicate vocab:hasOffspringSizeType ;
         rr:objectMap [
             rml:reference "offspring_size_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "offspring_size_type != ''"
@@ -155,6 +190,7 @@
         rr:predicate vocab:hasOffspringSizeUnits ;
         rr:objectMap [
             rml:reference "offspring_size_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "offspring_size_units != ''"
@@ -164,6 +200,7 @@
         rr:predicate vocab:hasOffspringSizeValue ;
         rr:objectMap [
             rml:reference "offspring_size_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "offspring_size_value != ''"

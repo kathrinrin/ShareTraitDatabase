@@ -3,7 +3,11 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#TraitMap>
     rml:logicalSource [
@@ -20,6 +24,7 @@
         rr:predicate vocab:hasTraitName ;
         rr:objectMap [
             rml:reference "trait_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_name != ''"
@@ -29,6 +34,7 @@
         rr:predicate vocab:hasTraitID ;
         rr:objectMap [
             rml:reference "trait_id" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_id != ''"
@@ -38,6 +44,7 @@
         rr:predicate vocab:hasShareTraitType ;
         rr:objectMap [
             rml:reference "sharetrait_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "sharetrait_type != ''"
@@ -46,7 +53,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasTraitType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{trait_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{trait_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "trait_type != ''"
@@ -56,6 +80,7 @@
         rr:predicate vocab:hasTraitCondition ;
         rr:objectMap [
             rml:reference "trait_condition" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_condition != ''"
@@ -65,6 +90,7 @@
         rr:predicate vocab:hasTraitParentID ;
         rr:objectMap [
             rml:reference "trait_parentid" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_parentid != ''"
@@ -74,6 +100,7 @@
         rr:predicate vocab:hasLifeStageGeneralInitial ;
         rr:objectMap [
             rml:reference "life_stage_general_initial" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "life_stage_general_initial != ''"
@@ -83,6 +110,7 @@
         rr:predicate vocab:hasLifeStageGeneralFinal ;
         rr:objectMap [
             rml:reference "life_stage_general_final" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "life_stage_general_final != ''"
@@ -92,6 +120,7 @@
         rr:predicate vocab:hasTraitDefinition ;
         rr:objectMap [
             rml:reference "trait_definition" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_definition != ''"
@@ -101,6 +130,7 @@
         rr:predicate vocab:hasTraitDefinitionSource ;
         rr:objectMap [
             rml:reference "trait_definition_source" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_definition_source != ''"
@@ -110,6 +140,7 @@
         rr:predicate vocab:hasTraitUnit ;
         rr:objectMap [
             rml:reference "trait_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_unit != ''"
@@ -119,6 +150,7 @@
         rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "trait_comment" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "trait_comment != ''"

@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#AcclimationSpecificationMap>
     rml:logicalSource [
@@ -19,6 +20,7 @@
         rr:predicate vocab:hasMating ;
         rr:objectMap [
             rml:reference "acclimation_mating" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "acclimation_mating != ''"
@@ -28,6 +30,7 @@
         rr:predicate vocab:hasChamber ;
         rr:objectMap [
             rml:reference "acclimation_chamber" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "acclimation_chamber != ''"
@@ -37,6 +40,7 @@
         rr:predicate vocab:hasFastingTime ;
         rr:objectMap [
             rml:reference "fasting_time" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "fasting_time != ''"

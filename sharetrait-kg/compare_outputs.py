@@ -7,7 +7,7 @@ def norm(v):
     if v is None:
         return ""
     v = str(v).strip()
-    if v == "":
+    if v == "" or v == "NA":
         return ""
     try:
         f = float(v)
@@ -16,9 +16,12 @@ def norm(v):
         else:
             return re.sub(r'\.?0+$', '', v) if '.' in v else v
     except ValueError:
-        return v
+        # Concept values: normalize spaces to underscores (KG uses _ in concept IRIs,
+        # SQL uses spaces in concept labels)
+        return v.replace(" ", "_")
 
-def compare_csv(sql_path, sparql_path, name, col_map=None, comment_groups=None):
+def compare_csv(sql_path, sparql_path, name, col_map=None, comment_groups=None,
+                sort_concat_cols=None):
     with open(sql_path, 'r') as f:
         sql_rows = list(csv.DictReader(f))
     with open(sparql_path, 'r') as f:
@@ -55,6 +58,15 @@ def compare_csv(sql_path, sparql_path, name, col_map=None, comment_groups=None):
 
         sql_vals = Counter(norm(r.get(sql_col, "")) for r in sql_rows)
         sparql_vals = Counter(norm(r.get(sparql_col, "")) for r in sparql_rows)
+
+        # For GROUP_CONCAT columns, sort comma-separated parts before comparing
+        if sort_concat_cols and (sql_col in sort_concat_cols or sparql_col in sort_concat_cols):
+            def sort_csv(val):
+                if not val:
+                    return val
+                return ",".join(sorted(val.split(",")))
+            sql_vals = Counter(sort_csv(k) for k, v in sql_vals.items() for _ in range(v))
+            sparql_vals = Counter(sort_csv(k) for k, v in sparql_vals.items() for _ in range(v))
 
         if sql_vals == sparql_vals:
             match_count += 1
@@ -225,11 +237,15 @@ query_col_maps = {
     "query08": {"max(measurement.trait_value)": "max_trait_value"},
     "query09": {"group_concat(measurement.trait_value)": "trait_values"},
 }
+sort_concat = {
+    "query09": {"group_concat(measurement.trait_value)", "trait_values"},
+}
 for i in range(1, 11):
     sql_path = f"{SQL_DIR}/query{str(i).zfill(2)}-output.csv"
     sparql_path = f"{SPARQL_DIR}/query{str(i).zfill(2)}-output.csv"
     name = f"query{str(i).zfill(2)}"
     try:
-        compare_csv(sql_path, sparql_path, name, query_col_maps.get(name))
+        compare_csv(sql_path, sparql_path, name, query_col_maps.get(name),
+                    sort_concat_cols=sort_concat.get(name))
     except Exception as e:
         print(f"[WARNING] Could not compare {name}: {e}")

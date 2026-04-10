@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <#TaxonomyMap>
@@ -20,6 +21,7 @@
         rr:predicate vocab:hasScientificName ;
         rr:objectMap [
             rml:reference "scientific_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "scientific_name != ''"
@@ -29,6 +31,7 @@
         rr:predicate vocab:hasTaxonomyIDRef ;
         rr:objectMap [
             rml:reference "taxonomy_id_ref" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "taxonomy_id_ref != ''"
@@ -38,6 +41,7 @@
         rr:predicate vocab:hasTaxonomyDBName ;
         rr:objectMap [
             rml:reference "taxonomy_db_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "taxonomy_db_name != ''"
@@ -47,6 +51,7 @@
         rr:predicate vocab:hasTaxonomyDBUrl ;
         rr:objectMap [
             rml:reference "taxonomy_db_url" ;
+            rr:datatype xsd:anyURI ;
             rr:termType rr:Literal
         ] ;
         rr:condition "taxonomy_db_url != ''"
@@ -56,6 +61,7 @@
         rr:predicate vocab:hasTaxonomyDBVersion ;
         rr:objectMap [
             rml:reference "taxonomy_db_version" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "taxonomy_db_version != ''"
@@ -65,6 +71,7 @@
         rr:predicate vocab:hasParentID ;
         rr:objectMap [
             rml:reference "parent_id" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_id != ''"
@@ -74,6 +81,7 @@
         rr:predicate vocab:hasParentName ;
         rr:objectMap [
             rml:reference "parent_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "parent_name != ''"
@@ -83,6 +91,7 @@
         rr:predicate vocab:hasRankLevel ;
         rr:objectMap [
             rml:reference "rank_level" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "rank_level != ''"
@@ -92,6 +101,7 @@
         rr:predicate vocab:hasPhylumName ;
         rr:objectMap [
             rml:reference "phylum_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "phylum_name != ''"
@@ -101,6 +111,7 @@
         rr:predicate vocab:hasClassName ;
         rr:objectMap [
             rml:reference "class_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "class_name != ''"
@@ -110,6 +121,7 @@
         rr:predicate vocab:hasOrderName ;
         rr:objectMap [
             rml:reference "order_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "order_name != ''"
@@ -119,6 +131,7 @@
         rr:predicate vocab:hasFamilyName ;
         rr:objectMap [
             rml:reference "family_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "family_name != ''"
@@ -128,6 +141,7 @@
         rr:predicate vocab:hasGenusName ;
         rr:objectMap [
             rml:reference "genus_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "genus_name != ''"
@@ -137,6 +151,7 @@
         rr:predicate vocab:hasSpeciesName ;
         rr:objectMap [
             rml:reference "species_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "species_name != ''"
@@ -146,6 +161,7 @@
         rr:predicate vocab:hasCommonNames ;
         rr:objectMap [
             rml:reference "common_names" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "common_names != ''"
@@ -155,6 +171,7 @@
         rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "comment_taxonomy" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comment_taxonomy != ''"

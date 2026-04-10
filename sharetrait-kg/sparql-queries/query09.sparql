@@ -11,7 +11,7 @@ PREFIX vocab: <https://sharetrait.org/vocab/>
 SELECT
   ?genus_name
   ?trait_type
-  (GROUP_CONCAT(?trait_value ; separator=",") AS ?trait_values)
+  (GROUP_CONCAT(STR(?trait_value) ; separator=",") AS ?trait_values)
   ?trait_unit
   ?temperature
   ?condition_label

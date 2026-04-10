@@ -1,5 +1,4 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
-PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
 
 # ============================================================
 # Query 8
@@ -16,7 +15,7 @@ SELECT
   ?scientific_name
   ?genus_name
   ?trait_type
-  (MAX(xsd:decimal(?trait_value)) AS ?max_trait_value)
+  (MAX(?trait_value) AS ?max_trait_value)
   ?trait_unit
 
 WHERE {

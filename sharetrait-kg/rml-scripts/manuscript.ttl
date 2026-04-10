@@ -21,6 +21,7 @@
         rr:predicate vocab:hasTitle ;
         rr:objectMap [
             rml:reference "title_manuscript" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "title_manuscript != ''"
@@ -30,6 +31,7 @@
         rr:predicate vocab:hasDOI ;
         rr:objectMap [
             rml:reference "doi_manuscript" ;
+            rr:datatype xsd:anyURI ;
             rr:termType rr:Literal
         ] ;
         rr:condition "doi_manuscript != ''"
@@ -39,6 +41,7 @@
         rr:predicate vocab:hasType ;
         rr:objectMap [
             rml:reference "type_manuscript" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "type_manuscript != ''"
@@ -48,6 +51,7 @@
         rr:predicate vocab:hasPublisher ;
         rr:objectMap [
             rml:reference "manuscript_publisher" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "manuscript_publisher != ''"
@@ -57,6 +61,7 @@
         rr:predicate vocab:hasCitation ;
         rr:objectMap [
             rml:reference "manuscript_citation" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "manuscript_citation != ''"
@@ -76,6 +81,7 @@
         rr:predicate rdfs:comment ;
         rr:objectMap [
             rml:reference "manuscript_comment" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "manuscript_comment != ''"

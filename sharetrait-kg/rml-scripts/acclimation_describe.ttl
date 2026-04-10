@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#MeasurementAcclimationMap>
     rml:logicalSource [
@@ -25,6 +26,7 @@
         rr:predicate vocab:hasSpecificationDate ;
         rr:objectMap [
             rml:reference "specification_date" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "specification_date != ''"

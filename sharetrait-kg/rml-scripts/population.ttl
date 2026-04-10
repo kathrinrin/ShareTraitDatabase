@@ -3,7 +3,11 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#PopulationMap>
     rml:logicalSource [
@@ -20,6 +24,7 @@
         rr:predicate vocab:hasPopulationName ;
         rr:objectMap [
             rml:reference "population_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "population_name != ''"
@@ -28,7 +33,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasPopulationLabel ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{population_label}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{population_label}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "population_label != ''"
@@ -38,6 +60,7 @@
         rr:predicate vocab:hasPopulationDescription ;
         rr:objectMap [
             rml:reference "population_description" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "population_description != ''"
@@ -47,6 +70,7 @@
         rr:predicate vocab:hasSpeciesReported ;
         rr:objectMap [
             rml:reference "species_reported" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "species_reported != ''"
@@ -56,6 +80,7 @@
         rr:predicate vocab:hasAuthority ;
         rr:objectMap [
             rml:reference "authority" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "authority != ''"
@@ -65,6 +90,7 @@
         rr:predicate vocab:hasPopulationFacts ;
         rr:objectMap [
             rml:reference "population_facts" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "population_facts != ''"
@@ -74,6 +100,7 @@
         rr:predicate vocab:hasPopulationComment ;
         rr:objectMap [
             rml:reference "comments" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comments != ''"

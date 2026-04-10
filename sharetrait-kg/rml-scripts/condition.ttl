@@ -30,6 +30,7 @@
         rr:predicate vocab:hasPhotoperiod ;
         rr:objectMap [
             rml:reference "photoperiod" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "photoperiod != '' AND photoperiod != 'NA'"
@@ -59,6 +60,7 @@
         rr:predicate vocab:hasOxygenUnit ;
         rr:objectMap [
             rml:reference "oxygen_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "oxygen_units != '' AND oxygen_units != 'NA'"
@@ -78,6 +80,7 @@
         rr:predicate vocab:hasCarbonDioxideUnit ;
         rr:objectMap [
             rml:reference "carbon_dioxide_units" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "carbon_dioxide_units != '' AND carbon_dioxide_units != 'NA'"
@@ -107,6 +110,7 @@
         rr:predicate vocab:hasFoodType ;
         rr:objectMap [
             rml:reference "food_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "food_type != '' AND food_type != 'NA'"
@@ -136,6 +140,7 @@
         rr:predicate vocab:hasMethodCheck ;
         rr:objectMap [
             rml:reference "method_check" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "method_check != '' AND method_check != 'NA'"

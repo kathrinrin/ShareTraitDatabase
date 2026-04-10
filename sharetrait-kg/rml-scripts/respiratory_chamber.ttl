@@ -3,6 +3,10 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#RespiratoryChamberMap>
     rml:logicalSource [
@@ -19,6 +23,7 @@
         rr:predicate vocab:hasSensorType ;
         rr:objectMap [
             rml:reference "sensor_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "sensor_type != ''"
@@ -28,6 +33,7 @@
         rr:predicate vocab:hasRespirationVolume ;
         rr:objectMap [
             rml:reference "respiration_volume" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "respiration_volume != ''"
@@ -37,6 +43,7 @@
         rr:predicate vocab:hasDelayTime ;
         rr:objectMap [
             rml:reference "delay_time" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "delay_time != ''"
@@ -46,6 +53,7 @@
         rr:predicate vocab:hasRespiratoryChamberMaterial ;
         rr:objectMap [
             rml:reference "respiratory_chamber_material" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "respiratory_chamber_material != ''"
@@ -55,6 +63,7 @@
         rr:predicate vocab:hasIncubationTime ;
         rr:objectMap [
             rml:reference "incubation_time" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "incubation_time != ''"
@@ -63,7 +72,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasRespirometryType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{respirometry_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{respirometry_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "respirometry_type != ''"
@@ -72,7 +98,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasBreathingMode ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{breathing_mode}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{breathing_mode}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "breathing_mode != ''"
@@ -81,7 +124,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasMetabolicRateType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{metabolic_rate_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{metabolic_rate_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "metabolic_rate_type != ''"

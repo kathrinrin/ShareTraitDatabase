@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#SiteMap>
     rml:logicalSource [
@@ -19,6 +20,7 @@
         rr:predicate vocab:hasSiteName ;
         rr:objectMap [
             rml:reference "site_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "site_name != ''"
@@ -28,6 +30,7 @@
         rr:predicate vocab:hasSiteRealmGeneral ;
         rr:objectMap [
             rml:reference "site_realm_general" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "site_realm_general != ''"
@@ -37,6 +40,7 @@
         rr:predicate vocab:hasSiteRealmSpecific ;
         rr:objectMap [
             rml:reference "site_realm_specific" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "site_realm_specific != ''"
@@ -46,6 +50,7 @@
         rr:predicate vocab:hasElevationValue ;
         rr:objectMap [
             rml:reference "elevation_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "elevation_value != ''"
@@ -55,6 +60,7 @@
         rr:predicate vocab:hasElevationUnit ;
         rr:objectMap [
             rml:reference "elevation_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "elevation_unit != ''"
@@ -64,6 +70,7 @@
         rr:predicate vocab:hasDepthValue ;
         rr:objectMap [
             rml:reference "depth_value" ;
+            rr:datatype xsd:decimal ;
             rr:termType rr:Literal
         ] ;
         rr:condition "depth_value != ''"
@@ -73,6 +80,7 @@
         rr:predicate vocab:hasDepthUnit ;
         rr:objectMap [
             rml:reference "depth_unit" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "depth_unit != ''"

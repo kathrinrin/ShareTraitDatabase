@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#TaxonomicLabelMap>
     rml:logicalSource [
@@ -25,6 +26,7 @@
         rr:predicate vocab:hasNameDate ;
         rr:objectMap [
             rml:reference "name_date" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "name_date != ''"
@@ -34,6 +36,7 @@
         rr:predicate vocab:hasReferenceSource ;
         rr:objectMap [
             rml:reference "reference_source" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "reference_source != ''"
@@ -43,6 +46,7 @@
         rr:predicate vocab:hasVersionTaxa ;
         rr:objectMap [
             rml:reference "version_taxa" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "version_taxa != ''"

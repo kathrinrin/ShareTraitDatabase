@@ -3,6 +3,7 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#> .
 @prefix ql: <http://semweb.mmlab.be/ns/ql#> .
 @prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#PlaceMap>
     rml:logicalSource [
@@ -19,6 +20,7 @@
         rr:predicate vocab:hasPlaceName ;
         rr:objectMap [
             rml:reference "place_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "place_name != ''"
@@ -28,6 +30,7 @@
         rr:predicate vocab:hasLocationName ;
         rr:objectMap [
             rml:reference "location_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "location_name != ''"
@@ -37,6 +40,7 @@
         rr:predicate vocab:hasLocationLabel ;
         rr:objectMap [
             rml:reference "location_label" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "location_label != ''"
@@ -46,6 +50,7 @@
         rr:predicate vocab:hasCountryName ;
         rr:objectMap [
             rml:reference "country_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "country_name != ''"
@@ -55,6 +60,7 @@
         rr:predicate vocab:hasContinentName ;
         rr:objectMap [
             rml:reference "continent_name" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "continent_name != ''"
@@ -64,6 +70,7 @@
         rr:predicate vocab:hasGeonameCountryID ;
         rr:objectMap [
             rml:reference "geoname_countryid" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "geoname_countryid != ''"

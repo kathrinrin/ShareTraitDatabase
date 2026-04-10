@@ -5,6 +5,9 @@
 @prefix vocab: <https://sharetrait.org/vocab/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
 
 <#DatasetMap>
     rml:logicalSource [
@@ -21,6 +24,7 @@
         rr:predicate vocab:hasTitle ;
         rr:objectMap [
             rml:reference "title_dataset" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "title_dataset != '' AND title_dataset != 'NA'"
@@ -30,6 +34,7 @@
         rr:predicate vocab:hasDOI ;
         rr:objectMap [
             rml:reference "doi_dataset" ;
+            rr:datatype xsd:anyURI ;
             rr:termType rr:Literal
         ] ;
         rr:condition "doi_dataset != '' AND doi_dataset != 'NA'"
@@ -39,6 +44,7 @@
         rr:predicate vocab:hasShareTraitDatasetID ;
         rr:objectMap [
             rml:reference "sharetrait_datasetid" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "sharetrait_datasetid != '' AND sharetrait_datasetid != 'NA'"
@@ -47,7 +53,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasReferenceType ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{reference_type}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{reference_type}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "reference_type != '' AND reference_type != 'NA'"
@@ -57,6 +80,7 @@
         rr:predicate vocab:hasDatasetType ;
         rr:objectMap [
             rml:reference "dataset_type" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "dataset_type != '' AND dataset_type != 'NA'"
@@ -66,6 +90,7 @@
         rr:predicate vocab:hasPublisher ;
         rr:objectMap [
             rml:reference "dataset_publisher" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "dataset_publisher != '' AND dataset_publisher != 'NA'"
@@ -94,7 +119,24 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasDatasetTrait ;
         rr:objectMap [
-            rr:template "https://sharetrait.org/concept/{dataset_trait}" ;
+            fnml:functionValue [
+                rr:predicateObjectMap [
+                    rr:predicate fno:executes ;
+                    rr:objectMap [ rr:constant grel:string_replace ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:valueParameter ;
+                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{dataset_trait}" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_find ;
+                    rr:objectMap [ rr:constant "%20" ]
+                ] ;
+                rr:predicateObjectMap [
+                    rr:predicate grel:p_string_replace ;
+                    rr:objectMap [ rr:constant "_" ]
+                ]
+            ] ;
             rr:termType rr:IRI
         ] ;
         rr:condition "dataset_trait != '' AND dataset_trait != 'NA'"
@@ -104,6 +146,7 @@
         rr:predicate vocab:hasDatasetComment ;
         rr:objectMap [
             rml:reference "dataset_comment" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "dataset_comment != '' AND dataset_comment != 'NA'"
@@ -113,6 +156,7 @@
         rr:predicate vocab:hasReferenceComment ;
         rr:objectMap [
             rml:reference "comments_reference" ;
+            rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
         rr:condition "comments_reference != '' AND comments_reference != 'NA'"
