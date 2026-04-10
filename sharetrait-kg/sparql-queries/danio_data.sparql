@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 # danio_data: datasets and trait types for genus Danio
 # Replicates the SQL export "danio_data"
@@ -31,7 +32,8 @@ WHERE {
     vocab:hasIndividual ?individual ;
     vocab:hasTraitType  ?trait_type_iri .
 
-  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
+  ?trait_type_iri skos:prefLabel ?trait_type_raw .
+  BIND(STR(?trait_type_raw) AS ?trait_type)
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
   OPTIONAL { ?measurement vocab:hasTraitValue ?trait_value }

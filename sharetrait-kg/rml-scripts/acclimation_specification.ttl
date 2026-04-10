@@ -23,7 +23,7 @@
             rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "acclimation_mating != ''"
+        rr:condition "acclimation_mating != '' AND acclimation_mating != 'NA'"
     ] ;
 
     rr:predicateObjectMap [
@@ -33,7 +33,7 @@
             rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "acclimation_chamber != ''"
+        rr:condition "acclimation_chamber != '' AND acclimation_chamber != 'NA'"
     ] ;
 
     rr:predicateObjectMap [
@@ -43,5 +43,5 @@
             rr:datatype xsd:string ;
             rr:termType rr:Literal
         ] ;
-        rr:condition "fasting_time != ''"
+        rr:condition "fasting_time != '' AND fasting_time != 'NA'"
     ] .

@@ -57,11 +57,15 @@ done
 ### 2. Concatenate TTL files
 
 Use Python (not `cat`) to guarantee newline separators between files.
-Lines with invalid WKT literals (e.g. `POINT(NA …)`) or invalid typed
-literals (e.g. `"NA"^^xsd:decimal`) are stripped during concatenation so
-they never enter the index. URL-encoded spaces (`%20`) in concept URIs
-are normalised to underscores so that concept IRIs stay readable and
-consistent with the SKOS vocabulary and SHACL shapes.
+Lines with invalid WKT literals (e.g. `POINT(NA …)`), invalid typed
+literals (e.g. `"NA"^^xsd:decimal`), or plain `"NA"` string literals are
+stripped during concatenation so they never enter the index. URL-encoded
+spaces (`%20`) in concept URIs are normalised to underscores as a safety
+net (the RML join-based concept mapping should already produce clean
+CamelCase URIs).
+
+The SKOS vocabulary (`sharetrait-skos.ttl`) is appended to the KG so that
+SPARQL queries can resolve `skos:prefLabel` for concept URIs.
 
 ```bash
 python3 -c "
@@ -69,20 +73,29 @@ import glob, pathlib, re
 files = sorted(glob.glob('sharetrait-kg/ttl-output/*.ttl'))
 bad_wkt = re.compile(r'POINT\([^)]*\bNA\b')
 bad_typed_na = re.compile(r'\"NA\"\^\^<')
+bad_plain_na = re.compile(r'\"NA\" [;.]')
 concept_pct20 = re.compile(r'(https://sharetrait\.org/concept/[^>]*)%20')
+prefix_line = re.compile(r'^@(prefix|base)\s')
 dropped = 0
 with open('sharetrait-kg/sharetrait-kg.ttl', 'w') as out:
+    out.write('@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n')
+    out.write('@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n')
+    out.write('@prefix skos: <http://www.w3.org/2004/02/skos/core#> .\n')
+    out.write('@prefix con: <https://sharetrait.org/concept/> .\n\n')
     for f in files:
         for line in pathlib.Path(f).read_text().splitlines(keepends=True):
-            if bad_wkt.search(line) or bad_typed_na.search(line):
+            if bad_wkt.search(line) or bad_typed_na.search(line) or bad_plain_na.search(line):
                 dropped += 1
             else:
-                # Replace %20 with _ in concept URIs (may occur more than once)
                 while concept_pct20.search(line):
                     line = concept_pct20.sub(r'\1_', line)
                 out.write(line)
         out.write('\n')
-print(f'Concatenated {len(files)} files, dropped {dropped} invalid lines')
+    # Append SKOS vocabulary (skip its @prefix/@base declarations)
+    for line in pathlib.Path('sharetrait-kg/sharetrait-skos.ttl').read_text().splitlines(keepends=True):
+        if not prefix_line.match(line):
+            out.write(line)
+print(f'Concatenated {len(files)} files + SKOS vocab, dropped {dropped} invalid lines')
 "
 ```
 

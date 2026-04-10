@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 # ============================================================
 # Query 1
@@ -23,8 +24,9 @@ WHERE {
     vocab:hasTraitType ?trait_type_iri ;
     vocab:hasIndividual ?individual_iri .
 
-  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
-  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/Development>)
+  ?trait_type_iri skos:prefLabel ?trait_type_raw .
+  BIND(STR(?trait_type_raw) AS ?trait_type)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual_iri .

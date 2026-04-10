@@ -5,9 +5,7 @@
 @prefix vocab: <https://sharetrait.org/vocab/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
-@prefix fno: <https://w3id.org/function/ontology#> .
-@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+
 
 <#PopulationMap>
     rml:logicalSource [
@@ -33,27 +31,12 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasPopulationLabel ;
         rr:objectMap [
-            fnml:functionValue [
-                rr:predicateObjectMap [
-                    rr:predicate fno:executes ;
-                    rr:objectMap [ rr:constant grel:string_replace ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:valueParameter ;
-                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{population_label}" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_find ;
-                    rr:objectMap [ rr:constant "%20" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_replace ;
-                    rr:objectMap [ rr:constant "_" ]
-                ]
-            ] ;
-            rr:termType rr:IRI
-        ] ;
-        rr:condition "population_label != ''"
+            rr:parentTriplesMap <#ConceptLookup> ;
+            rr:joinCondition [
+                rr:child "population_label" ;
+                rr:parent "csv_value"
+            ]
+        ]
     ] ;
 
     rr:predicateObjectMap [
@@ -104,4 +87,14 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "comments != ''"
+    ] .
+
+<#ConceptLookup>
+    rml:logicalSource [
+        rml:source "concept_mapping.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+    rr:subjectMap [
+        rr:template "https://sharetrait.org/concept/{concept_id}" ;
+        rr:termType rr:IRI
     ] .

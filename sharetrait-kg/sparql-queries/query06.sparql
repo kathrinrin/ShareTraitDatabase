@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 # ============================================================
 # Query 6
@@ -19,8 +20,9 @@ WHERE {
   ?dataset a vocab:Dataset ;
     vocab:hasDatasetTrait ?dataset_trait_iri .
 
-  FILTER(?dataset_trait_iri = <https://sharetrait.org/concept/fecundity>)
-  BIND(STRAFTER(STR(?dataset_trait_iri), "concept/") AS ?dataset_trait)
+  FILTER(?dataset_trait_iri = <https://sharetrait.org/concept/Fecundity>)
+  ?dataset_trait_iri skos:prefLabel ?dataset_trait_raw .
+  BIND(STR(?dataset_trait_raw) AS ?dataset_trait)
 
   ?dataset vocab:describesPopulation ?population .
 

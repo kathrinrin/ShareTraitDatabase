@@ -1,4 +1,5 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 # ============================================================
 # Query 5
@@ -33,7 +34,8 @@ WHERE {
     vocab:hasTraitValue     ?trait_value ;
     vocab:hasTraitUnit      ?trait_unit .
 
-  BIND(STRAFTER(STR(?trait_type_iri), "concept/") AS ?trait_type)
+  ?trait_type_iri skos:prefLabel ?trait_type_raw .
+  BIND(STR(?trait_type_raw) AS ?trait_type)
   BIND(STRAFTER(STR(?dataset), "dataset/") AS ?dataset_pk)
 
   OPTIONAL { ?population vocab:hasSpeciesReported ?species_reported }

@@ -5,9 +5,7 @@
 @prefix vocab: <https://sharetrait.org/vocab/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
-@prefix fno: <https://w3id.org/function/ontology#> .
-@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+
 
 <#DatasetMap>
     rml:logicalSource [
@@ -53,27 +51,12 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasReferenceType ;
         rr:objectMap [
-            fnml:functionValue [
-                rr:predicateObjectMap [
-                    rr:predicate fno:executes ;
-                    rr:objectMap [ rr:constant grel:string_replace ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:valueParameter ;
-                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{reference_type}" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_find ;
-                    rr:objectMap [ rr:constant "%20" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_replace ;
-                    rr:objectMap [ rr:constant "_" ]
-                ]
-            ] ;
-            rr:termType rr:IRI
-        ] ;
-        rr:condition "reference_type != '' AND reference_type != 'NA'"
+            rr:parentTriplesMap <#ConceptLookup> ;
+            rr:joinCondition [
+                rr:child "reference_type" ;
+                rr:parent "csv_value"
+            ]
+        ]
     ] ;
 
     rr:predicateObjectMap [
@@ -119,27 +102,12 @@
     rr:predicateObjectMap [
         rr:predicate vocab:hasDatasetTrait ;
         rr:objectMap [
-            fnml:functionValue [
-                rr:predicateObjectMap [
-                    rr:predicate fno:executes ;
-                    rr:objectMap [ rr:constant grel:string_replace ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:valueParameter ;
-                    rr:objectMap [ rr:template "https://sharetrait.org/concept/{dataset_trait}" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_find ;
-                    rr:objectMap [ rr:constant "%20" ]
-                ] ;
-                rr:predicateObjectMap [
-                    rr:predicate grel:p_string_replace ;
-                    rr:objectMap [ rr:constant "_" ]
-                ]
-            ] ;
-            rr:termType rr:IRI
-        ] ;
-        rr:condition "dataset_trait != '' AND dataset_trait != 'NA'"
+            rr:parentTriplesMap <#ConceptLookup> ;
+            rr:joinCondition [
+                rr:child "dataset_trait" ;
+                rr:parent "csv_value"
+            ]
+        ]
     ] ;
 
     rr:predicateObjectMap [
@@ -160,4 +128,14 @@
             rr:termType rr:Literal
         ] ;
         rr:condition "comments_reference != '' AND comments_reference != 'NA'"
+    ] .
+
+<#ConceptLookup>
+    rml:logicalSource [
+        rml:source "concept_mapping.csv" ;
+        rml:referenceFormulation ql:CSV
+    ] ;
+    rr:subjectMap [
+        rr:template "https://sharetrait.org/concept/{concept_id}" ;
+        rr:termType rr:IRI
     ] .

@@ -16,7 +16,7 @@ WHERE {
     vocab:hasTraitValue ?trait_value ;
     vocab:hasIndividual ?individual .
 
-  FILTER(?trait_type_iri = <https://sharetrait.org/concept/development>)
+  FILTER(?trait_type_iri = <https://sharetrait.org/concept/Development>)
 
   ?population a vocab:Population ;
     vocab:containsIndividual ?individual .

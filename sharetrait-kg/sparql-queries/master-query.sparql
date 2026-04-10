@@ -1,5 +1,6 @@
 PREFIX vocab: <https://sharetrait.org/vocab/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 # master-query: full flat export of the ShareTrait knowledge graph
 # Replicates the SQL view master-query-all.
@@ -90,8 +91,11 @@ WHERE {
   # --- optional scalar fields ---
 
   OPTIONAL { ?dataset       vocab:hasDateContribution          ?date_contribution }
-  OPTIONAL { ?dataset       vocab:hasReferenceType             ?reference_type_iri }
-  BIND(IF(BOUND(?reference_type_iri), STRAFTER(STR(?reference_type_iri), "concept/"), ?undef) AS ?reference_type)
+  OPTIONAL {
+    ?dataset vocab:hasReferenceType ?reference_type_iri .
+    ?reference_type_iri skos:prefLabel ?reference_type_raw .
+  }
+  BIND(IF(BOUND(?reference_type_raw), STR(?reference_type_raw), ?undef) AS ?reference_type)
   OPTIONAL { ?dataset       vocab:hasDOI                       ?doi_dataset }
   OPTIONAL { ?dataset       vocab:hasReferenceComment          ?comments_reference }
   OPTIONAL { ?population    vocab:hasSpeciesReported            ?species_reported }
@@ -169,18 +173,27 @@ WHERE {
   OPTIONAL {
     ?measurement vocab:usesTechnique ?technique .
     ?technique a vocab:Technique .
-    OPTIONAL { ?technique vocab:hasMetabolicRateType            ?metabolic_rate_type_iri }
+    OPTIONAL {
+      ?technique vocab:hasMetabolicRateType ?metabolic_rate_type_iri .
+      ?metabolic_rate_type_iri skos:prefLabel ?metabolic_rate_type_raw .
+    }
     OPTIONAL { ?technique vocab:hasSensorType                   ?sensor_type }
     OPTIONAL { ?technique vocab:hasRespirationVolume            ?respiration_volume }
     OPTIONAL { ?technique vocab:hasDelayTime                    ?delay_time }
     OPTIONAL { ?technique vocab:hasRespiratoryChamberMaterial   ?respiratory_chamber_material }
     OPTIONAL { ?technique vocab:hasIncubationTime               ?incubation_time }
-    OPTIONAL { ?technique vocab:hasRespirometryType             ?respirometry_type_iri }
-    OPTIONAL { ?technique vocab:hasBreathingMode                ?breathing_mode_iri }
+    OPTIONAL {
+      ?technique vocab:hasRespirometryType ?respirometry_type_iri .
+      ?respirometry_type_iri skos:prefLabel ?respirometry_type_raw .
+    }
+    OPTIONAL {
+      ?technique vocab:hasBreathingMode ?breathing_mode_iri .
+      ?breathing_mode_iri skos:prefLabel ?breathing_mode_raw .
+    }
   }
-  BIND(IF(BOUND(?metabolic_rate_type_iri), STRAFTER(STR(?metabolic_rate_type_iri), "concept/"), ?undef) AS ?metabolic_rate_type)
-  BIND(IF(BOUND(?respirometry_type_iri), REPLACE(STRAFTER(STR(?respirometry_type_iri), "concept/"), "%20", " "), ?undef) AS ?respirometry_type)
-  BIND(IF(BOUND(?breathing_mode_iri), STRAFTER(STR(?breathing_mode_iri), "concept/"), ?undef) AS ?breathing_mode)
+  BIND(IF(BOUND(?metabolic_rate_type_raw), STR(?metabolic_rate_type_raw), ?undef) AS ?metabolic_rate_type)
+  BIND(IF(BOUND(?respirometry_type_raw), STR(?respirometry_type_raw), ?undef) AS ?respirometry_type)
+  BIND(IF(BOUND(?breathing_mode_raw), STR(?breathing_mode_raw), ?undef) AS ?breathing_mode)
 
   # acclimation specification (via acclimation_describe junction)
   OPTIONAL {
