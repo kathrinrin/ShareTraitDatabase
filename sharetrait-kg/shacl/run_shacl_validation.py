@@ -1,23 +1,29 @@
 """Run SHACL validation on the ShareTrait KG."""
+from pathlib import Path
+
 from pyshacl import validate
 from rdflib import Graph
 
+# Resolve paths relative to this script's location (sharetrait-kg/shacl/)
+HERE = Path(__file__).resolve().parent
+KG_DIR = HERE.parent  # sharetrait-kg/
+
 print("Loading KG data graph...", flush=True)
 data_graph = Graph()
-data_graph.parse("sharetrait-kg.ttl", format="turtle")
+data_graph.parse(KG_DIR / "sharetrait-kg.ttl", format="turtle")
 print(f"  Data graph loaded: {len(data_graph)} triples", flush=True)
 
-data_graph.parse("sharetrait-skos.ttl", format="turtle")
+data_graph.parse(KG_DIR / "sharetrait-skos.ttl", format="turtle")
 print(f"  + SKOS vocab loaded: {len(data_graph)} triples total", flush=True)
 
 print("Loading SHACL shapes (OWL)...", flush=True)
 shapes_owl = Graph()
-shapes_owl.parse("sharetrait-shacl.ttl", format="turtle")
+shapes_owl.parse(HERE / "sharetrait-shacl.ttl", format="turtle")
 print(f"  OWL shapes: {len(shapes_owl)} triples", flush=True)
 
 print("Loading SHACL shapes (SKOS)...", flush=True)
 shapes_skos = Graph()
-shapes_skos.parse("sharetrait-skos-shacl.ttl", format="turtle")
+shapes_skos.parse(HERE / "sharetrait-skos-shacl.ttl", format="turtle")
 print(f"  SKOS shapes: {len(shapes_skos)} triples", flush=True)
 
 shapes_graph = shapes_owl + shapes_skos
@@ -39,7 +45,7 @@ print(f"Conforms: {conforms}")
 print("=" * 60)
 print(results_text[:20000])
 
-results_graph.serialize("sharetrait-shacl-report.ttl", format="turtle")
-with open("sharetrait-shacl-report.txt", "w") as f:
+results_graph.serialize(HERE / "sharetrait-shacl-report.ttl", format="turtle")
+with open(HERE / "sharetrait-shacl-report.txt", "w") as f:
     f.write(results_text)
-print(f"Full report saved to sharetrait-shacl-report.ttl and sharetrait-shacl-report.txt")
+print(f"Full report saved to shacl/sharetrait-shacl-report.ttl and shacl/sharetrait-shacl-report.txt")
