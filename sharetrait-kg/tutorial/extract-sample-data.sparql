@@ -1,0 +1,86 @@
+# SPARQL CONSTRUCT — Extract 6 sample measurements from the ShareTrait KG
+# and map them to the tutorial trait ontology classes.
+#
+# Run against sharetrait-kg.ttl (e.g., in QLever or rdflib).
+# Output: Turtle triples using the tutorial ontology namespace.
+#
+# Chain in the KG:
+#   Measurement → hasIndividual → Individual
+#   Population  → containsIndividual → Individual
+#   Taxonomy    → labelsPopulation   → Population
+#   Population  → occurredAt         → Site
+#   Measurement → hasCondition (where hasMethodCheck = "test") → Condition
+#   Measurement → usesTechnique      → Technique
+#   Measurement → hasTraitType       → concept (Development | MetabolicRate | Fecundity)
+
+PREFIX vocab: <https://sharetrait.org/vocab/>
+PREFIX concept: <https://sharetrait.org/concept/>
+PREFIX t:     <http://sharetrait.org/ontologies/traits#>
+PREFIX owl:   <http://www.w3.org/2002/07/owl#>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+    ?tInd  a owl:NamedIndividual , t:TraitMeasurement ;
+           t:measuresTraitType      ?traitClass ;
+           t:measuredOnOrganism     ?orgInd ;
+           t:hasExperimentalCondition t:TestConditionInstance ;
+           t:hasTemperatureRange    ?tempClass ;
+           t:hasTraitValue          ?traitValue .
+
+    ?orgInd a owl:NamedIndividual , ?orgClass ;
+            t:hasScientificName     ?sciName .
+}
+WHERE {
+    # ── Pick exactly these 6 measurements ────────────────────────────
+    VALUES ?mea {
+        <https://sharetrait.org/measurement/TRAMEA000001>    # Aphidius platensis, development, 10 °C
+        <https://sharetrait.org/measurement/TRAMEA000002>    # Aphidius platensis, development, 10 °C
+        <https://sharetrait.org/measurement/TRAMEA022189>    # Danio rerio, metabolic rate, 26 °C
+        <https://sharetrait.org/measurement/TRAMEA003743>    # Rana temporaria, development, 18 °C
+        <https://sharetrait.org/measurement/TRAMEA004493>    # Drosophila melanogaster, development, 20 °C
+        <https://sharetrait.org/measurement/TRAMEA021190>    # Drosophila subobscura, fecundity, 21 °C
+    }
+
+    # ── Measurement → trait value and trait type concept ─────────────
+    ?mea  a                    vocab:Measurement ;
+          vocab:hasTraitValue  ?traitValue ;
+          vocab:hasTraitType   ?traitConcept ;
+          vocab:hasIndividual  ?ind .
+
+    # ── Individual → Population → Taxonomy (scientific name) ────────
+    ?pop  vocab:containsIndividual ?ind .
+    ?tax  vocab:labelsPopulation   ?pop ;
+          vocab:hasScientificName  ?sciName .
+
+    # ── Test condition → temperature ────────────────────────────────
+    ?mea  vocab:hasCondition       ?cond .
+    ?cond vocab:hasMethodCheck     "test" ;
+          vocab:hasTemperature     ?temp .
+
+    # ── Map KG trait-type concepts → ontology classes ───────────────
+    VALUES (?traitConcept ?traitClass) {
+        (concept:Development   t:DevelopmentTrait)
+        (concept:MetabolicRate t:MetabolicRateTrait)
+        (concept:Fecundity     t:FecundityTrait)
+    }
+
+    # ── Map temperature → TemperatureRange class ────────────────────
+    BIND(
+        IF(?temp < 15, t:Cold,
+        IF(?temp < 25, t:Warm,
+                       t:Hot)) AS ?tempClass
+    )
+
+    # ── Map species → organism class ────────────────────────────────
+    BIND(
+        IF(CONTAINS(?sciName, "Aphidius"),    t:ParasitoidWasp,
+        IF(CONTAINS(?sciName, "Danio"),       t:Fish,
+        IF(CONTAINS(?sciName, "Rana"),         t:Amphibian,
+        IF(CONTAINS(?sciName, "Drosophila"),   t:FruitFly,
+                                               t:Organism)))) AS ?orgClass
+    )
+
+    # ── Mint IRIs for constructed individuals ───────────────────────
+    BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#measurement_", STRAFTER(STR(?mea), "TRAMEA"))) AS ?tInd)
+    BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#organism_",    STRAFTER(STR(?sciName), " "))) AS ?orgInd)
+}

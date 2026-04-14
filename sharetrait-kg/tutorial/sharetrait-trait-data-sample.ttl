@@ -1,0 +1,106 @@
+@prefix : <http://sharetrait.org/ontologies/traits#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://sharetrait.org/ontologies/traits> .
+
+# ==============================================================
+#  Sample data extracted from the ShareTrait Knowledge Graph
+#  mapped to the trait ontology classes for Protégé reasoning.
+#
+#  Source: sharetrait-kg.ttl via CONSTRUCT query
+#          (see extract-sample-data.sparql)
+#
+#  These 6 records are real measurements. Each individual is typed
+#  ONLY as TraitMeasurement. The reasoner must infer the rest.
+# ==============================================================
+
+
+# ── Value-partition individuals ──────────────────────────────────
+# (instances of the value-partition classes)
+
+:cold1  a owl:NamedIndividual , :Cold .
+:warm1  a owl:NamedIndividual , :Warm .
+:hot1   a owl:NamedIndividual , :Hot .
+
+
+# ── Trait-type individuals ───────────────────────────────────────
+
+:devTrait   a owl:NamedIndividual , :DevelopmentTrait .
+:fecTrait   a owl:NamedIndividual , :FecundityTrait .
+:mrTrait    a owl:NamedIndividual , :MetabolicRateTrait .
+
+
+
+# ── Organism individuals ─────────────────────────────────────────
+# (the four from the ontology, plus D. subobscura)
+
+:DsubObscura a owl:NamedIndividual , :FruitFly ;
+    :hasScientificName "Drosophila subobscura" .
+
+
+# ══════════════════════════════════════════════════════════════════
+#  Measurements: typed ONLY as :TraitMeasurement
+#  The reasoner should infer defined-class memberships.
+# ══════════════════════════════════════════════════════════════════
+
+
+# ── TRAMEA000001: Aphidius platensis, development, 10 °C ────────
+# KG source: measurement/TRAMEA000001
+
+:measurement_aph_001 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :devTrait ;
+    :measuredOnOrganism       :AphidiusPlatensis ;
+    :hasTemperatureRange      :cold1 ;
+    :hasTraitValue            39.0 .
+
+
+# ── TRAMEA000002: Aphidius platensis, development, 10 °C ────────
+# KG source: measurement/TRAMEA000002
+
+:measurement_aph_002 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :devTrait ;
+    :measuredOnOrganism       :AphidiusPlatensis ;
+    :hasTemperatureRange      :cold1 ;
+    :hasTraitValue            46.0 .
+
+
+# ── TRAMEA022189: Danio rerio, metabolic rate, 26 °C ────────────
+# KG source: measurement/TRAMEA022189
+
+:measurement_dre_001 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :mrTrait ;
+    :measuredOnOrganism       :DanioRerio ;
+    :hasTemperatureRange      :hot1 ;
+    :hasTraitValue            0.048 .
+
+
+# ── TRAMEA003743: Rana temporaria, development, 18 °C ───────────
+# KG source: measurement/TRAMEA003743
+
+:measurement_rana_001 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :devTrait ;
+    :measuredOnOrganism       :RanaTemporaria ;
+    :hasTemperatureRange      :warm1 ;
+    :hasTraitValue            35.0 .
+
+
+# ── TRAMEA004493: Drosophila melanogaster, development, 20 °C ───
+# KG source: measurement/TRAMEA004493
+
+:measurement_dmel_001 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :devTrait ;
+    :measuredOnOrganism       :DrosophilaMelanogaster ;
+    :hasTemperatureRange      :warm1 ;
+    :hasTraitValue            16.0 .
+
+
+# ── TRAMEA021190: Drosophila subobscura, fecundity, 21 °C ───────
+# KG source: measurement/TRAMEA021190
+
+:measurement_dsub_001 a owl:NamedIndividual , :TraitMeasurement ;
+    :measuresTraitType        :fecTrait ;
+    :measuredOnOrganism       :DsubObscura ;
+    :hasTemperatureRange      :warm1 ;
+    :hasTraitValue            185.0 .

@@ -1,0 +1,223 @@
+@prefix : <http://sharetrait.org/ontologies/traits#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@base <http://sharetrait.org/ontologies/traits> .
+
+
+# ==============================================================
+#  ShareTrait Traits Ontology
+# ==============================================================
+
+<http://sharetrait.org/ontologies/traits> a owl:Ontology ;
+    dc:title "ShareTrait Traits Ontology"@en ;
+    dc:description "Functional-trait measurement ontology for ecological research."@en ;
+    terms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "1.0.0" .
+
+dc:title a owl:AnnotationProperty .
+dc:description a owl:AnnotationProperty .
+terms:license a owl:AnnotationProperty .
+skos:closeMatch a owl:AnnotationProperty .
+
+
+# ==============================================================
+#  Object Properties
+# ==============================================================
+
+:hasComponent a owl:ObjectProperty .
+:isComponentOf a owl:ObjectProperty ; owl:inverseOf :hasComponent .
+
+:measuresTraitType a owl:ObjectProperty ;
+    rdfs:subPropertyOf :hasComponent ;
+    rdfs:domain :TraitMeasurement ; rdfs:range :TraitType .
+
+:isTraitTypeOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf :isComponentOf ; owl:inverseOf :measuresTraitType .
+
+:measuredOnOrganism a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:subPropertyOf :hasComponent ;
+    rdfs:domain :TraitMeasurement ; rdfs:range :Organism .
+
+:isOrganismOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf :isComponentOf ; owl:inverseOf :measuredOnOrganism .
+
+:hasTemperatureRange a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :TraitMeasurement ; rdfs:range :TemperatureRange .
+
+:hasRealm a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :Organism ; rdfs:range :Realm .
+
+
+# ==============================================================
+#  Data Properties
+# ==============================================================
+
+:hasTraitValue     a owl:DatatypeProperty ; rdfs:domain :TraitMeasurement ; rdfs:range xsd:decimal .
+:hasScientificName a owl:DatatypeProperty ; rdfs:domain :Organism ; rdfs:range xsd:string .
+
+
+# ==============================================================
+#  Top Hierarchy
+# ==============================================================
+
+:IndependentEntity a owl:Class ;
+    owl:disjointWith :ValuePartition .
+
+:ValuePartition a owl:Class .
+
+
+# ==============================================================
+#  Independent Entities
+# ==============================================================
+
+:TraitMeasurement a owl:Class ; rdfs:subClassOf :IndependentEntity .
+:TraitType        a owl:Class ; rdfs:subClassOf :IndependentEntity .
+:Organism         a owl:Class ; rdfs:subClassOf :IndependentEntity .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :TraitMeasurement :TraitType :Organism ) .
+
+
+# ==============================================================
+#  TraitType branch
+# ==============================================================
+
+:DevelopmentTrait a owl:Class ;
+    rdfs:subClassOf :TraitType ;
+    skos:closeMatch <http://purl.obolibrary.org/obo/PATO_0001309> .
+
+:FecundityTrait a owl:Class ;
+    rdfs:subClassOf :TraitType ;
+    skos:closeMatch <http://purl.obolibrary.org/obo/PATO_0000273> .
+
+:MetabolicRateTrait a owl:Class ;
+    rdfs:subClassOf :TraitType ;
+    skos:closeMatch <http://purl.obolibrary.org/obo/PATO_0001413> .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :DevelopmentTrait :FecundityTrait :MetabolicRateTrait ) .
+
+
+# ==============================================================
+#  Organism branch
+# ==============================================================
+
+:Insect a owl:Class ;
+    rdfs:subClassOf :Organism ,
+        [ a owl:Restriction ; owl:onProperty :hasRealm ; owl:someValuesFrom :Terrestrial ] .
+
+:ParasitoidWasp a owl:Class ; rdfs:subClassOf :Insect .
+:FruitFly       a owl:Class ; rdfs:subClassOf :Insect .
+
+[] a owl:AllDisjointClasses ; owl:members ( :ParasitoidWasp :FruitFly ) .
+
+:Amphibian a owl:Class ; rdfs:subClassOf :Organism .
+
+:Fish a owl:Class ;
+    rdfs:subClassOf :Organism ,
+        [ a owl:Restriction ; owl:onProperty :hasRealm ; owl:someValuesFrom :Aquatic ] .
+
+[] a owl:AllDisjointClasses ; owl:members ( :Insect :Amphibian :Fish ) .
+
+
+# ==============================================================
+#  Value Partitions (covering axiom + disjoint)
+# ==============================================================
+
+# ---- TemperatureRange ----
+
+:TemperatureRange a owl:Class ;
+    rdfs:subClassOf :ValuePartition ;
+    owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Cold :Warm :Hot ) ] .
+
+:Cold a owl:Class ; rdfs:subClassOf :TemperatureRange .
+:Warm a owl:Class ; rdfs:subClassOf :TemperatureRange .
+:Hot  a owl:Class ; rdfs:subClassOf :TemperatureRange .
+
+[] a owl:AllDisjointClasses ; owl:members ( :Cold :Warm :Hot ) .
+
+# ---- Realm ----
+
+:Realm a owl:Class ;
+    rdfs:subClassOf :ValuePartition ;
+    owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Terrestrial :Aquatic ) ] .
+
+:Terrestrial a owl:Class ; rdfs:subClassOf :Realm ; owl:disjointWith :Aquatic .
+:Aquatic     a owl:Class ; rdfs:subClassOf :Realm .
+
+
+# ==============================================================
+#  Named Trait Measurements
+# ==============================================================
+
+:AphidiusDevelopmentAssay a owl:Class ;
+    rdfs:subClassOf :TraitMeasurement ,
+        [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:someValuesFrom :DevelopmentTrait ] ,
+        [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :ParasitoidWasp ] ,
+        [ a owl:Restriction ; owl:onProperty :hasTemperatureRange ; owl:someValuesFrom :Cold ] ,
+        [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:allValuesFrom :DevelopmentTrait ] .
+
+:ZebrafishMetabolicAssay a owl:Class ;
+    rdfs:subClassOf :TraitMeasurement ,
+        [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:someValuesFrom :MetabolicRateTrait ] ,
+        [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Fish ] ,
+        [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:allValuesFrom :MetabolicRateTrait ] .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :AphidiusDevelopmentAssay :ZebrafishMetabolicAssay ) .
+
+
+# ==============================================================
+#  Defined (Equivalent) Classes
+# ==============================================================
+
+:AquaticTraitMeasurement a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+        owl:intersectionOf ( :TraitMeasurement
+            [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ;
+              owl:someValuesFrom [ a owl:Class ;
+                  owl:intersectionOf ( :Organism
+                      [ a owl:Restriction ; owl:onProperty :hasRealm ; owl:someValuesFrom :Aquatic ] ) ] ] ) ] .
+
+:ColdExposureMeasurement a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+        owl:intersectionOf ( :TraitMeasurement
+            [ a owl:Restriction ; owl:onProperty :hasTemperatureRange ; owl:someValuesFrom :Cold ] ) ] .
+
+:InsectTraitMeasurement a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+        owl:intersectionOf ( :TraitMeasurement
+            [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Insect ] ) ] .
+
+
+# ==============================================================
+#  Probe Classes
+# ==============================================================
+
+:InconsistentDevelopmentMetabolism a owl:Class ;
+    rdfs:subClassOf :DevelopmentTrait , :MetabolicRateTrait ;
+    rdfs:comment "Intentionally unsatisfiable: disjoint parents."@en .
+
+:UnclosedTraitMeasurement a owl:Class ;
+    rdfs:subClassOf :TraitMeasurement ,
+        [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:someValuesFrom :DevelopmentTrait ] ,
+        [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Insect ] ;
+    rdfs:comment "No closure axiom: cannot be fully classified by reasoner."@en .
+
+
+# ==============================================================
+#  Individuals
+# ==============================================================
+
+:DanioRerio             a owl:NamedIndividual , :Fish ;          :hasScientificName "Danio rerio" .
+:AphidiusPlatensis      a owl:NamedIndividual , :ParasitoidWasp ; :hasScientificName "Aphidius platensis" .
+:RanaTemporaria         a owl:NamedIndividual , :Amphibian ;     :hasScientificName "Rana temporaria" .
+:DrosophilaMelanogaster a owl:NamedIndividual , :FruitFly ;      :hasScientificName "Drosophila melanogaster" .
+
+[] a owl:AllDifferent ;
+    owl:distinctMembers ( :DanioRerio :AphidiusPlatensis :RanaTemporaria :DrosophilaMelanogaster ) .
