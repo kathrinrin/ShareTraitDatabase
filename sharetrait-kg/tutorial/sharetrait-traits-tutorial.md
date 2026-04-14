@@ -53,8 +53,8 @@ Build the full class tree. Right-click a class and select **Add subclass** to cr
 owl:Thing
 ├── IndependentEntity
 │   ├── TraitMeasurement
-│   │   ├── AphidiusDevelopmentAssay
-│   │   └── ZebrafishMetabolicAssay
+│   │   ├── AphidiusDevelopmentStudy
+│   │   └── ZebrafishMetabolicStudy
 │   ├── TraitType
 │   │   ├── DevelopmentTrait
 │   │   ├── FecundityTrait
@@ -97,7 +97,7 @@ Add disjoints for these groups:
 | `Insect` | `ParasitoidWasp`, `FruitFly` |
 | `TemperatureRange` | `Cold`, `Warm`, `Hot` |
 | `Realm` | `Terrestrial`, `Aquatic` |
-| `TraitMeasurement` | `AphidiusDevelopmentAssay`, `ZebrafishMetabolicAssay` |
+| `TraitMeasurement` | `AphidiusDevelopmentStudy`, `ZebrafishMetabolicStudy` |
 
 We will test these disjoints later with a probe class.
 
@@ -159,9 +159,9 @@ We leave `Amphibian` without a realm restriction on purpose. Frogs live in water
 
 ### Step 6: Named measurements with `some` and `only` (8 min)
 
-This is the key step. Select each assay class and add these **SubClass Of** restrictions:
+This is the key step. Select each study class and add these **SubClass Of** restrictions:
 
-**AphidiusDevelopmentAssay:**
+**AphidiusDevelopmentStudy:**
 ```
 measuresTraitType some DevelopmentTrait
 measuredOnOrganism some ParasitoidWasp
@@ -169,7 +169,7 @@ hasTemperatureRange some Cold
 measuresTraitType only DevelopmentTrait
 ```
 
-**ZebrafishMetabolicAssay:**
+**ZebrafishMetabolicStudy:**
 ```
 measuresTraitType some MetabolicRateTrait
 measuredOnOrganism some Fish
@@ -205,13 +205,13 @@ TraitMeasurement and (hasTemperatureRange some Cold)
 TraitMeasurement and (measuredOnOrganism some Insect)
 ```
 
-Before running the reasoner, predict which assays end up where:
+Before running the reasoner, predict which studies end up where:
 
 | Defined class | Expected member |
 |---|---|
-| `AquaticTraitMeasurement` | `ZebrafishMetabolicAssay` (fish are aquatic) |
-| `ColdExposureMeasurement` | `AphidiusDevelopmentAssay` (cold temperature) |
-| `InsectTraitMeasurement` | `AphidiusDevelopmentAssay` (parasitoid wasp is an insect) |
+| `AquaticTraitMeasurement` | `ZebrafishMetabolicStudy` (fish are aquatic) |
+| `ColdExposureMeasurement` | `AphidiusDevelopmentStudy` (cold temperature) |
+| `InsectTraitMeasurement` | `AphidiusDevelopmentStudy` (parasitoid wasp is an insect) |
 
 ---
 
@@ -221,14 +221,13 @@ Two quick tests to check your understanding.
 
 **InconsistentDevelopmentMetabolism:** Create a class that is a subclass of both `DevelopmentTrait` and `MetabolicRateTrait`. Since they are disjoint, the reasoner will flag this in red. Disjoint axioms catch modelling errors.
 
-**UnclosedTraitMeasurement:** Create a class with these **SubClass Of** restrictions:
+**UnclosedTraitMeasurement:** Create a class under `TraitMeasurement` and add these **SubClass Of** restrictions:
 ```
-TraitMeasurement
-and (measuresTraitType some DevelopmentTrait)
-and (measuredOnOrganism some Insect)
+measuresTraitType some DevelopmentTrait
+measuredOnOrganism some Insect
 ```
 
-Do **not** add a closure axiom. This class will not be fully classified. Compare it with `AphidiusDevelopmentAssay` to see why closure matters.
+Do **not** add a closure axiom. This class will not be fully classified. Compare it with `AphidiusDevelopmentStudy` to see why closure matters.
 
 ---
 
@@ -253,7 +252,7 @@ Go to **Reasoner > HermiT** (or Pellet), then **Reasoner > Start reasoner**.
 
 Check these results:
 
-1. **Inferred hierarchy.** Switch to the **Inferred** tab in the class hierarchy. `ZebrafishMetabolicAssay` should appear under `AquaticTraitMeasurement`. `AphidiusDevelopmentAssay` should appear under both `ColdExposureMeasurement` and `InsectTraitMeasurement`.
+1. **Inferred hierarchy.** Switch to the **Inferred** tab in the class hierarchy. `ZebrafishMetabolicStudy` should appear under `AquaticTraitMeasurement`. `AphidiusDevelopmentStudy` should appear under both `ColdExposureMeasurement` and `InsectTraitMeasurement`.
 
 2. **Red class.** `InconsistentDevelopmentMetabolism` is highlighted in red (equivalent to `owl:Nothing`).
 
@@ -301,15 +300,15 @@ Each measurement is typed **only** as `:TraitMeasurement`. No manual classificat
 
 1. Open your ontology from Part 2 (or the provided `sharetrait-trait-ontology.ttl`).
 
-2. Open the sample data: **File > Open** `sharetrait-trait-data-sample.ttl`. Since both files share the same namespace, Protege merges them.
+2. Append the sample data to your ontology file: copy the contents of `sharetrait-trait-data-sample.ttl` and paste them at the end of `sharetrait-trait-ontology.ttl`. Both files use the same namespace, so this works directly.
 
-   Alternatively, copy the sample data into the end of your ontology file before opening.
+3. Re-open the combined file in Protege: **File > Open** `sharetrait-trait-ontology.ttl`.
 
-3. Check the **Individuals** tab. You should see the four organism individuals from Part 2, plus the new measurement individuals and supporting individuals (`devTrait`, `cold1`, etc.).
+4. Check the **Individuals** tab. You should see the four organism individuals from Part 2, plus the new measurement individuals and supporting individuals (`devTrait`, `cold1`, etc.).
 
-4. **Reasoner > HermiT > Start reasoner**.
+5. **Reasoner > HermiT > Start reasoner**.
 
-5. Select each measurement individual and check **Inferred Types** in the Description panel.
+6. Select each measurement individual and check **Inferred Types** in the Description panel.
 
 ### Results
 
@@ -325,7 +324,7 @@ The reasoner classifies the measurements without any manual labels:
 6 measurements, 8 inferred classifications, 0 manual labels
 ```
 
-This scales to the full knowledge graph. The ShareTrait KG lives in [QLever](https://github.com/ad-freiburg/qlever); loading the ontology alongside the data lets SPARQL queries use the inferred classifications.
+This scales to the full knowledge graph. The ShareTrait KG lives in [QLever](https://github.com/ad-freiburg/qlever) for SPARQL querying. QLever itself does not do OWL reasoning. You run the reasoner in Protege first, export the inferred triples, and then load everything into QLever for querying.
 
 ---
 
@@ -335,36 +334,25 @@ Now that you know how to build an ontology from scratch, you know how to read an
 
 ### Replace, don't rebuild
 
-The classes we built today have equivalents in established ontologies:
+Some of the trait classes we built today already exist in [PATO](http://purl.obolibrary.org/obo/pato.owl) (Phenotypic Quality Ontology):
 
-| Our class | Replace with | URI |
-|---|---|---|
-| `DevelopmentTrait` | PATO "developmental process" | `PATO:0001309` |
-| `FecundityTrait` | PATO "fecundity" | `PATO:0000273` |
-| `MetabolicRateTrait` | PATO "metabolic rate" | `PATO:0001413` |
-| `Fish` | NCBI Taxonomy "Actinopteri" | `NCBITaxon:7898` |
-| `Insect` | NCBI Taxonomy "Insecta" | `NCBITaxon:50557` |
-| `Aquatic` | ENVO "aquatic biome" | `ENVO:00002030` |
+| Our class | PATO term | URI | Notes |
+|---|---|---|---|
+| `FecundityTrait` | "fecundity" | `PATO:0000273` | Exact match |
+| `MetabolicRateTrait` | "rate" | `PATO:0000161` | Too broad (PATO defines rate as "occurrence per unit time" in general) |
+| `DevelopmentTrait` | -- | -- | No direct PATO term; development time combines a process with a duration |
 
-In practice, you replace local URIs with external ones directly rather than importing entire ontologies. Your data uses the real URIs; your restrictions reference those URIs.
+Not everything maps cleanly. `DevelopmentTrait` has no single PATO equivalent because development time combines a biological process with a temporal quality. That is normal: you will often need to combine terms from several ontologies, or keep some local terms where no good match exists.
+
+In practice, you use the external URI directly instead of inventing your own. For example, instead of defining a local `FecundityTrait` class, you use `http://purl.obolibrary.org/obo/PATO_0000273` in your data and restrictions. No need to import the entire PATO ontology.
 
 Where to find terms:
 - [OBO Foundry](http://obofoundry.org/) for curated bio-ontologies
-- [BioPortal](https://bioportal.bioontology.org/) to browse 1,000+ ontologies
-- [Ontology Lookup Service](https://www.ebi.ac.uk/ols4/) to search across ontologies
-
-### Validate with SHACL
-
-Once you replace local classes with external URIs, you need a way to describe and enforce the expected structure of your data. That is what SHACL (Shapes Constraint Language) does.
-
-SHACL shapes define rules like:
-- Every `TraitMeasurement` must have exactly one `measuresTraitType`
-- The value of `measuredOnOrganism` must be an instance of a known organism class
-- `hasTraitValue` must be a decimal
-
-This is complementary to OWL reasoning. OWL tells you what *can be inferred*. SHACL tells you what *must be present*. We already use SHACL shapes in the ShareTrait project to validate the full knowledge graph.
+- [Ontology Lookup Service (OLS)](https://www.ebi.ac.uk/ols4/) to search individual terms across 1,000+ ontologies
 
 ### The pipeline
+
+The full pipeline from CSV to queryable knowledge graph is documented in the [sharetrait-kg README](../README.md).
 
 ```
 Spreadsheet / Database
@@ -376,17 +364,13 @@ Spreadsheet / Database
    Knowledge Graph        (RDF with external ontology URIs)
         |
         v
-   SHACL Validation       (check structure and completeness)
-        |
-        v
-   SPARQL + Reasoning     (query with inferred facts)
+   SPARQL Querying        (QLever)
 ```
 
 | Step | Tool |
 |---|---|
 | Mapping | [RML.io](https://rml.io/) / [YARRRML](https://rml.io/yarrrml/) |
 | Storing and querying | [QLever](https://github.com/ad-freiburg/qlever) |
-| Validation | [pySHACL](https://github.com/RDFLib/pySHACL) |
 | Reasoning | HermiT / Pellet (in Protege) |
 
 You do not need to become an ontology engineer. The skills from this tutorial are exactly what you need to read, evaluate, and reuse the ontologies that already exist.
