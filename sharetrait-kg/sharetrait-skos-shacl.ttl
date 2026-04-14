@@ -1,0 +1,223 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix con:  <https://sharetrait.org/concept/> .
+@prefix shape: <https://sharetrait.org/shape/skos/> .
+@base <https://sharetrait.org/shape/skos/> .
+
+# ──────────────────────────────────────────────
+# ShareTrait SKOS SHACL Shapes
+# Validates the controlled vocabularies defined in sharetrait-skos.ttl.
+# ──────────────────────────────────────────────
+
+# ═══════════════════════════════════════════════
+# Generic ConceptScheme shape
+# ═══════════════════════════════════════════════
+
+shape:ConceptSchemeShape a sh:NodeShape ;
+    sh:targetClass skos:ConceptScheme ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "ConceptScheme shape"@en ;
+    rdfs:comment "Every SKOS ConceptScheme must have a label and a comment."@en ;
+
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype rdf:langString ;
+        sh:name "label" ;
+        sh:message "A ConceptScheme must have at least one rdfs:label." ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:datatype rdf:langString ;
+        sh:name "comment" ;
+        sh:message "A ConceptScheme must have at least one rdfs:comment." ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Generic Concept shape
+# ═══════════════════════════════════════════════
+
+shape:ConceptShape a sh:NodeShape ;
+    sh:targetClass skos:Concept ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Concept shape"@en ;
+    rdfs:comment "Every SKOS Concept must belong to a scheme, have a prefLabel, and a definition."@en ;
+
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class skos:ConceptScheme ;
+        sh:nodeKind sh:IRI ;
+        sh:name "in scheme" ;
+        sh:message "A Concept must belong to exactly one ConceptScheme via skos:inScheme." ;
+    ] ;
+    sh:property [
+        sh:path skos:prefLabel ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype rdf:langString ;
+        sh:name "preferred label" ;
+        sh:message "A Concept must have exactly one skos:prefLabel." ;
+    ] ;
+    sh:property [
+        sh:path skos:definition ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype rdf:langString ;
+        sh:name "definition" ;
+        sh:message "A Concept must have exactly one skos:definition." ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Per-scheme membership shapes
+# Validate that each concept belongs to the correct scheme.
+# ═══════════════════════════════════════════════
+
+# --- Trait Type ---
+
+shape:TraitTypeConceptShape a sh:NodeShape ;
+    sh:targetNode con:Development, con:Fecundity, con:MetabolicRate ;
+    rdfs:label "Trait type concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:TraitTypeScheme ;
+        sh:name "trait type scheme membership" ;
+        sh:message "Trait type concepts must belong to con:TraitTypeScheme." ;
+    ] .
+
+# --- Trait Category ---
+
+shape:TraitCategoryConceptShape a sh:NodeShape ;
+    sh:targetNode con:Functional ;
+    rdfs:label "Trait category concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:TraitCategoryScheme ;
+        sh:name "trait category scheme membership" ;
+        sh:message "Trait category concepts must belong to con:TraitCategoryScheme." ;
+    ] .
+
+# --- Condition Label ---
+
+shape:ConditionLabelConceptShape a sh:NodeShape ;
+    sh:targetNode con:TestCondition, con:MaintenanceCondition, con:AcclimationCondition ;
+    rdfs:label "Condition label concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:ConditionLabelScheme ;
+        sh:name "condition label scheme membership" ;
+        sh:message "Condition label concepts must belong to con:ConditionLabelScheme." ;
+    ] .
+
+# --- Population Label ---
+
+shape:PopulationLabelConceptShape a sh:NodeShape ;
+    sh:targetNode con:IndividualMeasure, con:PopulationMeasure ;
+    rdfs:label "Population label concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:PopulationLabelScheme ;
+        sh:name "population label scheme membership" ;
+        sh:message "Population label concepts must belong to con:PopulationLabelScheme." ;
+    ] .
+
+# --- Reference Type ---
+
+shape:ReferenceTypeConceptShape a sh:NodeShape ;
+    sh:targetNode con:PrimaryReference, con:SecondaryReference ;
+    rdfs:label "Reference type concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:ReferenceTypeScheme ;
+        sh:name "reference type scheme membership" ;
+        sh:message "Reference type concepts must belong to con:ReferenceTypeScheme." ;
+    ] .
+
+# --- Individual Type ---
+
+shape:IndividualTypeConceptShape a sh:NodeShape ;
+    sh:targetNode con:ParentType, con:OffspringType ;
+    rdfs:label "Individual type concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:IndividualTypeScheme ;
+        sh:name "individual type scheme membership" ;
+        sh:message "Individual type concepts must belong to con:IndividualTypeScheme." ;
+    ] .
+
+# --- Location Label ---
+
+shape:LocationLabelConceptShape a sh:NodeShape ;
+    sh:targetNode con:CommentBased, con:GpsBased ;
+    rdfs:label "Location label concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:LocationLabelScheme ;
+        sh:name "location label scheme membership" ;
+        sh:message "Location label concepts must belong to con:LocationLabelScheme." ;
+    ] .
+
+# --- Origin ---
+
+shape:OriginConceptShape a sh:NodeShape ;
+    sh:targetNode con:FieldOrigin ;
+    rdfs:label "Origin concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:OriginScheme ;
+        sh:name "origin scheme membership" ;
+        sh:message "Origin concepts must belong to con:OriginScheme." ;
+    ] .
+
+# --- Realm ---
+
+shape:RealmConceptShape a sh:NodeShape ;
+    sh:targetNode con:Terrestrial, con:Aquatic ;
+    rdfs:label "Realm concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:RealmScheme ;
+        sh:name "realm scheme membership" ;
+        sh:message "Realm concepts must belong to con:RealmScheme." ;
+    ] .
+
+# --- Respirometry Type ---
+
+shape:RespirometryTypeConceptShape a sh:NodeShape ;
+    sh:targetNode con:ClosedRespirometry, con:OpenRespirometry, con:IntermittentFlowThrough ;
+    rdfs:label "Respirometry type concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:RespirometryTypeScheme ;
+        sh:name "respirometry type scheme membership" ;
+        sh:message "Respirometry type concepts must belong to con:RespirometryTypeScheme." ;
+    ] .
+
+# --- Metabolic Rate Type ---
+
+shape:MetabolicRateTypeConceptShape a sh:NodeShape ;
+    sh:targetNode con:StandardMetabolicRate, con:ActiveMetabolicRate, con:RestingMetabolicRate, con:RoutineMetabolicRate ;
+    rdfs:label "Metabolic rate type concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:MetabolicRateTypeScheme ;
+        sh:name "metabolic rate type scheme membership" ;
+        sh:message "Metabolic rate type concepts must belong to con:MetabolicRateTypeScheme." ;
+    ] .
+
+# --- Breathing Mode ---
+
+shape:BreathingModeConceptShape a sh:NodeShape ;
+    sh:targetNode con:AquaticBreathing, con:AerialBreathing, con:BimodalBreathing ;
+    rdfs:label "Breathing mode concept shape"@en ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue con:BreathingModeScheme ;
+        sh:name "breathing mode scheme membership" ;
+        sh:message "Breathing mode concepts must belong to con:BreathingModeScheme." ;
+    ] .

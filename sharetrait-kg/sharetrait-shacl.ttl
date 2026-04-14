@@ -1,0 +1,1064 @@
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix vocab: <https://sharetrait.org/vocab/> .
+@prefix shape: <https://sharetrait.org/shape/> .
+@base <https://sharetrait.org/shape/> .
+
+# ──────────────────────────────────────────────
+# ShareTrait SHACL Shapes
+# Validates KG instances against the ShareTrait OWL ontology.
+# ──────────────────────────────────────────────
+
+# ═══════════════════════════════════════════════
+# Dataset
+# ═══════════════════════════════════════════════
+
+shape:DatasetShape a sh:NodeShape ;
+    sh:targetClass vocab:Dataset ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Dataset shape"@en ;
+    rdfs:comment "Validates instances of vocab:Dataset."@en ;
+
+    # Required properties
+    sh:property [
+        sh:path vocab:hasShareTraitDatasetID ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "ShareTrait dataset ID" ;
+        sh:message "A Dataset must have exactly one hasShareTraitDatasetID (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDOI ;
+        sh:datatype xsd:anyURI ;
+        sh:maxCount 1 ;
+        sh:name "DOI" ;
+        sh:message "hasDOI must be an xsd:anyURI." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTitle ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "title" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasReferenceType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/PrimaryReference> <https://sharetrait.org/concept/SecondaryReference> ) ;
+        sh:name "reference type" ;
+        sh:message "hasReferenceType must be a concept IRI for 'primary' or 'secondary'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDatasetType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "dataset type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPublisher ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "publisher" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasYearPublication ;
+        sh:datatype xsd:gYear ;
+        sh:maxCount 1 ;
+        sh:name "year of publication" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDateContribution ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:name "date of contribution" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDatasetTrait ;
+        sh:nodeKind sh:IRI ;
+        sh:name "dataset trait" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDatasetComment ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "dataset comment" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasReferenceComment ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "reference comment" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCitation ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "citation" ;
+    ] ;
+
+    # Object properties
+    sh:property [
+        sh:path vocab:hasManuscript ;
+        sh:class vocab:Manuscript ;
+        sh:nodeKind sh:IRI ;
+        sh:name "manuscript" ;
+    ] ;
+    sh:property [
+        sh:path vocab:describesPopulation ;
+        sh:class vocab:Population ;
+        sh:nodeKind sh:IRI ;
+        sh:name "describes population" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Manuscript
+# ═══════════════════════════════════════════════
+
+shape:ManuscriptShape a sh:NodeShape ;
+    sh:targetClass vocab:Manuscript ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Manuscript shape"@en ;
+    rdfs:comment "Validates instances of vocab:Manuscript."@en ;
+
+    sh:property [
+        sh:path vocab:hasDOI ;
+        sh:datatype xsd:anyURI ;
+        sh:maxCount 1 ;
+        sh:name "DOI" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTitle ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "title" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCitation ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "citation" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPublisher ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "publisher" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasYearPublication ;
+        sh:datatype xsd:gYear ;
+        sh:maxCount 1 ;
+        sh:name "year of publication" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Population
+# ═══════════════════════════════════════════════
+
+shape:PopulationShape a sh:NodeShape ;
+    sh:targetClass vocab:Population ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Population shape"@en ;
+    rdfs:comment "Validates instances of vocab:Population."@en ;
+
+    sh:property [
+        sh:path vocab:hasPopulationName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "population name" ;
+        sh:message "A Population must have exactly one hasPopulationName (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPopulationLabel ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/IndividualMeasure> <https://sharetrait.org/concept/PopulationMeasure> ) ;
+        sh:name "population label" ;
+        sh:message "hasPopulationLabel must be a concept IRI for 'ind_measure' or 'pop_measure'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPopulationDescription ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "population description" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSpeciesReported ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "species reported" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasAuthority ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "authority" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPopulationFacts ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "population facts" ;
+    ] ;
+
+    # Object properties
+    sh:property [
+        sh:path vocab:containsIndividual ;
+        sh:class vocab:Individual ;
+        sh:nodeKind sh:IRI ;
+        sh:name "contains individual" ;
+    ] ;
+    sh:property [
+        sh:path vocab:occurredAt ;
+        sh:class vocab:Site ;
+        sh:nodeKind sh:IRI ;
+        sh:name "occurred at" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Individual
+# ═══════════════════════════════════════════════
+
+shape:IndividualShape a sh:NodeShape ;
+    sh:targetClass vocab:Individual ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Individual shape"@en ;
+    rdfs:comment "Validates instances of vocab:Individual."@en ;
+
+    sh:property [
+        sh:path vocab:hasRepresentativeStage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "representative stage" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSex ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "sex" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasIndividualType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/ParentType> <https://sharetrait.org/concept/OffspringType> ) ;
+        sh:name "individual type" ;
+        sh:message "hasIndividualType must be a concept IRI for 'parent' or 'offspring'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasMatingMethod ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "mating method" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasMethodType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "method type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasStrategyOfProtection ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "strategy of protection" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDescription ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "description" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentSizeType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "parent size type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentSizeUnits ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "parent size units" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentalSizeValue ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "parental size value" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentAge ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:name "parent age" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentAgeUnits ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "parent age units" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOffspringDevelopmentalStage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "offspring developmental stage" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOffspringSizeType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "offspring size type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOffspringSizeUnits ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "offspring size units" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOffspringSizeValue ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "offspring size value" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Measurement
+# ═══════════════════════════════════════════════
+
+shape:MeasurementShape a sh:NodeShape ;
+    sh:targetClass vocab:Measurement ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Measurement shape"@en ;
+    rdfs:comment "Validates instances of vocab:Measurement."@en ;
+
+    # Required object properties
+    sh:property [
+        sh:path vocab:hasIndividual ;
+        sh:class vocab:Individual ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "individual" ;
+        sh:message "Every Measurement must reference exactly one Individual." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTrait ;
+        sh:class vocab:Trait ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "trait" ;
+        sh:message "Every Measurement must reference exactly one Trait." ;
+    ] ;
+
+    # Optional object properties
+    sh:property [
+        sh:path vocab:hasCondition ;
+        sh:class vocab:Condition ;
+        sh:nodeKind sh:IRI ;
+        sh:name "condition" ;
+    ] ;
+    sh:property [
+        sh:path vocab:usesTechnique ;
+        sh:class vocab:Technique ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:name "technique" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasAcclimation ;
+        sh:class vocab:Acclimation ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:name "acclimation" ;
+    ] ;
+
+    # Datatype properties
+    sh:property [
+        sh:path vocab:hasTraitValue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:name "trait value" ;
+        sh:message "A Measurement must have at most one hasTraitValue (xsd:decimal)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitUnit ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "trait unit" ;
+        sh:message "A Measurement must have exactly one hasTraitUnit (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:name "trait type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitErrorEstimate ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait error estimate" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitErrorType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait error type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitConverted ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait converted" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasIndividualDevelopmentalStage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "individual developmental stage" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFreshMass ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "fresh mass" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFreshMassUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "fresh mass unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSampleSize ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "sample size" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSizeValue ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "size value" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSizeUnits ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "size units" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSizeType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "size type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSizeValueInitial ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "size value initial" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSizeValueFinal ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "size value final" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageGeneral ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage general" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageSpecific ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage specific" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifestageSpecificInitial ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage specific initial" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifestageSpecificFinal ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage specific final" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasMeasureDate ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "measure date" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFecundityTemporalUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "fecundity temporal unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasReproductiveStage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "reproductive stage" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasExperimentLocation ;
+        sh:name "experiment location" ;
+        sh:message "hasExperimentLocation values (literal or IRI)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitComment ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait comment" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasExperimentalConditionsComment ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "experimental conditions comment" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Trait
+# ═══════════════════════════════════════════════
+
+shape:TraitShape a sh:NodeShape ;
+    sh:targetClass vocab:Trait ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Trait shape"@en ;
+    rdfs:comment "Validates instances of vocab:Trait."@en ;
+
+    sh:property [
+        sh:path vocab:hasTraitID ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "trait ID" ;
+        sh:message "A Trait must have exactly one hasTraitID (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "trait name" ;
+        sh:message "A Trait must have exactly one hasTraitName (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:name "trait type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasShareTraitType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "ShareTrait type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitCondition ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait condition" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitParentID ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait parent ID" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageGeneralInitial ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage general initial" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageGeneralFinal ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage general final" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageGeneral ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage general" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLifeStageSpecific ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "life stage specific" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitDefinition ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait definition" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTraitDefinitionSource ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "trait definition source" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Taxonomy
+# ═══════════════════════════════════════════════
+
+shape:TaxonomyShape a sh:NodeShape ;
+    sh:targetClass vocab:Taxonomy ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Taxonomy shape"@en ;
+    rdfs:comment "Validates instances of vocab:Taxonomy."@en ;
+
+    sh:property [
+        sh:path vocab:hasScientificName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "scientific name" ;
+        sh:message "A Taxonomy must have exactly one hasScientificName (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTaxonomyIDRef ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "taxonomy ID reference" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTaxonomyDBName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "taxonomy database name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTaxonomyDBUrl ;
+        sh:datatype xsd:anyURI ;
+        sh:maxCount 1 ;
+        sh:name "taxonomy database URL" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasTaxonomyDBVersion ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "taxonomy database version" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentID ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "parent ID" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasParentName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "parent name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasRankLevel ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "rank level" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPhylumName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "phylum name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasClassName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "class name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOrderName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "order name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFamilyName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "family name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasGenusName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "genus name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSpeciesName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "species name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCommonNames ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "common names" ;
+    ] ;
+
+    # Object property
+    sh:property [
+        sh:path vocab:labelsPopulation ;
+        sh:class vocab:Population ;
+        sh:nodeKind sh:IRI ;
+        sh:name "labels population" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Site
+# ═══════════════════════════════════════════════
+
+shape:SiteShape a sh:NodeShape ;
+    sh:targetClass vocab:Site ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Site shape"@en ;
+    rdfs:comment "Validates instances of vocab:Site."@en ;
+
+    sh:property [
+        sh:path vocab:hasSiteName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "site name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSiteRealmGeneral ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "terrestrial" "aquatic" "marine" "freshwater" "intertidal" "brackish" ) ;
+        sh:name "site realm general" ;
+        sh:message "hasSiteRealmGeneral must be one of: terrestrial, aquatic, marine, freshwater, intertidal, brackish." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSiteRealmSpecific ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "site realm specific" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasElevationValue ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "elevation value" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasElevationUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "elevation unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDepthValue ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "depth value" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDepthUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "depth unit" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Place
+# ═══════════════════════════════════════════════
+
+shape:PlaceShape a sh:NodeShape ;
+    sh:targetClass vocab:Place ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Place shape"@en ;
+    rdfs:comment "Validates instances of vocab:Place."@en ;
+
+    sh:property [
+        sh:path vocab:hasPlaceName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "place name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLocationName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "location name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLocationLabel ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "comment-based" "gps-based" "term-based" ) ;
+        sh:name "location label" ;
+        sh:message "hasLocationLabel must be 'comment-based', 'gps-based', or 'term-based'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCountryName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "country name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasContinentName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "continent name" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasGeonameCountryID ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "GeoName country ID" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLocationDescription ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "location description" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasLocationCheck ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "location check" ;
+    ] ;
+
+    # Object property
+    sh:property [
+        sh:path vocab:locatedIn ;
+        sh:class vocab:Site ;
+        sh:nodeKind sh:IRI ;
+        sh:name "located in" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Condition
+# ═══════════════════════════════════════════════
+
+shape:ConditionShape a sh:NodeShape ;
+    sh:targetClass vocab:Condition ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Condition shape"@en ;
+    rdfs:comment "Validates instances of vocab:Condition."@en ;
+
+    sh:property [
+        sh:path vocab:hasTemperature ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "temperature" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPhotoperiod ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "photoperiod" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasHumidity ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "humidity" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOxygen ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "oxygen" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasOxygenUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "oxygen unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCarbonDioxide ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "carbon dioxide" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasCarbonDioxideUnit ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "carbon dioxide unit" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasSalinity ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "salinity" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasPH ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 14 ;
+        sh:name "pH" ;
+        sh:message "hasPH must be a decimal between 0 and 14." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFoodType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "food type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDuration ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "duration" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDurationGenerations ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "duration generations" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasMethodCheck ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "method check" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasConditionLabel ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "condition label" ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Technique
+# ═══════════════════════════════════════════════
+
+shape:TechniqueShape a sh:NodeShape ;
+    sh:targetClass vocab:Technique ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Technique shape"@en ;
+    rdfs:comment "Validates instances of vocab:Technique."@en ;
+
+    sh:property [
+        sh:path vocab:hasSensorType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "sensor type" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasRespirationVolume ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "respiration volume" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasDelayTime ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "delay time" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasRespiratoryChamberMaterial ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "respiratory chamber material" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasIncubationTime ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:name "incubation time" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasRespirometryType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/ClosedRespirometry> <https://sharetrait.org/concept/OpenRespirometry> <https://sharetrait.org/concept/IntermittentFlowThrough> ) ;
+        sh:name "respirometry type" ;
+        sh:message "hasRespirometryType must be a concept IRI for 'closed', 'open', or 'intermittent flow-through'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasBreathingMode ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/AquaticBreathing> <https://sharetrait.org/concept/AerialBreathing> <https://sharetrait.org/concept/BimodalBreathing> ) ;
+        sh:name "breathing mode" ;
+        sh:message "hasBreathingMode must be a concept IRI for 'aquatic', 'aerial', or 'bimodal'." ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasMetabolicRateType ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:in ( <https://sharetrait.org/concept/StandardMetabolicRate> <https://sharetrait.org/concept/ActiveMetabolicRate> <https://sharetrait.org/concept/RestingMetabolicRate> <https://sharetrait.org/concept/RoutineMetabolicRate> <https://sharetrait.org/concept/MaximumMetabolicRate> ) ;
+        sh:name "metabolic rate type" ;
+        sh:message "hasMetabolicRateType must be a concept IRI for 'standard', 'active', 'resting', 'routine', or 'maximum'." ;
+    ] .
+
+# ═══════════════════════════════════════════════
+# Acclimation
+# ═══════════════════════════════════════════════
+
+shape:AcclimationShape a sh:NodeShape ;
+    sh:targetClass vocab:Acclimation ;
+    sh:nodeKind sh:IRI ;
+    rdfs:label "Acclimation shape"@en ;
+    rdfs:comment "Validates instances of vocab:Acclimation."@en ;
+
+    sh:property [
+        sh:path vocab:hasMating ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "mating" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasChamber ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "chamber" ;
+    ] ;
+    sh:property [
+        sh:path vocab:hasFastingTime ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:name "fasting time" ;
+    ] .
