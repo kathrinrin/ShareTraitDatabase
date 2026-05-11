@@ -7,6 +7,46 @@
 
 ---
 
+## Background: ShareTrait and the Problem We Are Solving
+
+### What is ShareTrait?
+
+[ShareTrait](https://sharetrait.org/) is an open database of individual-level trait measurements for ectotherms — animals whose body temperature follows their environment (insects, fish, amphibians, crustaceans, and over 99% of animal species). It currently focuses on three fundamental traits measurable in almost all animals:
+
+- **Metabolic rate** — how fast an animal burns energy
+- **Development time** — how long it takes to reach a life stage
+- **Fecundity** — how many offspring an animal produces
+
+Each record stores not just the trait value, but rich metadata: the species, collection site, sex, life stage, rearing temperature, acclimation conditions, and measurement technique. As of 2025, ShareTrait holds ~28,000 individual-level records from 45 datasets contributed by researchers worldwide (Leiva et al., *Functional Ecology*, 2025).
+
+The database is built on a **relational SQL structure** — multiple tables linked by primary keys, queryable with SQL. This works well for structured retrieval within the database.
+
+### The problem: ShareTrait is an island
+
+The SQL database answers questions about what is *in* ShareTrait. It cannot easily answer questions about how ShareTrait data relates to the rest of the world. Three concrete limitations:
+
+1. **Terms are strings, not concepts.** `trait_type = 'development'` is text. An external tool has no way to know what "development" means, how it relates to "fecundity", or whether it matches a term used in another database.
+
+2. **Taxonomy is a batch pipeline.** ShareTrait generates a phylogenetic tree by calling the Open Tree of Life API in an R script — a step that must be rerun whenever new species are added. Querying "all measurements for insects" requires knowing in advance which species in the database are insects.
+
+3. **Integration with external data requires manual pipelines.** Linking ShareTrait records to conservation status, species occurrence ranges, climate zones, or habitat classifications means writing custom code to download, clean, and join external datasets. This is done once, for one question, and cannot be reused.
+
+### What an ontology adds
+
+An ontology is a formal vocabulary where terms have stable identifiers, definitions, and explicit relationships. Combining ShareTrait data with an ontology (a **knowledge graph**) addresses each limitation directly:
+
+| # | Advantage | What it means in practice |
+|---|---|---|
+| 1 | **Connect to external databases without manual pipelines** | ShareTrait data can be joined live with Wikidata (conservation status, climate zones), or with GBIF occurrence data loaded into the same index — using a single SPARQL query instead of a custom R script |
+| 2 | **Find what is missing, not just what is there** | By comparing ShareTrait species against GBIF observation records, you can detect which animal groups, habitats, or regions have few or no trait measurements |
+| 3 | **Data has meaning, not just values** | `con:Development` is a concept with a definition, linked to related concepts — machines can reason over what the data *means*, not just match strings |
+| 4 | **Query across the taxonomic tree using graph traversal** | A single query with a recursive property path finds all insect measurements automatically — newly added species are included without any code change |
+| 5 | **The vocabulary becomes a reusable standard** | `sharetrait-owl.ttl` is a citable artefact that other trait databases can align to; a SQL schema is invisible to the outside world |
+
+This tutorial builds a small OWL ontology from scratch using real ShareTrait data. By the end you will understand how ontologies work mechanically — which is exactly what you need to read, evaluate, and reuse the ShareTrait knowledge graph.
+
+---
+
 ## Part 1: Quick Introduction (10 min)
 
 An ontology is a **formal, shared vocabulary** where the computer understands how terms relate and can check your data for mistakes.
