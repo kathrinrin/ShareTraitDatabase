@@ -160,20 +160,29 @@ See the [QLever UI docs](https://github.com/qlever-dev/qlever-ui/blob/master/doc
 
 ## Optional: Petrimaps (map visualisation without Docker)
 
-[Petrimaps](https://petrimaps.2comp.org/) renders SPARQL query results on
-a map. It connects directly to a running QLever endpoint — no Docker required.
+[Petrimaps](https://github.com/ad-freiburg/petrimaps) renders SPARQL
+query results on a map. It connects directly to a running QLever endpoint
+— no Docker required.
 
 ### Setup
 
-1. Download the latest release from
-   <https://github.com/2comp/petrimaps/releases/> and unpack it.
-2. Build it and then start it: 
+1. Clone and build petrimaps (one-time):
 
-```bash
-./build/petrimaps -p 9090
-```
+   ```bash
+   git clone https://github.com/ad-freiburg/petrimaps.git
+   cd petrimaps
+   mkdir build && cd build
+   cmake .. && make -j
+   ```
 
-3. Open **http://localhost:7002** in your browser.
+2. Start it (with QLever already running on `:7001`):
+
+   ```bash
+   ./build/petrimaps -p 9090
+   ```
+
+3. Open **<http://localhost:9090>** in your browser and point the
+   "SPARQL endpoint" field at `http://localhost:7001`.
 
 ### Example geo query
 

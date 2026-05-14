@@ -10,13 +10,15 @@
 
 # ==============================================================
 #  ShareTrait Traits Ontology
+#  Worked example: spangled perch (Leiopotherapon unicolor)
+#  Source measurement: TRAMEA023773 (Gomez Isaza et al. 2020)
 # ==============================================================
 
 <http://sharetrait.org/ontologies/traits> a owl:Ontology ;
     dc:title "ShareTrait Traits Ontology"@en ;
-    dc:description "Functional-trait measurement ontology for ecological research."@en ;
+    dc:description "Functional-trait measurement ontology for ecological research. The hands-on example uses a juvenile spangled perch (Leiopotherapon unicolor) standard metabolic rate measurement from Gomez Isaza et al. (2020)."@en ;
     terms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "1.0.0" .
+    owl:versionInfo "1.1.0" .
 
 dc:title a owl:AnnotationProperty .
 dc:description a owl:AnnotationProperty .
@@ -47,8 +49,18 @@ terms:license a owl:AnnotationProperty .
 :hasTemperatureRange a owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:domain :TraitMeasurement ; rdfs:range :TemperatureRange .
 
+:hasLifeStage a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :TraitMeasurement ; rdfs:range :LifeStage .
+
 :hasRealm a owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:domain :Organism ; rdfs:range :Realm .
+
+:usedInstrument a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:subPropertyOf :hasComponent ;
+    rdfs:domain :TraitMeasurement ; rdfs:range :Instrument .
+
+:isInstrumentOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf :isComponentOf ; owl:inverseOf :usedInstrument .
 
 
 # ==============================================================
@@ -76,9 +88,12 @@ terms:license a owl:AnnotationProperty .
 :TraitMeasurement a owl:Class ; rdfs:subClassOf :IndependentEntity .
 :TraitType        a owl:Class ; rdfs:subClassOf :IndependentEntity .
 :Organism         a owl:Class ; rdfs:subClassOf :IndependentEntity .
+:Instrument       a owl:Class ; rdfs:subClassOf :IndependentEntity ;
+    rdfs:label "Instrument"@en ;
+    rdfs:comment "A physical device used to acquire a trait measurement (e.g. respirometer, oxygen sensor, climate chamber)."@en .
 
 [] a owl:AllDisjointClasses ;
-    owl:members ( :TraitMeasurement :TraitType :Organism ) .
+    owl:members ( :TraitMeasurement :TraitType :Organism :Instrument ) .
 
 
 # ==============================================================
@@ -117,7 +132,24 @@ terms:license a owl:AnnotationProperty .
     rdfs:subClassOf :Organism ,
         [ a owl:Restriction ; owl:onProperty :hasRealm ; owl:someValuesFrom :Aquatic ] .
 
+# Species-level class for the hero record. Subclass of Fish so it inherits
+# the Aquatic-realm restriction automatically.
+:SpangledPerch a owl:Class ;
+    rdfs:subClassOf :Fish ;
+    rdfs:label "Spangled perch"@en ;
+    rdfs:comment "Leiopotherapon unicolor - a small Australian freshwater fish (family Terapontidae)."@en .
+
 [] a owl:AllDisjointClasses ; owl:members ( :Insect :Amphibian :Fish ) .
+
+
+# ==============================================================
+#  Instrument branch
+# ==============================================================
+
+:Respirometer a owl:Class ;
+    rdfs:subClassOf :Instrument ;
+    rdfs:label "Respirometer"@en ;
+    rdfs:comment "A sealed chamber for measuring oxygen consumption (intermittent flow-through, closed, or open)."@en .
 
 
 # ==============================================================
@@ -145,6 +177,18 @@ terms:license a owl:AnnotationProperty .
 :Terrestrial a owl:Class ; rdfs:subClassOf :Realm ; owl:disjointWith :Aquatic .
 :Aquatic     a owl:Class ; rdfs:subClassOf :Realm .
 
+# ---- LifeStage ----
+
+:LifeStage a owl:Class ;
+    rdfs:subClassOf :ValuePartition ;
+    owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Juvenile :Adult :Larva ) ] .
+
+:Juvenile a owl:Class ; rdfs:subClassOf :LifeStage .
+:Adult    a owl:Class ; rdfs:subClassOf :LifeStage .
+:Larva    a owl:Class ; rdfs:subClassOf :LifeStage .
+
+[] a owl:AllDisjointClasses ; owl:members ( :Juvenile :Adult :Larva ) .
+
 
 # ==============================================================
 #  Named Trait Measurements
@@ -157,14 +201,19 @@ terms:license a owl:AnnotationProperty .
         [ a owl:Restriction ; owl:onProperty :hasTemperatureRange ; owl:someValuesFrom :Cold ] ,
         [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:allValuesFrom :DevelopmentTrait ] .
 
-:ZebrafishMetabolicStudy a owl:Class ;
+# The hero study: juvenile spangled perch metabolic rate, intermittent flow-through respirometry.
+# Source: Gomez Isaza et al. (2020), Conservation Physiology 8(1):coz092.
+:SpangledPerchRespirometryStudy a owl:Class ;
     rdfs:subClassOf :TraitMeasurement ,
         [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:someValuesFrom :MetabolicRateTrait ] ,
         [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Fish ] ,
+        [ a owl:Restriction ; owl:onProperty :hasTemperatureRange ; owl:someValuesFrom :Warm ] ,
+        [ a owl:Restriction ; owl:onProperty :hasLifeStage ; owl:someValuesFrom :Juvenile ] ,
+        [ a owl:Restriction ; owl:onProperty :usedInstrument ; owl:someValuesFrom :Respirometer ] ,
         [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:allValuesFrom :MetabolicRateTrait ] .
 
 [] a owl:AllDisjointClasses ;
-    owl:members ( :AphidiusDevelopmentStudy :ZebrafishMetabolicStudy ) .
+    owl:members ( :AphidiusDevelopmentStudy :SpangledPerchRespirometryStudy ) .
 
 
 # ==============================================================
@@ -189,6 +238,19 @@ terms:license a owl:AnnotationProperty .
         owl:intersectionOf ( :TraitMeasurement
             [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Insect ] ) ] .
 
+# New defined class - the one the spangled perch hero record should fall into.
+:JuvenileFishMeasurement a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+        owl:intersectionOf ( :TraitMeasurement
+            [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Fish ]
+            [ a owl:Restriction ; owl:onProperty :hasLifeStage ; owl:someValuesFrom :Juvenile ] ) ] .
+
+# Defined class for any measurement acquired with a respirometer.
+:RespirometryMeasurement a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+        owl:intersectionOf ( :TraitMeasurement
+            [ a owl:Restriction ; owl:onProperty :usedInstrument ; owl:someValuesFrom :Respirometer ] ) ] .
+
 
 # ==============================================================
 #  Probe Classes
@@ -209,10 +271,10 @@ terms:license a owl:AnnotationProperty .
 #  Individuals
 # ==============================================================
 
-:DanioRerio             a owl:NamedIndividual , :Fish ;          :hasScientificName "Danio rerio" .
-:AphidiusPlatensis      a owl:NamedIndividual , :ParasitoidWasp ; :hasScientificName "Aphidius platensis" .
-:RanaTemporaria         a owl:NamedIndividual , :Amphibian ;     :hasScientificName "Rana temporaria" .
-:DrosophilaMelanogaster a owl:NamedIndividual , :FruitFly ;      :hasScientificName "Drosophila melanogaster" .
+:organism_Leiopotherapon_unicolor a owl:NamedIndividual , :SpangledPerch ;  :hasScientificName "Leiopotherapon unicolor" .
+:organism_Aphidius_platensis      a owl:NamedIndividual , :ParasitoidWasp ; :hasScientificName "Aphidius platensis" .
+:organism_Rana_temporaria         a owl:NamedIndividual , :Amphibian ;      :hasScientificName "Rana temporaria" .
+:organism_Drosophila_melanogaster a owl:NamedIndividual , :FruitFly ;       :hasScientificName "Drosophila melanogaster" .
 
 [] a owl:AllDifferent ;
-    owl:distinctMembers ( :DanioRerio :AphidiusPlatensis :RanaTemporaria :DrosophilaMelanogaster ) .
+    owl:distinctMembers ( :organism_Leiopotherapon_unicolor :organism_Aphidius_platensis :organism_Rana_temporaria :organism_Drosophila_melanogaster ) .

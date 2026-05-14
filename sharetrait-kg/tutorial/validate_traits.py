@@ -8,7 +8,7 @@ from rdflib.collection import Collection
 HERE = Path(__file__).resolve().parent
 
 g = Graph()
-g.parse(HERE / 'sharetrait-trait-ontology.ttl', format='turtle')
+g.parse(HERE / 'sharetrait-ontology.ttl', format='turtle')
 NS = Namespace("http://sharetrait.org/ontologies/traits#")
 
 named_cls = sorted([s for s in g.subjects(RDF.type, OWL.Class) if isinstance(s, URIRef)], key=str)
@@ -53,14 +53,6 @@ for dn in disj_nodes:
         for m in Collection(g, mn[0]):
             if isinstance(m, URIRef) and str(m).startswith(str(NS)) and m not in all_cls:
                 issues.append(f"Undeclared disjoint member: {n(m)}")
-
-# Pizza check
-ttl = open(HERE / 'sharetrait-trait-ontology.ttl').read()
-md = open(HERE / 'sharetrait-traits-tutorial.md').read()
-p_ttl = sum(1 for l in ttl.split('\n') if 'pizza' in l.lower())
-p_md = sum(1 for l in md.split('\n') if 'pizza' in l.lower())
-if p_ttl: issues.append(f"Pizza refs in TTL: {p_ttl}")
-if p_md: issues.append(f"Pizza refs in MD: {p_md}")
 
 if issues:
     for i in issues: print(f"  ISSUE: {i}")

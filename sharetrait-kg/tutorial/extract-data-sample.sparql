@@ -1,0 +1,151 @@
+# =============================================================================
+# extract-data-sample.sparql
+#
+# SPARQL CONSTRUCT that extracts 6 sample measurements from the ShareTrait
+# knowledge graph and emits them as triples in the tutorial ontology
+# namespace (http://sharetrait.org/ontologies/traits#).
+#
+# Run against sharetrait-kg.ttl (e.g. in QLever, GraphDB, or rdflib).
+# Output: the contents of sharetrait-data-sample.ttl, minus the value-
+# partition individuals (cold1/warm1/hot1, juvenile1/adult1/larva1), which
+# the tutorial asserts manually.
+#
+# Hero record: TRAMEA023773 - juvenile Leiopotherapon unicolor (spangled
+# perch), standard metabolic rate 117.0165483 mgO2/h/kgFM at 21.5 C,
+# nitrate control (0 mg/L NO3-). Contrasted with TRAMEA023829, the same
+# species/study at 100 mg/L NO3- (751.4 mgO2/h/kgFM, ~6.4x higher).
+# Source: Gomez Isaza et al. (2020), Conservation Physiology 8(1):coz092.
+#
+# Chain followed in the KG:
+#   Measurement -> hasIndividual          -> Individual
+#   Population  -> containsIndividual     -> Individual
+#   Taxonomy    -> labelsPopulation       -> Population
+#                  hasScientificName      -> "Genus species ..."
+#   Measurement -> hasLifeStageGeneral    -> "juvenile" | "adult" | "larva"
+#                                            (OPTIONAL; not always present)
+#   Measurement -> hasCondition           -> Condition
+#                  hasMethodCheck "test"
+#                  hasTemperature         -> decimal
+#   Measurement -> hasTraitType           -> concept:{Development,
+#                                            MetabolicRate, Fecundity}
+#   Measurement -> usesTechnique          -> Technique  (OPTIONAL; respirometer)
+#                                            hasRespirationVolume, hasSensorType,
+#                                            hasRespiratoryChamberMaterial
+# =============================================================================
+
+PREFIX vocab:   <https://sharetrait.org/vocab/>
+PREFIX concept: <https://sharetrait.org/concept/>
+PREFIX t:       <http://sharetrait.org/ontologies/traits#>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+    ?tInd  a owl:NamedIndividual , t:TraitMeasurement ;
+           rdfs:label              ?label ;
+           t:measuresTraitType     ?traitClass ;
+           t:measuredOnOrganism    ?orgInd ;
+           t:hasTemperatureRange   ?tempInd ;
+           t:hasLifeStage          ?lifeInd ;
+           t:usedInstrument        ?instInd ;
+           t:hasTraitValue         ?traitValue .
+
+    ?orgInd  a owl:NamedIndividual , ?orgClass ;
+             t:hasScientificName   ?sciClean .
+
+    ?instInd a owl:NamedIndividual , t:Respirometer ;
+             rdfs:label            ?instLabel .
+}
+WHERE {
+    # -- 1. Pick exactly these 6 measurements ------------------------
+    # Three spangled-perch records anchor the demo (hero study);
+    # three more species give the reasoner variety.
+    VALUES (?mea ?label) {
+        (<https://sharetrait.org/measurement/TRAMEA023773> "TRAMEA023773 (hero record)")
+        (<https://sharetrait.org/measurement/TRAMEA023776> "TRAMEA023776 (control replicate)")
+        (<https://sharetrait.org/measurement/TRAMEA023829> "TRAMEA023829 (nitrate-stressed, 100 mg/L)")
+        (<https://sharetrait.org/measurement/TRAMEA000001> "TRAMEA000001 (Aphidius development)")
+        (<https://sharetrait.org/measurement/TRAMEA003743> "TRAMEA003743 (Rana development)")
+        (<https://sharetrait.org/measurement/TRAMEA004493> "TRAMEA004493 (Drosophila development)")
+    }
+
+    # -- 2. Measurement: trait value, trait-type concept, individual -
+    ?mea  a                      vocab:Measurement ;
+          vocab:hasTraitValue    ?traitValue ;
+          vocab:hasTraitType     ?traitConcept ;
+          vocab:hasIndividual    ?ind .
+
+    # -- 3. Individual -> Population -> Taxonomy ---------------------
+    ?pop  vocab:containsIndividual ?ind .
+    ?tax  vocab:labelsPopulation   ?pop ;
+          vocab:hasScientificName  ?sciName .
+
+    # -- 4. Test condition -> temperature ----------------------------
+    ?mea  vocab:hasCondition       ?cond .
+    ?cond vocab:hasMethodCheck     "test" ;
+          vocab:hasTemperature     ?temp .
+
+    # -- 5. Life stage (OPTIONAL; not all records have it) -----------
+    OPTIONAL { ?mea vocab:hasLifeStageGeneral ?lifeStr . }
+
+    # -- 6. Map KG trait-type concepts -> ontology classes -----------
+    VALUES (?traitConcept ?traitClass) {
+        (concept:Development   t:DevelopmentTrait)
+        (concept:MetabolicRate t:MetabolicRateTrait)
+        (concept:Fecundity     t:FecundityTrait)
+    }
+
+    # -- 7. Map temperature -> TemperatureRange individual -----------
+    #      < 15 C = cold, 15-25 C = warm, >= 25 C = hot.
+    BIND(IF(?temp < 15, t:cold1,
+         IF(?temp < 25, t:warm1,
+                        t:hot1)) AS ?tempInd)
+
+    # -- 8. Map life-stage string -> LifeStage individual ------------
+    #      Unbound ?lifeStr (Aphidius/Rana/Drosophila) leaves ?lifeInd
+    #      unbound and the CONSTRUCT skips the t:hasLifeStage triple.
+    BIND(IF(?lifeStr = "juvenile", t:juvenile1,
+         IF(?lifeStr = "adult",    t:adult1,
+         IF(?lifeStr = "larva",    t:larva1,
+                                   ?undef))) AS ?lifeInd)
+
+    # -- 9. Map species -> organism class ----------------------------
+    BIND(IF(CONTAINS(?sciName, "Leiopotherapon"), t:SpangledPerch,
+         IF(CONTAINS(?sciName, "Aphidius"),       t:ParasitoidWasp,
+         IF(CONTAINS(?sciName, "Rana"),           t:Amphibian,
+         IF(CONTAINS(?sciName, "Drosophila"),     t:FruitFly,
+                                                  t:Organism)))) AS ?orgClass)
+
+    # -- 10. Normalize scientific name + mint IRIs -------------------
+    # Drop any parenthesized text (author year or subgenus), then keep
+    # only the first two whitespace-separated tokens (Genus + species):
+    #   "Leiopotherapon unicolor (Gunther, 1859)"        -> "Leiopotherapon unicolor"
+    #   "Aphidius platensis Brethes, 1913"               -> "Aphidius platensis"
+    #   "Drosophila (Sophophora) melanogaster Meigen..." -> "Drosophila melanogaster"
+    BIND(REPLACE(?sciName, "\\([^)]*\\)", "")                 AS ?sci1)
+    BIND(REPLACE(?sci1, "^\\s*(\\S+)\\s+(\\S+).*$", "$1 $2")  AS ?sciClean)
+    BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#measurement_",
+                    STRAFTER(STR(?mea), "TRAMEA")))           AS ?tInd)
+    BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#organism_",
+                    REPLACE(?sciClean, " ", "_")))            AS ?orgInd)
+
+    # -- 11. Instrument (OPTIONAL: respiratory chamber technique) ----
+    # If the measurement used a respirometry technique, mint one
+    # Respirometer individual per technique IRI and label it from the
+    # technique's attributes (volume, chamber material, sensor type).
+    OPTIONAL {
+        ?mea  vocab:usesTechnique               ?tech .
+        ?tech vocab:hasRespirometryType         ?respType .
+        OPTIONAL { ?tech vocab:hasRespirationVolume         ?vol . }
+        OPTIONAL { ?tech vocab:hasSensorType                ?sensor . }
+        OPTIONAL { ?tech vocab:hasRespiratoryChamberMaterial ?material . }
+        BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#respirometer_",
+                        STRAFTER(STR(?tech), "TRATEC"))) AS ?instInd)
+        BIND(CONCAT(
+            COALESCE(CONCAT(STR(?vol),      " mL "), ""),
+            COALESCE(CONCAT(STR(?material), " "),    ""),
+            "respirometer",
+            COALESCE(CONCAT(", ", STR(?sensor)),     "")
+        ) AS ?instLabel)
+    }
+}

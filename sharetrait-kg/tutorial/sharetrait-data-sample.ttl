@@ -1,0 +1,170 @@
+@prefix : <http://sharetrait.org/ontologies/traits#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://sharetrait.org/ontologies/traits> .
+
+# ==============================================================
+#  Sample data extracted from the ShareTrait Knowledge Graph
+#  mapped to the trait ontology classes for Protege reasoning.
+#
+#  Source: sharetrait-kg.ttl via CONSTRUCT query
+#          (see extract-data-sample.sparql)
+#
+#  This file is the exact serialization of that query's output,
+#  re-grouped by subject and annotated with tutorial commentary.
+#  If you re-run the query, the IRIs and triples will match
+#  what you see below.
+#
+#  Hero record:
+#    TRAMEA023773 - juvenile Leiopotherapon unicolor (spangled perch),
+#    standard metabolic rate = 117.0165483 mgO2/h/kgFM at 21.5 C,
+#    nitrate control (0 mg/L NO3-), pH 7.0, intermittent flow-through
+#    respirometry. Source: Gomez Isaza et al. (2020),
+#    Conservation Physiology 8(1):coz092.
+#
+#  These 6 records are real measurements. Each measurement individual
+#  is typed ONLY as :TraitMeasurement. The reasoner must infer the rest.
+# ==============================================================
+
+
+# -- Value-partition individuals -------------------------------
+# (Asserted by the tutorial, not by the SPARQL extractor. The query
+# refers to these IRIs in its CONSTRUCT template.)
+
+:cold1  a owl:NamedIndividual , :Cold .
+:warm1  a owl:NamedIndividual , :Warm .
+:hot1   a owl:NamedIndividual , :Hot .
+
+:juvenile1 a owl:NamedIndividual , :Juvenile .
+:adult1    a owl:NamedIndividual , :Adult .
+:larva1    a owl:NamedIndividual , :Larva .
+
+
+# ==============================================================
+#  Triples produced by the SPARQL CONSTRUCT
+#  (extract-data-sample.sparql) - 6 measurements, 4 organisms,
+#  1 respirometer.
+# ==============================================================
+
+
+# -- Instrument ------------------------------------------------
+# The three spangled-perch records share TRATEC001585, a 693 mL
+# acrylic/Plexiglas respirometer with a fiber-optic O2 analyzer.
+
+:respirometer_001585 a owl:NamedIndividual , :Respirometer ;
+    rdfs:label "693 mL acrylic/Plexiglas respirometer, fiber optic-based oxygen analyzer" .
+
+
+# -- Organisms --------------------------------------------------
+# Organism IRIs are minted from the cleaned scientific name
+# (genus + species only, dropping authors and subgenera).
+# The organism class (:SpangledPerch, :ParasitoidWasp, :Amphibian,
+# :FruitFly) is asserted directly by the extractor so that the
+# reasoner can fire downstream class restrictions.
+
+:organism_Leiopotherapon_unicolor a owl:NamedIndividual , :SpangledPerch ;
+    :hasScientificName "Leiopotherapon unicolor" .
+
+:organism_Aphidius_platensis a owl:NamedIndividual , :ParasitoidWasp ;
+    :hasScientificName "Aphidius platensis" .
+
+:organism_Rana_temporaria a owl:NamedIndividual , :Amphibian ;
+    :hasScientificName "Rana temporaria" .
+
+:organism_Drosophila_melanogaster a owl:NamedIndividual , :FruitFly ;
+    :hasScientificName "Drosophila melanogaster" .
+
+
+# ==============================================================
+#  Measurements: typed ONLY as :TraitMeasurement
+#  The reasoner should infer defined-class memberships.
+# ==============================================================
+
+
+# -- HERO RECORD ------------------------------------------------
+# TRAMEA023773: juvenile Leiopotherapon unicolor,
+# standard metabolic rate, 21.5 C, nitrate control (0 mg/L NO3-).
+# Expected inferences:
+#   - AquaticTraitMeasurement   (fish -> aquatic realm)
+#   - JuvenileFishMeasurement   (fish + juvenile)
+#   - RespirometryMeasurement   (used a respirometer)
+#   - SpangledPerchRespirometryStudy  (fish + warm + juvenile + MR + respirometer)
+
+:measurement_023773 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA023773 (hero record)" ;
+    :measuresTraitType        :MetabolicRateTrait ;
+    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :hasTemperatureRange      :warm1 ;
+    :hasLifeStage             :juvenile1 ;
+    :usedInstrument           :respirometer_001585 ;
+    :hasTraitValue            117.0165483 .
+
+
+# -- TRAMEA023776: same hero study, second control juvenile fish.
+# Demonstrates that two records share the same inferred classes.
+
+:measurement_023776 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA023776 (control replicate)" ;
+    :measuresTraitType        :MetabolicRateTrait ;
+    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :hasTemperatureRange      :warm1 ;
+    :hasLifeStage             :juvenile1 ;
+    :usedInstrument           :respirometer_001585 ;
+    :hasTraitValue            110.0274363 .
+
+
+# -- TRAMEA023829: same hero study, 100 mg/L nitrate treatment.
+# Same species, same temperature, same life stage, same instrument
+# as the two controls above, so the inferred classes are identical.
+# What changes is the raw value: standard metabolic rate is ~6.4x
+# higher under nitrate stress (751.4 vs 117.0 mgO2/h/kgFM).
+
+:measurement_023829 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA023829 (nitrate-stressed, 100 mg/L)" ;
+    :measuresTraitType        :MetabolicRateTrait ;
+    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :hasTemperatureRange      :warm1 ;
+    :hasLifeStage             :juvenile1 ;
+    :usedInstrument           :respirometer_001585 ;
+    :hasTraitValue            751.3638873 .
+
+
+# -- TRAMEA000001: Aphidius platensis, development, < 15 C -----
+# Real-world sparsity: the KG record carries no life-stage
+# annotation, so the extractor emits no :hasLifeStage triple.
+# Expected inferences depend only on organism class and temperature.
+
+:measurement_000001 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA000001 (Aphidius development)" ;
+    :measuresTraitType        :DevelopmentTrait ;
+    :measuredOnOrganism       :organism_Aphidius_platensis ;
+    :hasTemperatureRange      :cold1 ;
+    :hasTraitValue            39.0 .
+
+
+# -- TRAMEA003743: Rana temporaria, development, 15-25 C -------
+# No life-stage annotation in the KG. Expected inferences are
+# limited: amphibian has no realm restriction in the tutorial
+# ontology, and warm is not cold, so this record fires few rules.
+# A nice demonstration of the open-world assumption.
+
+:measurement_003743 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA003743 (Rana development)" ;
+    :measuresTraitType        :DevelopmentTrait ;
+    :measuredOnOrganism       :organism_Rana_temporaria ;
+    :hasTemperatureRange      :warm1 ;
+    :hasTraitValue            35.0 .
+
+
+# -- TRAMEA004493: Drosophila melanogaster, development, 15-25 C
+# No life-stage annotation in the KG.
+# Expected inference: InsectTraitMeasurement (fruit fly is an insect).
+
+:measurement_004493 a owl:NamedIndividual , :TraitMeasurement ;
+    rdfs:label                "TRAMEA004493 (Drosophila development)" ;
+    :measuresTraitType        :DevelopmentTrait ;
+    :measuredOnOrganism       :organism_Drosophila_melanogaster ;
+    :hasTemperatureRange      :warm1 ;
+    :hasTraitValue            16.0 .
