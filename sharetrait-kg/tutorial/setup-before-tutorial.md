@@ -31,13 +31,13 @@ Download from <https://protege.stanford.edu/> (the "Protégé Desktop" zip, not 
 
 ## 3. Open the starter file and confirm it works
 
-Download `sharetrait-ontology-starter.ttl` from the tutorial materials and open it in Protégé:
+Download [`sharetrait-ontology-starter.ttl`](https://drive.google.com/file/d/1WkcXIMcByDiiOgf3DRTLEilGZj4P6FHO/view?usp=sharing) and open it in Protégé:
 
 **File > Open** > select `sharetrait-ontology-starter.ttl`
 
 You should see:
 
-- A class tree with **26 classes** under `owl:Thing` (top-level branches: `TraitMeasurement`, `TraitType`, `Organism`, `Instrument`, `TemperatureRange`, `Realm`, `LifeStage`).
+- A class tree with **30 classes** under `owl:Thing` (top-level branches: `TraitMeasurement`, `TraitType`, `Organism`, `Instrument`, `TemperatureRange`, `Realm`, `LifeStage`).
 - No errors in red.
 - The window title shows `sharetrait-ontology-starter.ttl`.
 
@@ -62,4 +62,4 @@ If HermiT starts and stops without complaint, your Java install is healthy and y
 ## 5. Bring to the session
 
 - Laptop (charged) with Protégé installed and the starter file opening cleanly.
-- The data file `sharetrait-data-sample.ttl` (we will load it together in Part 4).
+- The data file [`sharetrait-data-sample.ttl`](https://drive.google.com/file/d/1pkrQaAREdA4o1i6S00DFtho9h5CxiUxB/view?usp=sharing) (we will load it together in Part 4).

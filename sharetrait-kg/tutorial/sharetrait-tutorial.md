@@ -2,7 +2,7 @@
 
 > **Duration:** 2 hours (intro, ShareTrait, two hands-on blocks with plenaries, break, wrap-up)
 > **Tool:** [Protégé Desktop](https://protege.stanford.edu/) (version 5.x)
-> **Prerequisites:** Protégé and Java pre-installed and confirmed working before the session - see `setup-before-tutorial.md`. Bring `sharetrait-ontology-starter.ttl` opening cleanly in Protégé.
+> **Prerequisites:** Protégé and Java pre-installed and confirmed working before the session - see `setup-before-tutorial.md`. Bring [`sharetrait-ontology-starter.ttl`](https://drive.google.com/file/d/1WkcXIMcByDiiOgf3DRTLEilGZj4P6FHO/view?usp=sharing) opening cleanly in Protégé.
 > **Result:** A small OWL ontology that automatically classifies trait measurements using real ShareTrait data - with one juvenile spangled perch as the worked example
 
 The starter file `sharetrait-ontology-starter.ttl` is *almost* complete: one real element of each modelling layer (one class, one disjoint axiom, one covering axiom, one object property, one data property) has been left empty so participants create it themselves in Steps 1–5 of the live session. Four of the five defined classes in Step 8 are also pre-filled as reference patterns so the participant builds only the fifth (`RespirometryMeasurement`). Steps 6–12 then build on top of the completed starter. The tutorial text below walks through every step in detail so it can also be used to rebuild the ontology from scratch later.
@@ -499,7 +499,7 @@ Now we load six real ShareTrait measurements on top of the ontology you just bui
 
 **Steps:**
 
-1. Make sure `sharetrait-data-sample.ttl` sits in the **same folder** as your starter file (Protégé resolves local imports by relative path).
+1. Make sure [`sharetrait-data-sample.ttl`](https://drive.google.com/file/d/1pkrQaAREdA4o1i6S00DFtho9h5CxiUxB/view?usp=sharing) sits in the **same folder** as your starter file (Protégé resolves local imports by relative path).
 2. In Protégé, with your ontology still open, open the **Active ontology** tab and find the **Ontology imports** section (lower half of the tab). Next to **Direct Imports**, click the **+** button.
 3. In the wizard, choose **Import an ontology contained in a specific file**, browse to `sharetrait-data-sample.ttl`, then click through with the defaults. Protégé adds one `owl:imports` axiom and pulls in the six measurements, four organisms, six closed-set individuals (`cold1`/`warm1`/`hot1`, `juvenile1`/`adult1`/`embryo1`) and one respirometer. The data appears under the same `:` namespace, so the imported individuals link straight into the classes you built.
 4. Confirm the import worked: switch to the **Individuals** tab - the six measurements appear with their human-friendly labels (`TRAMEA023773 (hero record)`, `TRAMEA023776 (control replicate)`, ...). You should also see `organism_023773`, `respirometer_001585` and the six closed-set individuals. If they are missing, return to **Active ontology > Ontology imports** and re-add the file.
