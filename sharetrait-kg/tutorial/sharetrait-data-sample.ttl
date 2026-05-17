@@ -34,8 +34,24 @@
 #  own BodySizeMeasurement is on the roadmap for a follow-up session.
 # ==============================================================
 
+<http://sharetrait.org/ontologies/traits/data-sample> a owl:Ontology .
 
-# -- Value-partition individuals -------------------------------
+
+# -- Property declarations -------------------------------------
+# (Stub declarations so this file parses cleanly on its own. The
+# real domains, ranges and characteristics live in the starter
+# ontology, which this file is imported into.)
+
+:hasTemperatureRange a owl:ObjectProperty .
+:hasLifeStage        a owl:ObjectProperty .
+:measuredOnOrganism  a owl:ObjectProperty .
+:measuresTraitType   a owl:ObjectProperty .
+:usedInstrument      a owl:ObjectProperty .
+:hasTraitValue       a owl:DatatypeProperty .
+:hasScientificName   a owl:DatatypeProperty .
+
+
+# -- Individuals of the closed sets (TemperatureRange, LifeStage) --
 # (Asserted by the tutorial, not by the SPARQL extractor. The query
 # refers to these IRIs in its CONSTRUCT template.)
 
@@ -45,7 +61,7 @@
 
 :juvenile1 a owl:NamedIndividual , :Juvenile .
 :adult1    a owl:NamedIndividual , :Adult .
-:larva1    a owl:NamedIndividual , :Larva .
+:embryo1   a owl:NamedIndividual , :Embryo .
 
 
 # ==============================================================
@@ -64,22 +80,31 @@
 
 
 # -- Organisms --------------------------------------------------
-# Organism IRIs are minted from the cleaned scientific name
-# (genus + species only, dropping authors and subgenera).
+# Organism IRIs are numbered (one per measurement) - they match the
+# TRAIND* individual IRIs in the source KG, NOT species names. This
+# makes it visually clear in Protégé that each individual represents
+# ONE animal, not the species as a whole. The three perch records
+# below were taken on three different fish.
 # The organism class (:SpangledPerch, :ParasitoidWasp, :Amphibian,
 # :FruitFly) is asserted directly by the extractor so that the
 # reasoner can fire downstream class restrictions.
 
-:organism_Leiopotherapon_unicolor a owl:NamedIndividual , :SpangledPerch ;
+:organism_023773 a owl:NamedIndividual , :SpangledPerch ;
     :hasScientificName "Leiopotherapon unicolor" .
 
-:organism_Aphidius_platensis a owl:NamedIndividual , :ParasitoidWasp ;
+:organism_023776 a owl:NamedIndividual , :SpangledPerch ;
+    :hasScientificName "Leiopotherapon unicolor" .
+
+:organism_023829 a owl:NamedIndividual , :SpangledPerch ;
+    :hasScientificName "Leiopotherapon unicolor" .
+
+:organism_000001 a owl:NamedIndividual , :ParasitoidWasp ;
     :hasScientificName "Aphidius platensis" .
 
-:organism_Rana_temporaria a owl:NamedIndividual , :Amphibian ;
+:organism_003743 a owl:NamedIndividual , :Amphibian ;
     :hasScientificName "Rana temporaria" .
 
-:organism_Drosophila_melanogaster a owl:NamedIndividual , :FruitFly ;
+:organism_004493 a owl:NamedIndividual , :FruitFly ;
     :hasScientificName "Drosophila melanogaster" .
 
 
@@ -104,7 +129,7 @@
 :measurement_023773 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA023773 (hero record)" ;
     :measuresTraitType        :MetabolicRateTrait ;
-    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :measuredOnOrganism       :organism_023773 ;
     :hasTemperatureRange      :warm1 ;
     :hasLifeStage             :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
@@ -117,7 +142,7 @@
 :measurement_023776 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA023776 (control replicate)" ;
     :measuresTraitType        :MetabolicRateTrait ;
-    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :measuredOnOrganism       :organism_023776 ;
     :hasTemperatureRange      :warm1 ;
     :hasLifeStage             :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
@@ -133,7 +158,7 @@
 :measurement_023829 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA023829 (nitrate-stressed, 100 mg/L)" ;
     :measuresTraitType        :MetabolicRateTrait ;
-    :measuredOnOrganism       :organism_Leiopotherapon_unicolor ;
+    :measuredOnOrganism       :organism_023829 ;
     :hasTemperatureRange      :warm1 ;
     :hasLifeStage             :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
@@ -148,7 +173,7 @@
 :measurement_000001 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA000001 (Aphidius development)" ;
     :measuresTraitType        :DevelopmentTrait ;
-    :measuredOnOrganism       :organism_Aphidius_platensis ;
+    :measuredOnOrganism       :organism_000001 ;
     :hasTemperatureRange      :cold1 ;
     :hasTraitValue            39.0 .
 
@@ -162,7 +187,7 @@
 :measurement_003743 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA003743 (Rana development)" ;
     :measuresTraitType        :DevelopmentTrait ;
-    :measuredOnOrganism       :organism_Rana_temporaria ;
+    :measuredOnOrganism       :organism_003743 ;
     :hasTemperatureRange      :warm1 ;
     :hasTraitValue            35.0 .
 
@@ -174,6 +199,6 @@
 :measurement_004493 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA004493 (Drosophila development)" ;
     :measuresTraitType        :DevelopmentTrait ;
-    :measuredOnOrganism       :organism_Drosophila_melanogaster ;
+    :measuredOnOrganism       :organism_004493 ;
     :hasTemperatureRange      :warm1 ;
     :hasTraitValue            16.0 .

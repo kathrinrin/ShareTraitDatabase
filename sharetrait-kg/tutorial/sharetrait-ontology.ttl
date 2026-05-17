@@ -108,8 +108,7 @@ terms:license a owl:AnnotationProperty .
 # ==============================================================
 
 :Insect a owl:Class ;
-    rdfs:subClassOf :Organism ,
-        [ a owl:Restriction ; owl:onProperty :hasRealm ; owl:someValuesFrom :Terrestrial ] .
+    rdfs:subClassOf :Organism .
 
 :ParasitoidWasp a owl:Class ; rdfs:subClassOf :Insect .
 :FruitFly       a owl:Class ; rdfs:subClassOf :Insect .
@@ -168,13 +167,13 @@ terms:license a owl:AnnotationProperty .
 # ---- LifeStage ----
 
 :LifeStage a owl:Class ;
-    owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Juvenile :Adult :Larva ) ] .
+    owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Juvenile :Adult :Embryo ) ] .
 
 :Juvenile a owl:Class ; rdfs:subClassOf :LifeStage .
 :Adult    a owl:Class ; rdfs:subClassOf :LifeStage .
-:Larva    a owl:Class ; rdfs:subClassOf :LifeStage .
+:Embryo   a owl:Class ; rdfs:subClassOf :LifeStage .
 
-[] a owl:AllDisjointClasses ; owl:members ( :Juvenile :Adult :Larva ) .
+[] a owl:AllDisjointClasses ; owl:members ( :Juvenile :Adult :Embryo ) .
 
 
 # ==============================================================
@@ -193,7 +192,7 @@ terms:license a owl:AnnotationProperty .
 :SpangledPerchRespirometryStudy a owl:Class ;
     rdfs:subClassOf :TraitMeasurement ,
         [ a owl:Restriction ; owl:onProperty :measuresTraitType ; owl:someValuesFrom :MetabolicRateTrait ] ,
-        [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :Fish ] ,
+        [ a owl:Restriction ; owl:onProperty :measuredOnOrganism ; owl:someValuesFrom :SpangledPerch ] ,
         [ a owl:Restriction ; owl:onProperty :hasTemperatureRange ; owl:someValuesFrom :Warm ] ,
         [ a owl:Restriction ; owl:onProperty :hasLifeStage ; owl:someValuesFrom :Juvenile ] ,
         [ a owl:Restriction ; owl:onProperty :usedInstrument ; owl:someValuesFrom :Respirometer ] ,
@@ -258,12 +257,12 @@ terms:license a owl:AnnotationProperty .
 #  Individuals
 # ==============================================================
 
-:organism_Leiopotherapon_unicolor a owl:NamedIndividual , :SpangledPerch ;  :hasScientificName "Leiopotherapon unicolor" .
-:organism_Aphidius_platensis      a owl:NamedIndividual , :ParasitoidWasp ; :hasScientificName "Aphidius platensis" .
-:organism_Rana_temporaria         a owl:NamedIndividual , :Amphibian ;      :hasScientificName "Rana temporaria" .
-:organism_Drosophila_melanogaster a owl:NamedIndividual , :FruitFly ;       :hasScientificName "Drosophila melanogaster" .
+:organism_023773 a owl:NamedIndividual , :SpangledPerch ;  :hasScientificName "Leiopotherapon unicolor" .
+:organism_000001 a owl:NamedIndividual , :ParasitoidWasp ; :hasScientificName "Aphidius platensis" .
+:organism_003743 a owl:NamedIndividual , :Amphibian ;      :hasScientificName "Rana temporaria" .
+:organism_004493 a owl:NamedIndividual , :FruitFly ;       :hasScientificName "Drosophila melanogaster" .
 
 :respirometer_001585              a owl:NamedIndividual , :Respirometer ;   rdfs:label "Respirometer 001585" .
 
 [] a owl:AllDifferent ;
-    owl:distinctMembers ( :organism_Leiopotherapon_unicolor :organism_Aphidius_platensis :organism_Rana_temporaria :organism_Drosophila_melanogaster ) .
+    owl:distinctMembers ( :organism_023773 :organism_000001 :organism_003743 :organism_004493 ) .

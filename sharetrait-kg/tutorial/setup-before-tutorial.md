@@ -45,7 +45,21 @@ If the file opens and the class tree looks like the diagram in Step 1 of the tut
 
 ---
 
-## 4. Bring to the session
+## 4. Confirm the reasoner runs
+
+We use an **OWL reasoner** (HermiT) to derive new facts - which classes subsume which, which individuals belong to which classes, whether the ontology is consistent. HermiT ships bundled with Protégé 5.x, so nothing to install; we just confirm it is selected and runs once on the starter file.
+
+1. With `sharetrait-ontology-starter.ttl` open, go to the **Reasoner** menu in the top bar.
+2. Make sure **HermiT** is checked (Pellet works too if HermiT is greyed out).
+3. Click **Reasoner > Start reasoner**.
+4. After a second or two, the status bar at the bottom should read *Reasoner active* with no red error popup.
+5. Click **Reasoner > Stop reasoner** before closing the file.
+
+If HermiT starts and stops without complaint, your Java install is healthy and you are ready for Step 11.
+
+---
+
+## 5. Bring to the session
 
 - Laptop (charged) with Protégé installed and the starter file opening cleanly.
 - The data file `sharetrait-data-sample.ttl` (we will load it together in Part 4).

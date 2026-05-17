@@ -7,7 +7,7 @@
 #
 # Run against sharetrait-kg.ttl (e.g. in QLever, GraphDB, or rdflib).
 # Output: the contents of sharetrait-data-sample.ttl, minus the value-
-# partition individuals (cold1/warm1/hot1, juvenile1/adult1/larva1), which
+# partition individuals (cold1/warm1/hot1, juvenile1/adult1/embryo1), which
 # the tutorial asserts manually.
 #
 # Hero record: TRAMEA023773 - juvenile Leiopotherapon unicolor (spangled
@@ -21,8 +21,13 @@
 #   Population  -> containsIndividual     -> Individual
 #   Taxonomy    -> labelsPopulation       -> Population
 #                  hasScientificName      -> "Genus species ..."
-#   Measurement -> hasLifeStageGeneral    -> "juvenile" | "adult" | "larva"
-#                                            (OPTIONAL; not always present)
+#   Measurement -> hasLifeStageGeneral    -> "juvenile" | "adult" | "egg" | "larva"
+#                                            (OPTIONAL; not always present.
+#                                             The tutorial ontology models
+#                                             three life stages - Embryo,
+#                                             Juvenile, Adult - so "egg"
+#                                             maps to :embryo1 and "larva"
+#                                             is dropped.)
 #   Measurement -> hasCondition           -> Condition
 #                  hasMethodCheck "test"
 #                  hasTemperature         -> decimal
@@ -102,11 +107,14 @@ WHERE {
                         t:hot1)) AS ?tempInd)
 
     # -- 8. Map life-stage string -> LifeStage individual ------------
-    #      Unbound ?lifeStr (Aphidius/Rana/Drosophila) leaves ?lifeInd
-    #      unbound and the CONSTRUCT skips the t:hasLifeStage triple.
+    #      Source strings: "juvenile", "adult", "egg", "larva".
+    #      Tutorial ontology has 3 stages (Embryo/Juvenile/Adult), so
+    #      "egg" -> :embryo1 and "larva" is unmapped (no triple emitted).
+    #      Unbound ?lifeStr (Aphidius/Rana/Drosophila) also leaves
+    #      ?lifeInd unbound; CONSTRUCT skips the t:hasLifeStage triple.
     BIND(IF(?lifeStr = "juvenile", t:juvenile1,
          IF(?lifeStr = "adult",    t:adult1,
-         IF(?lifeStr = "larva",    t:larva1,
+         IF(?lifeStr = "egg",      t:embryo1,
                                    ?undef))) AS ?lifeInd)
 
     # -- 9. Map species -> organism class ----------------------------
@@ -117,6 +125,13 @@ WHERE {
                                                   t:Organism)))) AS ?orgClass)
 
     # -- 10. Normalize scientific name + mint IRIs -------------------
+    # Each measurement individual (TRAMEA*) and each measured organism
+    # individual (TRAIND*) gets a numbered IRI in the tutorial namespace.
+    # Numbering organisms (rather than naming them after the species)
+    # makes it visually clear in Protégé that each organism is ONE
+    # animal, not the species as a whole. Two records can share a
+    # numeric ID (e.g. measurement_023773 was taken on organism_023773).
+    #
     # Drop any parenthesized text (author year or subgenus), then keep
     # only the first two whitespace-separated tokens (Genus + species):
     #   "Leiopotherapon unicolor (Gunther, 1859)"        -> "Leiopotherapon unicolor"
@@ -127,7 +142,7 @@ WHERE {
     BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#measurement_",
                     STRAFTER(STR(?mea), "TRAMEA")))           AS ?tInd)
     BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#organism_",
-                    REPLACE(?sciClean, " ", "_")))            AS ?orgInd)
+                    STRAFTER(STR(?ind), "TRAIND")))           AS ?orgInd)
 
     # -- 11. Instrument (OPTIONAL: respiratory chamber technique) ----
     # If the measurement used a respirometry technique, mint one

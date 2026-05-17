@@ -1,15 +1,16 @@
-@prefix :     <http://sharetrait.org/ontologies/traits#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <http://sharetrait.org/ontologies/traits#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@base <http://sharetrait.org/ontologies/traits#> .
 
 <http://sharetrait.org/ontologies/traits> rdf:type owl:Ontology ;
-    rdfs:label "ShareTrait Tutorial Ontology - Starter"@en ;
-    rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. In Steps 1-5 the participant adds exactly one element of each modelling layer that has been left out: one class (SpangledPerch), one disjoint axiom (Insect/Amphibian/Fish), one covering axiom (LifeStage), one object property (hasLifeStage), one data property (hasScientificName)."@en ;
-    owl:versionInfo "starter-1.3" .
-
+                                           owl:imports <http://sharetrait.org/ontologies/traits/data-sample> ;
+                                           rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. In Steps 1-5 the participant adds exactly one element of each modelling layer that has been left out: one class (SpangledPerch), one disjoint axiom (Insect/Amphibian/Fish), one covering axiom (LifeStage), one object property (hasLifeStage), one data property (hasScientificName). Four of the five defined classes (AquaticTraitMeasurement, ColdExposureMeasurement, InsectTraitMeasurement, JuvenileFishMeasurement) are pre-filled as reference patterns; the participant builds the fifth (RespirometryMeasurement) in Step 8."@en ;
+                                           rdfs:label "ShareTrait Tutorial Ontology - Starter"@en ;
+                                           owl:versionInfo "starter-1.5" .
 
 #################################################################
 #    Object Properties
@@ -57,9 +58,9 @@
 
 
 ###  http://sharetrait.org/ontologies/traits#measuredOnOrganism
-:measuredOnOrganism rdf:type owl:ObjectProperty ,
-                             owl:FunctionalProperty ;
+:measuredOnOrganism rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :hasComponent ;
+                    rdf:type owl:FunctionalProperty ;
                     rdfs:domain :TraitMeasurement ;
                     rdfs:range :Organism .
 
@@ -72,9 +73,9 @@
 
 
 ###  http://sharetrait.org/ontologies/traits#usedInstrument
-:usedInstrument rdf:type owl:ObjectProperty ,
-                         owl:FunctionalProperty ;
+:usedInstrument rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :hasComponent ;
+                rdf:type owl:FunctionalProperty ;
                 rdfs:domain :TraitMeasurement ;
                 rdfs:range :Instrument .
 
@@ -105,7 +106,23 @@
 
 ###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentStudy
 :AphidiusDevelopmentStudy rdf:type owl:Class ;
-                          rdfs:subClassOf :TraitMeasurement ;
+                          rdfs:subClassOf :TraitMeasurement ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTemperatureRange ;
+                                            owl:someValuesFrom :Cold
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :measuredOnOrganism ;
+                                            owl:someValuesFrom :ParasitoidWasp
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :measuresTraitType ;
+                                            owl:someValuesFrom :DevelopmentTrait
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :measuresTraitType ;
+                                            owl:allValuesFrom :DevelopmentTrait
+                                          ] ;
                           owl:disjointWith :SpangledPerchRespirometryStudy .
 
 
@@ -115,14 +132,52 @@
          owl:disjointWith :Terrestrial .
 
 
+###  http://sharetrait.org/ontologies/traits#AquaticTraitMeasurement
+:AquaticTraitMeasurement rdf:type owl:Class ;
+                         owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty :measuredOnOrganism ;
+                                                                      owl:someValuesFrom [ owl:intersectionOf ( :Organism
+                                                                                                                [ rdf:type owl:Restriction ;
+                                                                                                                  owl:onProperty :hasRealm ;
+                                                                                                                  owl:someValuesFrom :Aquatic
+                                                                                                                ]
+                                                                                                              ) ;
+                                                                                           rdf:type owl:Class
+                                                                                         ]
+                                                                    ]
+                                                                  ) ;
+                                               rdf:type owl:Class
+                                             ] ;
+                         rdfs:subClassOf :TraitMeasurement .
+
+
 ###  http://sharetrait.org/ontologies/traits#Cold
 :Cold rdf:type owl:Class ;
       rdfs:subClassOf :TemperatureRange .
 
 
+###  http://sharetrait.org/ontologies/traits#ColdExposureMeasurement
+:ColdExposureMeasurement rdf:type owl:Class ;
+                         owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty :hasTemperatureRange ;
+                                                                      owl:someValuesFrom :Cold
+                                                                    ]
+                                                                  ) ;
+                                               rdf:type owl:Class
+                                             ] ;
+                         rdfs:subClassOf :TraitMeasurement .
+
+
 ###  http://sharetrait.org/ontologies/traits#DevelopmentTrait
 :DevelopmentTrait rdf:type owl:Class ;
                   rdfs:subClassOf :TraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#Embryo
+:Embryo rdf:type owl:Class ;
+        rdfs:subClassOf :LifeStage .
 
 
 ###  http://sharetrait.org/ontologies/traits#FecundityTrait
@@ -151,6 +206,19 @@
         rdfs:subClassOf :Organism .
 
 
+###  http://sharetrait.org/ontologies/traits#InsectTraitMeasurement
+:InsectTraitMeasurement rdf:type owl:Class ;
+                        owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
+                                                                   [ rdf:type owl:Restriction ;
+                                                                     owl:onProperty :measuredOnOrganism ;
+                                                                     owl:someValuesFrom :Insect
+                                                                   ]
+                                                                 ) ;
+                                              rdf:type owl:Class
+                                            ] ;
+                        rdfs:subClassOf :TraitMeasurement .
+
+
 ###  http://sharetrait.org/ontologies/traits#Instrument
 :Instrument rdf:type owl:Class .
 
@@ -160,9 +228,21 @@
           rdfs:subClassOf :LifeStage .
 
 
-###  http://sharetrait.org/ontologies/traits#Larva
-:Larva rdf:type owl:Class ;
-       rdfs:subClassOf :LifeStage .
+###  http://sharetrait.org/ontologies/traits#JuvenileFishMeasurement
+:JuvenileFishMeasurement rdf:type owl:Class ;
+                         owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty :hasLifeStage ;
+                                                                      owl:someValuesFrom :Juvenile
+                                                                    ]
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty :measuredOnOrganism ;
+                                                                      owl:someValuesFrom :Fish
+                                                                    ]
+                                                                  ) ;
+                                               rdf:type owl:Class
+                                             ] ;
+                         rdfs:subClassOf :TraitMeasurement .
 
 
 ###  http://sharetrait.org/ontologies/traits#LifeStage
@@ -186,7 +266,9 @@
 ###  http://sharetrait.org/ontologies/traits#Realm
 :Realm rdf:type owl:Class ;
        owl:equivalentClass [ rdf:type owl:Class ;
-                             owl:unionOf ( :Aquatic :Terrestrial )
+                             owl:unionOf ( :Aquatic
+                                           :Terrestrial
+                                         )
                            ] .
 
 
@@ -203,7 +285,10 @@
 ###  http://sharetrait.org/ontologies/traits#TemperatureRange
 :TemperatureRange rdf:type owl:Class ;
                   owl:equivalentClass [ rdf:type owl:Class ;
-                                        owl:unionOf ( :Cold :Hot :Warm )
+                                        owl:unionOf ( :Cold
+                                                      :Hot
+                                                      :Warm
+                                                    )
                                       ] .
 
 
@@ -230,20 +315,36 @@
 #################################################################
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Adult :Juvenile :Larva )
+  owl:members ( :Adult
+                :Embryo
+                :Juvenile
+              )
 ] .
 
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Cold :Hot :Warm )
+  owl:members ( :Cold
+                :Hot
+                :Warm
+              )
 ] .
 
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :DevelopmentTrait :FecundityTrait :MetabolicRateTrait )
+  owl:members ( :DevelopmentTrait
+                :FecundityTrait
+                :MetabolicRateTrait
+              )
 ] .
 
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Instrument :Organism :TraitMeasurement :TraitType )
+  owl:members ( :Instrument
+                :Organism
+                :TraitMeasurement
+                :TraitType
+              )
 ] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
