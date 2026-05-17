@@ -146,7 +146,7 @@ Open the **starter file** in Protégé:
 
 **File > Open** > `sharetrait-ontology-starter.ttl`
 
-**The pedagogical pattern for the rest of the tutorial.** The starter is *almost* complete: in each of Steps 1–5 exactly **one** real element of that modelling layer (one class, one disjoint axiom, one covering axiom, one object property, one data property) has been left out for you to create. You learn how to create one real, meaningful element of each kind yourself, while the facilitator demonstrates the same action on screen. Steps 6–8 then build new axioms (realm restrictions, named measurement classes with closure, and five defined classes) on top of the completed starter. By the end of Block A your file is the full base ontology - 36 classes, 11 object properties, 2 data properties - built with your own hands.
+**The pedagogical pattern for the rest of the tutorial.** The starter is *almost* complete: in each of Steps 1–5 exactly **one** real element of that modelling layer (one class, one disjoint axiom, one covering axiom, one object property, one data property) has been left out for you to create. You learn how to create one real, meaningful element of each kind yourself, while the facilitator demonstrates the same action on screen. Steps 6–8 then build new axioms (realm restrictions, named measurement classes with closure, and five defined classes) on top of the completed starter. By the end of Block A your file is the full base ontology - 34 classes, 11 object properties, 2 data properties - built with your own hands.
 
 Save as you go: **File > Save**.
 
@@ -156,48 +156,46 @@ Save as you go: **File > Save**.
 
 ### Step 1 [hands-on]: Add one class - `SpangledPerch` (2 min)
 
-The starter contains 28 classes; the hero species class is missing. You add it.
+The starter contains 26 classes; the hero species class is missing. You add it.
 
-1. In the **Classes** tab, expand `owl:Thing > IndependentEntity > Organism > Fish`.
+1. In the **Classes** tab, expand `owl:Thing > Organism > Fish`.
 2. Right-click `Fish` and choose **Add subclass**.
 3. Name it `SpangledPerch`.
 
-The full class tree once you are done (29 classes):
+The full class tree once you are done (27 classes):
 
 ```
 owl:Thing
-├── IndependentEntity
-│   ├── TraitMeasurement
-│   │   ├── AphidiusDevelopmentStudy
-│   │   └── SpangledPerchRespirometryStudy
-│   ├── TraitType
-│   │   ├── DevelopmentTrait
-│   │   ├── FecundityTrait
-│   │   └── MetabolicRateTrait
-│   ├── Organism
-│   │   ├── Insect
-│   │   │   ├── ParasitoidWasp
-│   │   │   └── FruitFly
-│   │   ├── Amphibian
-│   │   └── Fish
-│   │       └── SpangledPerch          ← you add this
-│   └── Instrument
-│       └── Respirometer
-└── ValuePartition
-    ├── TemperatureRange
-    │   ├── Cold
-    │   ├── Warm
-    │   └── Hot
-    ├── Realm
-    │   ├── Terrestrial
-    │   └── Aquatic
-    └── LifeStage
-        ├── Juvenile
-        ├── Adult
-        └── Larva
+├── TraitMeasurement
+│   ├── AphidiusDevelopmentStudy
+│   └── SpangledPerchRespirometryStudy
+├── TraitType
+│   ├── DevelopmentTrait
+│   ├── FecundityTrait
+│   └── MetabolicRateTrait
+├── Organism
+│   ├── Insect
+│   │   ├── ParasitoidWasp
+│   │   └── FruitFly
+│   ├── Amphibian
+│   └── Fish
+│       └── SpangledPerch          ← you add this
+├── Instrument
+│   └── Respirometer
+├── TemperatureRange
+│   ├── Cold
+│   ├── Warm
+│   └── Hot
+├── Realm
+│   ├── Terrestrial
+│   └── Aquatic
+└── LifeStage
+    ├── Juvenile
+    ├── Adult
+    └── Larva
 ```
 
-That is 29 classes. We will add 7 more in Steps 8–9 (5 defined + 2 probe = 36 total).
+That is 27 classes. We will add 7 more in Steps 8–9 (5 defined + 2 probe = 34 total).
 
 > **Why `SpangledPerch` as its own class?** Species-level facts (conservation status, native range, external Wikidata URI) attach in one place instead of being repeated on every individual fish.
 
@@ -223,8 +221,7 @@ The full set of disjoint axioms in your file is now:
 
 | Parent | Disjoint siblings |
 |---|---|
-| `owl:Thing` | `IndependentEntity`, `ValuePartition` |
-| `IndependentEntity` | `TraitMeasurement`, `TraitType`, `Organism`, `Instrument` |
+| `owl:Thing` | `TraitMeasurement`, `TraitType`, `Organism`, `Instrument` |
 | `TraitType` | `DevelopmentTrait`, `FecundityTrait`, `MetabolicRateTrait` |
 | **`Organism`** | **`Insect`, `Amphibian`, `Fish`** ← you add this |
 | `Insect` | `ParasitoidWasp`, `FruitFly` |
@@ -257,7 +254,7 @@ Without these, someone could create a fourth life stage and the reasoner would a
 
 Switch to the **Object Properties** tab. Ten of the eleven object properties needed by the rest of the tutorial are pre-loaded. You add the eleventh: `hasLifeStage`.
 
-**Functional** and **Inverse Of** were introduced in Part 1 - this is the step where you tick the **Functional** box for real. The starter has ticked **Functional** on `measuredOnOrganism`, `usedInstrument`, `hasTemperatureRange`, `hasRealm`; you tick it on `hasLifeStage` too. Inverse pairs (e.g. `measuredOnOrganism` / `isOrganismOf`) are visible in the reference table below - the facilitator walks through them on screen while you create your property.
+A **Functional** property means "at most one value per subject" - one measurement has one organism, one instrument, one temperature range, one life stage. An **inverse** pair (declared with `owl:inverseOf`) links two properties pointing in opposite directions: stating `m measuredOnOrganism o` once lets the reasoner derive `o isOrganismOf m`. In the starter, `measuredOnOrganism`, `usedInstrument`, `hasTemperatureRange`, and `hasRealm` are already declared **Functional**, and the four inverse pairs are already set; you declare `hasLifeStage` Functional as well.
 
 **Your turn:**
 

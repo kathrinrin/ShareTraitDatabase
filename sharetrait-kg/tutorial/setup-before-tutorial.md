@@ -37,7 +37,7 @@ Download `sharetrait-ontology-starter.ttl` from the tutorial materials and open 
 
 You should see:
 
-- A class tree with **29 classes** under `owl:Thing` (`IndependentEntity` and `ValuePartition` are the two top branches).
+- A class tree with **26 classes** under `owl:Thing` (top-level branches: `TraitMeasurement`, `TraitType`, `Organism`, `Instrument`, `TemperatureRange`, `Realm`, `LifeStage`).
 - No errors in red.
 - The window title shows `sharetrait-ontology-starter.ttl`.
 

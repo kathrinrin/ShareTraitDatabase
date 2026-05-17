@@ -72,23 +72,13 @@ terms:license a owl:AnnotationProperty .
 
 
 # ==============================================================
-#  Top Hierarchy
-# ==============================================================
-
-:IndependentEntity a owl:Class ;
-    owl:disjointWith :ValuePartition .
-
-:ValuePartition a owl:Class .
-
-
-# ==============================================================
 #  Independent Entities
 # ==============================================================
 
-:TraitMeasurement a owl:Class ; rdfs:subClassOf :IndependentEntity .
-:TraitType        a owl:Class ; rdfs:subClassOf :IndependentEntity .
-:Organism         a owl:Class ; rdfs:subClassOf :IndependentEntity .
-:Instrument       a owl:Class ; rdfs:subClassOf :IndependentEntity ;
+:TraitMeasurement a owl:Class .
+:TraitType        a owl:Class .
+:Organism         a owl:Class .
+:Instrument       a owl:Class ;
     rdfs:label "Instrument"@en ;
     rdfs:comment "A physical device used to acquire a trait measurement (e.g. respirometer, oxygen sensor, climate chamber)."@en .
 
@@ -159,7 +149,6 @@ terms:license a owl:AnnotationProperty .
 # ---- TemperatureRange ----
 
 :TemperatureRange a owl:Class ;
-    rdfs:subClassOf :ValuePartition ;
     owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Cold :Warm :Hot ) ] .
 
 :Cold a owl:Class ; rdfs:subClassOf :TemperatureRange .
@@ -171,7 +160,6 @@ terms:license a owl:AnnotationProperty .
 # ---- Realm ----
 
 :Realm a owl:Class ;
-    rdfs:subClassOf :ValuePartition ;
     owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Terrestrial :Aquatic ) ] .
 
 :Terrestrial a owl:Class ; rdfs:subClassOf :Realm ; owl:disjointWith :Aquatic .
@@ -180,7 +168,6 @@ terms:license a owl:AnnotationProperty .
 # ---- LifeStage ----
 
 :LifeStage a owl:Class ;
-    rdfs:subClassOf :ValuePartition ;
     owl:equivalentClass [ a owl:Class ; owl:unionOf ( :Juvenile :Adult :Larva ) ] .
 
 :Juvenile a owl:Class ; rdfs:subClassOf :LifeStage .
