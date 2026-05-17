@@ -7,7 +7,7 @@
 
 # ==============================================================
 #  Sample data extracted from the ShareTrait Knowledge Graph
-#  mapped to the trait ontology classes for Protege reasoning.
+#  mapped to the trait ontology classes for Protégé reasoning.
 #
 #  Source: sharetrait-kg.ttl via CONSTRUCT query
 #          (see extract-data-sample.sparql)
@@ -26,6 +26,12 @@
 #
 #  These 6 records are real measurements. Each measurement individual
 #  is typed ONLY as :TraitMeasurement. The reasoner must infer the rest.
+#
+#  Body size is intentionally NOT modelled here. The KG does carry
+#  body mass for the perch records; we kept this tutorial subset
+#  focused on Measurement -> Trait -> Organism so the reasoning
+#  story stays tight in two hours. Re-modelling body size as its
+#  own BodySizeMeasurement is on the roadmap for a follow-up session.
 # ==============================================================
 
 
@@ -86,11 +92,14 @@
 # -- HERO RECORD ------------------------------------------------
 # TRAMEA023773: juvenile Leiopotherapon unicolor,
 # standard metabolic rate, 21.5 C, nitrate control (0 mg/L NO3-).
-# Expected inferences:
+# Expected inferences (defined / EquivalentTo classes only):
 #   - AquaticTraitMeasurement   (fish -> aquatic realm)
 #   - JuvenileFishMeasurement   (fish + juvenile)
 #   - RespirometryMeasurement   (used a respirometer)
-#   - SpangledPerchRespirometryStudy  (fish + warm + juvenile + MR + respirometer)
+# Note: SpangledPerchRespirometryStudy is declared with SubClassOf
+# (necessary conditions only), so the reasoner places it in the
+# class hierarchy under the three defined classes above, but does
+# not classify this individual into it.
 
 :measurement_023773 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA023773 (hero record)" ;

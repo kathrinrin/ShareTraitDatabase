@@ -1,22 +1,55 @@
 # Building a Traits Ontology: Hands-on Tutorial
 
-> **Duration:** ~2 hours (intro, hands-on, break, real data demo)
-> **Tool:** [Protege Desktop](https://protege.stanford.edu/) (version 5.x)
-> **Prerequisites:** Protege installed, Java runtime
-> **Result:** A small OWL ontology that automatically classifies trait measurements using real ShareTrait data — with one juvenile spangled perch as the worked example
+> **Duration:** 2 hours (intro, ShareTrait, two hands-on blocks with plenaries, break, wrap-up)
+> **Tool:** [Protégé Desktop](https://protege.stanford.edu/) (version 5.x)
+> **Prerequisites:** Protégé and Java pre-installed and confirmed working before the session - see `setup-before-tutorial.md`. Bring `sharetrait-ontology-starter.ttl` opening cleanly in Protégé.
+> **Result:** A small OWL ontology that automatically classifies trait measurements using real ShareTrait data - with one juvenile spangled perch as the worked example
+
+The starter file `sharetrait-ontology-starter.ttl` is *almost* complete: one real element of each modelling layer (one class, one disjoint axiom, one covering axiom, one object property, one data property) has been left empty so participants create it themselves in Steps 1–5 of the live session. Steps 6–11 then build on top of the completed starter. The tutorial text below walks through every step in detail so it can also be used to rebuild the ontology from scratch later.
+
+---
+
+## Running order (120 min)
+
+| Time | Block | Mode |
+|---|---|---|
+| 0:00–0:10 | Part 1 - Intro to ontologies | demo |
+| 0:10–0:20 | Part 2 - ShareTrait introduction | presentation |
+| 0:20–0:50 | Part 3 - Hands-on Block A (Steps 1–8) | hands-on |
+| 0:50–1:00 | Plenary A | discussion |
+| 1:00–1:10 | Break | - |
+| 1:10–1:40 | Part 4 - Hands-on Block B (Steps 9–11 + data) | hands-on + demo |
+| 1:40–1:50 | Plenary B - what the reasoner inferred | discussion |
+| 1:50–2:00 | Part 5 - Reuse, what comes next, Q&A | discussion |
+
+Work in **pairs**. Save as you go.
+
+---
+
+## Research question for today
+
+> **How does standard metabolic rate scale with body mass in freshwater fish at ~21 °C - and does environmental stress (here: nitrate exposure) shift that scaling?**
+
+This is the question that motivates today's modelling work. Three things to note:
+
+- It needs **body mass *and* metabolic rate** on the same record - exactly what ShareTrait stores.
+- One study (Gomez Isaza et al. 2020) gives us 3 juvenile spangled perch in the dataset: body masses 7.4 g / 9.6 g / 12.4 g, control SMR ≈ **117 mgO₂/h/kgFM**, nitrate-stressed (100 mg/L NO₃⁻) ≈ **751 mgO₂/h/kgFM** - ~6.4× higher.
+- A scaling *curve* needs many more studies than that. The point of an ontology is to make those studies findable and combinable across labs - we return to what the tutorial does and does not answer at the end (Part 5).
+
+Throughout the rest of the tutorial we keep coming back to one of those three perch records (`TRAMEA023773`) as the worked example.
 
 ---
 
 ## The worked example: one juvenile spangled perch
 
-Throughout this tutorial we keep coming back to a single real measurement from ShareTrait:
+Here is the full record for `TRAMEA023773`:
 
 | Field | Value |
 |---|---|
 | Measurement ID | `TRAMEA023773` |
 | Species | *Leiopotherapon unicolor* (spangled perch, a small Australian freshwater fish) |
 | Life stage | juvenile |
-| Body mass | 0.0074 kg (≈ 7.4 g) |
+| Body mass | ≈ 7.4 g |
 | Trait | standard metabolic rate |
 | Value | **117.0165483 mgO2/h/kgFM** |
 | Test temperature | 21.5 °C |
@@ -25,49 +58,9 @@ Throughout this tutorial we keep coming back to a single real measurement from S
 | Source | Gomez Isaza et al. (2020), *Conservation Physiology* 8(1):coz092, [doi:10.1093/conphys/coz092](https://doi.org/10.1093/conphys/coz092) |
 | Dataset DOI | [10.14264/80b3353](https://doi.org/10.14264/80b3353) |
 
-In the original study, 300 juvenile spangled perch were exposed for 28 days to a 2 × 3 factorial of pH (7.0 or 4.0) and nitrate (0, 50, or 100 mg/L), then their resting oxygen consumption was measured. Our hero fish (`TRAMEA023773`) is one of the control animals — it tells us what "normal" oxygen demand looks like for a small juvenile of this species at 21.5 °C.
+In the original study, 300 juvenile spangled perch were exposed for 28 days to a 2 × 3 factorial of pH (7.0 or 4.0) and nitrate (0, 50, or 100 mg/L), then their resting oxygen consumption was measured. Our hero fish (`TRAMEA023773`) is one of the control animals - it tells us what "normal" oxygen demand looks like for a small juvenile of this species at 21.5 °C.
 
-Why this record? It is biologically rich (a real ectotherm under controlled conditions, with a clearly documented method), it has all the contextual fields we want to model (species, life stage, temperature, value), and we have two more records from the same study to use as comparators. By the end of the tutorial, the OWL reasoner will be classifying this measurement automatically into four different categories without us having to label it manually.
-
----
-
-## Background: ShareTrait and the Problem We Are Solving
-
-### What is ShareTrait?
-
-[ShareTrait](https://sharetrait.org/) is an open database of individual-level trait measurements for ectotherms — animals whose body temperature follows their environment (insects, fish, amphibians, crustaceans, and over 99% of animal species). It currently focuses on three fundamental traits measurable in almost all animals:
-
-- **Metabolic rate** — how fast an animal burns energy (our hero record measures this)
-- **Development time** — how long it takes to reach a life stage
-- **Fecundity** — how many offspring an animal produces
-
-Each record stores not just the trait value, but rich metadata: the species, collection site, sex, life stage, rearing temperature, acclimation conditions, and measurement technique. As of 2025, ShareTrait holds ~28,000 individual-level records from 45 datasets contributed by researchers worldwide (Leiva et al., *Functional Ecology*, 2025).
-
-The database is built on a **relational SQL structure** — multiple tables linked by primary keys, queryable with SQL. This works well for structured retrieval within the database.
-
-### The problem: ShareTrait is an island
-
-The SQL database answers questions about what is *in* ShareTrait. It cannot easily answer questions about how ShareTrait data relates to the rest of the world. Three concrete limitations, illustrated with the spangled perch record:
-
-1. **Terms are strings, not concepts.** `trait_type = 'metabolic_rate'` is text. An external tool has no way to know that this is the same concept as "respiration rate" in another database, or how it relates to "fecundity".
-
-2. **Taxonomy is a batch pipeline.** To answer "give me all metabolic-rate measurements for freshwater fish" you must first know that *Leiopotherapon unicolor* is a freshwater fish — currently encoded only as a string column.
-
-3. **Integration with external data requires manual pipelines.** Linking the spangled perch record to its IUCN conservation status, its native range, or its phylogenetic relatives means writing custom code each time.
-
-### What an ontology adds
-
-An ontology is a formal vocabulary where terms have stable identifiers, definitions, and explicit relationships. Combining ShareTrait data with an ontology (a **knowledge graph**) addresses each limitation directly:
-
-| # | Advantage | What it means for the spangled perch record |
-|---|---|---|
-| 1 | **Connect to external databases without manual pipelines** | The fish individual can be joined live with Wikidata (conservation status, distribution) or GBIF occurrences in a single SPARQL query |
-| 2 | **Find what is missing, not just what is there** | You can quickly ask "which Australian freshwater fish have no metabolic-rate records yet?" |
-| 3 | **Data has meaning, not just values** | `MetabolicRateTrait` is a concept with a definition, not the string `"metabolic_rate"` |
-| 4 | **Query across the taxonomic tree using graph traversal** | A single recursive query finds all `Fish` measurements automatically — spangled perch included |
-| 5 | **The vocabulary becomes a reusable standard** | `sharetrait-owl.ttl` is a citable artefact other trait databases can align to |
-
-This tutorial builds a small OWL ontology from scratch and then loads the spangled perch (plus five comparator records) into it. By the end you will understand how ontologies work mechanically — which is exactly what you need to read, evaluate, and reuse the ShareTrait knowledge graph.
+Why this record? It is biologically rich (a real ectotherm under controlled conditions, with a clearly documented method), it has all the contextual fields we want to model (species, life stage, temperature, value), and we have two more records from the same study to use as comparators. By the end of the tutorial, the OWL reasoner will be classifying this measurement automatically into three inferred categories (`AquaticTraitMeasurement`, `JuvenileFishMeasurement`, `RespirometryMeasurement`) without us having to label it manually.
 
 ---
 
@@ -91,38 +84,85 @@ We write ontologies in **OWL** (Web Ontology Language). Files use **Turtle** for
 - **Automated reasoning**: the computer draws conclusions from your rules
 - **Error detection**: logical contradictions are caught automatically
 
-### A bit of notation
+---
 
-Protégé shows axioms in a readable "Manchester syntax" with four symbols you need to recognise:
+## Concept cheat sheet (reference)
 
-| Manchester | DL symbol | Meaning |
+Keep this table open in a side tab during the hands-on, or printed on the table next to your laptop. Every concept the tutorial touches, in one place, with the spangled-perch example for each:
+
+| Concept | What it does | From our fish |
 |---|---|---|
-| `and` | ⊓ | both classes apply |
-| `or` | ⊔ | at least one class applies |
-| `some` | ∃ | existential restriction ("at least one") |
-| `only` | ∀ | universal restriction ("only values of this kind") |
-
-### The open-world assumption
-
-In a database, missing data means "no". In OWL, missing data means "unknown". This matters: if you say our spangled perch measurement `measuresTraitType` some `MetabolicRateTrait` but do not say it *only* involves a metabolic rate, the reasoner thinks "maybe it also measures development time." The fix is a **closure axiom** with `only` — see Step 6.
+| *Vocabulary primitives* | | |
+| **Class** | A category of things | `SpangledPerch`, `Fish`, `MetabolicRateTrait`, `Respirometer` |
+| **Property** | A relationship between things (object property) or between a thing and a literal (data property) | `measuredOnOrganism` (object), `hasTraitValue` (data) |
+| **Individual** | A concrete thing | `organism_Leiopotherapon_unicolor`, `measurement_023773` |
+| **Axiom** | A logical statement the reasoner can use | "every `Fish` lives in an `Aquatic` realm" |
+| *Class axioms* | | |
+| **SubClassOf** (⊑) | "Is-a"; *necessary* condition. Members must satisfy it, but satisfying it does not make you a member | `SpangledPerch ⊑ Fish` |
+| **EquivalentTo** (≡) | Necessary *and sufficient*; defined class; anything matching is automatically classified | `JuvenileFishMeasurement ≡ TraitMeasurement and (measuredOnOrganism some Fish) and (hasLifeStage some Juvenile)` |
+| **Disjoint Classes** | "These classes can never overlap" | `Insect`, `Amphibian`, `Fish` are pairwise disjoint |
+| **Covering axiom** | "These subclasses are the only options"; `EquivalentTo` a disjunction of the subclasses | `LifeStage ≡ Juvenile or Adult or Larva` |
+| **`owl:Nothing`** (empty class, ⊥) | The class with no members; any class proven equivalent to it is **unsatisfiable** (the reasoner flags it red) | `InconsistentDevelopmentMetabolism` collapses to `owl:Nothing` because it inherits from two disjoint trait types |
+| *Logical connectives* | | |
+| **Conjunction** (`and`, ⊓) | Both classes apply | `Fish and (hasRealm some Aquatic)` |
+| **Disjunction** (`or`, ⊔) | At least one of the classes applies | `Juvenile or Adult or Larva` |
+| *Property restrictions (quantifiers)* | | |
+| **Existential restriction** (`some`, ∃) | "At least one value of this kind exists" | `Fish ⊑ hasRealm some Aquatic` |
+| **Universal restriction** (`only`, ∀) | "If a value exists for this property, it must be of this kind"; a **closure axiom** | `SpangledPerchRespirometryStudy ⊑ measuresTraitType only MetabolicRateTrait` |
+| *Property characteristics* | | |
+| **Functional** property | "At most one value" | `measuredOnOrganism`: one measurement, one organism |
+| **Transitive** property | If `a R b` and `b R c`, then `a R c` | Not used in this tutorial; a classic example is `partOf`: if a fin is part of a perch and the perch is part of a population, the fin is part of the population |
+| **Inverse Of** | Two properties pointing opposite ways; state once, reasoner derives both | `measuredOnOrganism` / `isOrganismOf` |
+| *Reasoner concepts* | | |
+| **Realisation** (instance classification) | Reasoner deciding which classes each individual belongs to | `measurement_023773` → `JuvenileFishMeasurement`, `AquaticTraitMeasurement`, `RespirometryMeasurement` |
+| **Open-world assumption (OWA)** | Missing data means "unknown", not "no"; the reason `only` closure axioms are needed | Without `only` on `measuresTraitType`, the reasoner could imagine the perch measurement also has a `DevelopmentTrait` |
 
 ---
 
-## Part 2: Hands-on in Protege (~55 min)
+## Part 2: ShareTrait - what it is and why an ontology on top (10 min)
 
-Create a new ontology:
+A short presentation from the ShareTrait team. No hands-on action. The presentation covers:
 
-1. **File > New Ontology**
-2. Ontology IRI: `http://sharetrait.org/ontologies/traits`
-3. **File > Save As** > Turtle format, name it `sharetrait-ontology.ttl`
+- What the **ShareTrait database** is, what it covers, and who contributes.
+- How a record is structured (species, individual, condition, technique, trait, value, body size).
+- Why we are now adding an **ontology layer** on top - and where this tutorial fits in.
 
-Save often!
+The short version of why we are adding an ontology on top of ShareTrait:
+
+| # | Advantage | What it means for the spangled perch record |
+|---|---|---|
+| 1 | **Terms have meaning, not just values** | `MetabolicRateTrait` is a concept with a definition; the species is `Leiopotherapon unicolor` joinable to Wikidata, GBIF, or IUCN in one SPARQL query |
+| 2 | **Reasoning over the taxonomy** | A single query finds all `Fish` measurements automatically - spangled perch included |
+| 3 | **Find what is missing, not just what is there** | "Which Australian freshwater fish have no metabolic-rate records yet?" becomes a one-line query |
+| 4 | **The vocabulary becomes a reusable standard** | Other trait databases can align to it instead of re-inventing terms |
+
+The rest of this tutorial builds a small OWL ontology and loads six real measurements into it - the hero spangled perch (`TRAMEA023773`), two more spangled perch from the same study (one control, one nitrate-stressed), and three records from different species (parasitoid wasp, frog, fruit fly). By the end you will understand how ontologies work mechanically. 
 
 ---
 
-### Step 1: Class hierarchy (10 min)
+## Part 3: Hands-on in Protégé - Block A (30 min)
 
-Build the full class tree. Right-click a class and select **Add subclass** to create children.
+Open the **starter file** in Protégé:
+
+**File > Open** > `sharetrait-ontology-starter.ttl`
+
+**The pedagogical pattern for the rest of the tutorial.** The starter is *almost* complete: in each of Steps 1–5 exactly **one** real element of that modelling layer (one class, one disjoint axiom, one covering axiom, one object property, one data property) has been left out for you to create. You learn how to create one real, meaningful element of each kind yourself, while the facilitator demonstrates the same action on screen. Steps 6–8 then build new axioms (realm restrictions, named measurement classes with closure, and five defined classes) on top of the completed starter. By the end of Block A your file is the full base ontology - 36 classes, 11 object properties, 2 data properties - built with your own hands.
+
+Save as you go: **File > Save**.
+
+> The eight Block A sub-steps and the four Block B sub-steps in this tutorial are deliberately bite-sized - each one targets exactly one OWL concept (class, disjoint, covering, property, restriction, closure, defined class, individual). The facilitator demonstrates the same action on screen, so you can still see how it is done even if you fall behind.
+
+---
+
+### Step 1 [hands-on]: Add one class - `SpangledPerch` (2 min)
+
+The starter contains 28 classes; the hero species class is missing. You add it.
+
+1. In the **Classes** tab, expand `owl:Thing > IndependentEntity > Organism > Fish`.
+2. Right-click `Fish` and choose **Add subclass**.
+3. Name it `SpangledPerch`.
+
+The full class tree once you are done (29 classes):
 
 ```
 owl:Thing
@@ -140,7 +180,7 @@ owl:Thing
 │   │   │   └── FruitFly
 │   │   ├── Amphibian
 │   │   └── Fish
-│   │       └── SpangledPerch
+│   │       └── SpangledPerch          ← you add this
 │   └── Instrument
 │       └── Respirometer
 └── ValuePartition
@@ -157,60 +197,77 @@ owl:Thing
         └── Larva
 ```
 
-That is 28 classes. We will add 7 more later (5 defined + 2 probe = 35 total). Check your tree in Protege against the diagram.
+That is 29 classes. We will add 7 more in Steps 8–9 (5 defined + 2 probe = 36 total).
 
-> **Why `SpangledPerch` as its own class?** Our hero record is a *Leiopotherapon unicolor*. Giving the species its own class under `Fish` lets us attach species-level facts (conservation status, native range, an external Wikidata URI) in one place, instead of repeating them on every individual fish.
+> **Why `SpangledPerch` as its own class?** Species-level facts (conservation status, native range, external Wikidata URI) attach in one place instead of being repeated on every individual fish.
 
-> **Why `SpangledPerchRespirometryStudy` and not `ZebrafishMetabolicStudy`?** It is a *named class of measurement*, named after the hero study (Gomez Isaza et al. 2020), and fully described by the trait type, organism, temperature, and life stage it must have.
+> **Why `SpangledPerchRespirometryStudy` (a study-shaped class)?** It is described by the trait type, organism, temperature, life stage, and instrument it must have - exactly the pattern we will exercise in Step 7.
 
-> **Why `LifeStage` as a value partition?** Our hero fish is a juvenile. Life stage is a closed set of categories (juvenile / adult / larva), exactly the kind of thing value partitions are for.
+> **Why `LifeStage` as a value partition?** It is a small closed set (juvenile / adult / larva) - the textbook use case for value partitions.
 
-> **Why an `Instrument` class?** The hero record was acquired with a 693 mL acrylic respirometer and a fiber-optic O₂ sensor. The original SQL database stores this as free-text columns on a `respiratory_chamber` row; in the ontology we lift it to a first-class entity so two studies that used the same device can be linked, and so we can ask "give me every metabolic-rate record acquired with a respirometer" with one query.
+> **Why an `Instrument` class?** Lifting the respirometer from a free-text column to a first-class entity lets the reasoner answer "every metabolic-rate record acquired with a respirometer" with one query.
 
 ---
 
-### Step 2: Disjoint classes (5 min)
+### Step 2 [hands-on]: Add one disjoint-class axiom - Insect / Amphibian / Fish (2 min)
 
-Disjoint means "these classes can never overlap." Add disjoint axioms for each group of siblings:
+Disjoint means "these classes can never overlap." The starter declares disjointness for every sibling group *except* the three organism kinds - you add that one.
 
-1. Select any class, then in the **Description** panel click **+** next to **Disjoint With**.
-2. Or right-click a parent class and use **Make all sibling classes disjoint** if available.
+1. Select `Insect`.
+2. In the **Description** panel, click **+** next to **Disjoint With**.
+3. Add `Amphibian` and `Fish`.
 
-Add disjoints for these groups:
+Protégé propagates the symmetric axiom - you only need to state it once. The probe class in Step 9 will demonstrate what disjoint axioms catch.
+
+The full set of disjoint axioms in your file is now:
 
 | Parent | Disjoint siblings |
 |---|---|
 | `owl:Thing` | `IndependentEntity`, `ValuePartition` |
 | `IndependentEntity` | `TraitMeasurement`, `TraitType`, `Organism`, `Instrument` |
 | `TraitType` | `DevelopmentTrait`, `FecundityTrait`, `MetabolicRateTrait` |
-| `Organism` | `Insect`, `Amphibian`, `Fish` |
+| **`Organism`** | **`Insect`, `Amphibian`, `Fish`** ← you add this |
 | `Insect` | `ParasitoidWasp`, `FruitFly` |
-| `Fish` | `SpangledPerch` (only one for now; no disjoint needed until siblings exist) |
-| `Instrument` | `Respirometer` (only one for now) |
 | `TemperatureRange` | `Cold`, `Warm`, `Hot` |
 | `Realm` | `Terrestrial`, `Aquatic` |
 | `LifeStage` | `Juvenile`, `Adult`, `Larva` |
 | `TraitMeasurement` | `AphidiusDevelopmentStudy`, `SpangledPerchRespirometryStudy` |
 
-We will test these disjoints later with a probe class.
-
 ---
 
-### Step 3: Covering axioms (3 min)
+### Step 3 [hands-on]: Add one covering axiom - `LifeStage` (2 min)
 
-A covering axiom says "these subclasses are the only options." Select the parent class, click **+** next to **Equivalent To**, and enter the union:
+A covering axiom says "these subclasses are the only options." The starter declares covering for `TemperatureRange` and `Realm` - you add it for `LifeStage`.
+
+1. Select `LifeStage`.
+2. In the **Description** panel, click **+** next to **Equivalent To**.
+3. Enter: `Juvenile or Adult or Larva`.
+
+Your file now has all three covering axioms:
 
 - `TemperatureRange`: `Cold or Warm or Hot`
 - `Realm`: `Terrestrial or Aquatic`
-- `LifeStage`: `Juvenile or Adult or Larva`
+- **`LifeStage`: `Juvenile or Adult or Larva`** ← you add this
 
 Without these, someone could create a fourth life stage and the reasoner would accept it.
 
 ---
 
-### Step 4: Properties (10 min)
+### Step 4 [hands-on]: Add one object property - `hasLifeStage` (5 min)
 
-Switch to the **Object Properties** tab. Create these 11 properties:
+Switch to the **Object Properties** tab. Ten of the eleven object properties needed by the rest of the tutorial are pre-loaded. You add the eleventh: `hasLifeStage`.
+
+**Functional** and **Inverse Of** were introduced in Part 1 - this is the step where you tick the **Functional** box for real. The starter has ticked **Functional** on `measuredOnOrganism`, `usedInstrument`, `hasTemperatureRange`, `hasRealm`; you tick it on `hasLifeStage` too. Inverse pairs (e.g. `measuredOnOrganism` / `isOrganismOf`) are visible in the reference table below - the facilitator walks through them on screen while you create your property.
+
+**Your turn:**
+
+1. Right-click `owl:topObjectProperty` > **Add sub property** → name it `hasLifeStage`.
+2. In the Description panel:
+   - **Domains** → `TraitMeasurement`
+   - **Ranges** → `LifeStage`
+   - Tick **Functional** under *Characteristics*.
+
+Full reference (yours plus the pre-loaded ten):
 
 | Property | Domain | Range | Characteristics |
 |---|---|---|---|
@@ -223,27 +280,32 @@ Switch to the **Object Properties** tab. Create these 11 properties:
 | `usedInstrument` | `TraitMeasurement` | `Instrument` | SubProperty of `hasComponent`, **Functional** |
 | `isInstrumentOf` | | | Inverse of `usedInstrument` |
 | `hasTemperatureRange` | `TraitMeasurement` | `TemperatureRange` | **Functional** |
-| `hasLifeStage` | `TraitMeasurement` | `LifeStage` | **Functional** |
+| **`hasLifeStage`** | **`TraitMeasurement`** | **`LifeStage`** | **Functional** ← you add this |
 | `hasRealm` | `Organism` | `Realm` | **Functional** |
 
-For each property:
-- Right-click `owl:topObjectProperty` > **Add sub property**
-- Set **Domain** and **Range** in the Description panel
-- For inverses: click **+** next to **Inverse Of**
-- For functional: tick **Functional** under Characteristics
+---
 
-**Functional** means "at most one value." A measurement has one temperature range, one life stage, one primary instrument; an organism lives in one realm.
+### Step 5 [hands-on]: Add one data property - `hasScientificName` (3 min)
 
-Then switch to **Data Properties** and create:
+Switch to the **Data Properties** tab. One data property is pre-loaded (`hasTraitValue`, range `xsd:decimal`). You add the second, which carries species labels on organism individuals in Step 10.
+
+1. Right-click `owl:topDataProperty` > **Add sub property** → name it `hasScientificName`.
+2. In the Description panel:
+   - **Domains** → `Organism`
+   - **Ranges** → `xsd:string`
+
+Your file now has both data properties:
 
 | Property | Domain | Range |
 |---|---|---|
 | `hasTraitValue` | `TraitMeasurement` | `xsd:decimal` |
-| `hasScientificName` | `Organism` | `xsd:string` |
+| **`hasScientificName`** | **`Organism`** | **`xsd:string`** ← you add this |
+
+Only two data properties - we keep the tutorial focused on the Measurement → Trait → Organism story. Body size is *not* modelled here; see the note in Part 5.
 
 ---
 
-### Step 5: Restrictions on organisms (3 min)
+### Step 6 [hands-on]: Realm restrictions on `Insect` and `Fish` (3 min)
 
 Go back to the **Classes** tab.
 
@@ -256,9 +318,9 @@ Once this restriction is in place, the spangled perch (an instance of `Fish`) wi
 
 ---
 
-### Step 6: Named measurements — existential restrictions + a closure axiom (8 min)
+### Step 7 [hands-on]: Named measurements - existential restrictions + a closure axiom (8 min)
 
-This is the key step. We describe our two *named measurement classes* as **necessary conditions** (subclass-of axioms) using existential (`some`, ∃) and universal (`only`, ∀) property restrictions.
+This is the key modelling step. We describe our two *named measurement classes* as **necessary conditions** (subclass-of axioms) using existential (`some`, ∃) and universal (`only`, ∀) property restrictions.
 
 Select each study class and add these **SubClass Of** restrictions:
 
@@ -283,20 +345,19 @@ measuresTraitType   only MetabolicRateTrait   -- closure axiom (∀)
 **Why both `some` and `only`?**
 
 - `some` (∃) is an **existential restriction**: "at least one value of this type exists." Without it, an empty measurement would trivially satisfy `only`.
-- `only` (∀) is a **universal restriction** — a **closure axiom**: "if a value exists for this property, it must be of this type." Without it, the OWA lets the reasoner imagine other trait types attached to the measurement.
+- `only` (∀) is a **universal restriction** - a **closure axiom**: "if a value exists for this property, it must be of this type." Without it, the OWA lets the reasoner imagine other trait types attached to the measurement.
 
-We attach these as `SubClassOf` (necessary conditions), *not* `EquivalentTo` (necessary and sufficient). That is the next step.
+We attach these as `SubClassOf` (necessary conditions), *not* `EquivalentTo` (necessary and sufficient). The contrast - and what `EquivalentTo` buys us - is the topic of the next step (on a different set of classes).
 
 ---
 
-### Step 7: Defined classes — necessary *and sufficient* conditions (6 min)
-
+### Step 8 [hands-on]: Defined classes - necessary *and sufficient* conditions (6 min)
 This is the most important distinction in OWL modelling:
 
 - A **SubClassOf** axiom states *necessary* conditions. Any member of the class must satisfy them, but satisfying them does not make you a member.
 - An **EquivalentTo** axiom states *necessary and sufficient* conditions. Anything that satisfies them is automatically classified as a member by the reasoner.
 
-Defined classes use **EquivalentTo** axioms. The reasoner then becomes an automatic classifier — exactly what we want for `JuvenileFishMeasurement` to swallow the spangled perch records.
+Defined classes use **EquivalentTo** axioms. The reasoner then becomes an automatic classifier - exactly what we want for `JuvenileFishMeasurement` to swallow the spangled perch records.
 
 Create five new classes under `TraitMeasurement`. For each, click **+** next to **Equivalent To**:
 
@@ -337,7 +398,28 @@ Before running the reasoner, predict which records end up where:
 
 ---
 
-### Step 8: Probe classes (3 min)
+## Plenary A - checkpoint after Step 8 (10 min)
+
+Quick group check before the break. Things to look at together:
+
+- Inferred class hierarchy: does `SpangledPerchRespirometryStudy` appear under `JuvenileFishMeasurement`?
+- The role of the closure axiom (`only`) under the open-world assumption.
+- The difference between `SubClassOf` (named class) and `EquivalentTo` (defined class).
+- Anyone stuck - fix together so Block B starts clean.
+
+---
+
+## Break (10 min)
+
+---
+
+## Part 4: Hands-on in Protégé - Block B (30 min)
+
+In Block B you add probe classes, create the organism individuals, run the reasoner, then load six real ShareTrait measurements and watch the reasoner classify them.
+
+---
+
+### Step 9 [hands-on]: Probe classes (3 min)
 
 Two quick tests to check your understanding.
 
@@ -353,7 +435,7 @@ Do **not** add a closure axiom. This class will not be fully classified. Compare
 
 ---
 
-### Step 9: Individuals (3 min)
+### Step 10 [hands-on]: Individuals (3 min)
 
 Switch to the **Individuals** tab. Create four organism individuals plus one instrument:
 
@@ -365,25 +447,25 @@ Switch to the **Individuals** tab. Create four organism individuals plus one ins
 | `organism_Drosophila_melanogaster` | `FruitFly` | `hasScientificName "Drosophila melanogaster"` |
 | `respirometer_001585` | `Respirometer` | (label only) |
 
-Note that `organism_Leiopotherapon_unicolor` is typed as `SpangledPerch`, not `Fish`. The reasoner will infer `Fish`, `Organism`, and `hasRealm some Aquatic` automatically — that is the whole point of a class hierarchy.
+Note that `organism_Leiopotherapon_unicolor` is typed as `SpangledPerch`, not `Fish`. The reasoner will infer `Fish`, `Organism`, and `hasRealm some Aquatic` automatically - that is the whole point of a class hierarchy.
 
 For the four organism individuals, click **+** next to **Different From** and add the other three. OWL does **not** assume individuals are distinct by default (it drops the Unique Name Assumption).
 
 ---
 
-### Step 10: Run the reasoner (5 min)
+### Step 11 [hands-on]: Run the reasoner (5 min)
 
 Go to **Reasoner > HermiT** (or Pellet), then **Reasoner > Start reasoner**. The reasoner performs three jobs:
 
-1. **Consistency check** — is the ontology free of contradictions?
-2. **Subsumption / classification** — which classes are subclasses of which?
-3. **Realisation** — for each individual, which classes does it belong to?
+1. **Consistency check** - is the ontology free of contradictions?
+2. **Subsumption / classification** - which classes are subclasses of which?
+3. **Realisation** (instance classification) - for each individual, which classes does it belong to?
 
 Check these results:
 
 1. **Inferred hierarchy.** Switch to the **Inferred** tab in the class hierarchy. `SpangledPerchRespirometryStudy` should appear under `AquaticTraitMeasurement`, `JuvenileFishMeasurement`, *and* `RespirometryMeasurement`. `AphidiusDevelopmentStudy` should appear under both `ColdExposureMeasurement` and `InsectTraitMeasurement`. `SpangledPerch` appears under `Fish`.
 
-2. **Red class.** `InconsistentDevelopmentMetabolism` is highlighted in red (equivalent to `owl:Nothing` — *unsatisfiable*).
+2. **Red class.** `InconsistentDevelopmentMetabolism` is highlighted in red (equivalent to `owl:Nothing` - *unsatisfiable*).
 
 3. **Unclosed class.** `UnclosedTraitMeasurement` is *not* classified under any defined class.
 
@@ -395,132 +477,116 @@ Open the **DL Query** tab (Window > Tabs > DL Query if it is hidden). Type:
 TraitMeasurement and (measuredOnOrganism some Fish)
 ```
 
-The Instances panel should list the three spangled-perch measurements once Part 3 data is loaded.
+At this point there are no measurement individuals yet, so the Instances panel will be empty. We will re-run this query after loading the real data and it will list the three spangled-perch measurements.
 
 Save: **File > Save**.
 
 ---
 
-## Take-aways
+### Load the real data and re-run the reasoner (15 min)
 
-1. **Unknown is not false.** The Open World Assumption is the key mental shift.
-2. **Existential (∃, `some`) vs universal (∀, `only`).** Both are needed: `some` introduces a value, `only` closes the property.
-3. **Necessary vs necessary-and-sufficient.** `SubClassOf` ≠ `EquivalentTo`. Defined classes use `EquivalentTo`.
-4. **Disjoint axioms** catch modelling errors automatically.
-5. **Defined classes** turn the reasoner into an automatic classifier.
+Now we load six real ShareTrait measurements on top of the ontology you just built. The hero is still `TRAMEA023773`. The facilitator drives this part from the front; participants follow on their own laptops.
+
+**The 6 measurements** - three spangled-perch records anchor the demo; three more species give the reasoner variety.
+
+| ID | Species | Trait | Value | Temp | Life stage |
+|---|---|---|---|---|---|
+| `measurement_023773` | *Leiopotherapon unicolor* | Metabolic rate | **117.0 mgO2/h/kgFM** | 21.5 °C (Warm) | juvenile |
+| `measurement_023776` | *Leiopotherapon unicolor* | Metabolic rate | 110.0 mgO2/h/kgFM | 21.5 °C (Warm) | juvenile |
+| `measurement_023829` | *Leiopotherapon unicolor* | Metabolic rate | 751.4 mgO2/h/kgFM | 21.5 °C (Warm) | juvenile |
+| `measurement_000001` | *Aphidius platensis* | Development | 39 days | < 15 °C (Cold) | *not in KG* |
+| `measurement_003743` | *Rana temporaria* | Development | 35 days | 15–25 °C (Warm) | *not in KG* |
+| `measurement_004493` | *Drosophila melanogaster* | Development | 16 days | 15–25 °C (Warm) | *not in KG* |
+
+**Steps:**
+
+1. Open the data sample `sharetrait-data-sample.ttl` and copy its contents.
+2. Paste at the end of your `sharetrait-ontology-starter.ttl`. Both files share the same namespace.
+3. Re-open the combined file in Protégé: **File > Open**.
+4. **Reasoner > HermiT > Start reasoner**.
+5. Select `measurement_023773` and check **Inferred Types** in the Description panel.
+
+The sample was extracted from the full ShareTrait knowledge graph with a SPARQL `CONSTRUCT` query (`extract-data-sample.sparql`). Temperatures are mapped to value partitions (< 15 °C = `Cold`, 15–25 °C = `Warm`, ≥ 25 °C = `Hot`); life-stage strings to `juvenile1` / `adult1` / `larva1` when present; organism individuals are typed by genus. Each measurement is typed **only** as `:TraitMeasurement` - every other class membership comes from the reasoner.
+
+Save: **File > Save**.
 
 ---
 
-## Break (15 min)
+## Plenary B - what the reasoner inferred (10 min)
 
----
+Review the inferred-types results together:
 
-## Part 3: Applying the Ontology to Real Data (25 min)
-
-Now we load actual measurements from the ShareTrait knowledge graph and let the reasoner classify them. The hero is still `TRAMEA023773`.
-
-### Where the data comes from
-
-The sample data was extracted from `sharetrait-kg.ttl` using a SPARQL `CONSTRUCT` query (`extract-data-sample.sparql`). For each chosen measurement it follows the chain `Measurement → Individual → Population → Taxonomy` for the species, `Measurement → Condition (test)` for the temperature, and `Measurement → hasLifeStageGeneral` for life stage. Then it:
-
-- maps temperatures to our value partitions (< 15 °C = `Cold`, 15–25 °C = `Warm`, ≥ 25 °C = `Hot`),
-- maps life-stage strings to `juvenile1` / `adult1` / `larva1` **when the KG records them** (otherwise no `hasLifeStage` triple is emitted), and
-- maps species via `CONTAINS` rules (`Leiopotherapon` → `Fish`, `Aphidius` → `ParasitoidWasp`, etc.).
-
-Each measurement is typed **only** as `:TraitMeasurement`. No manual classification.
-
-### The 6 measurements
-
-Three spangled-perch records anchor the demo; three more species give the reasoner variety.
-
-| ID | Species | Trait | Value | Temp | Life stage | Notes |
-|---|---|---|---|---|---|---|
-| `measurement_023773` | *Leiopotherapon unicolor* | Metabolic rate | **117.0 mgO2/h/kgFM** | 21.5 °C (Warm) | juvenile | **Hero record `TRAMEA023773`**, control |
-| `measurement_023776` | *Leiopotherapon unicolor* | Metabolic rate | 110.0 mgO2/h/kgFM | 21.5 °C (Warm) | juvenile | `TRAMEA023776`, control replicate |
-| `measurement_023829` | *Leiopotherapon unicolor* | Metabolic rate | 751.4 mgO2/h/kgFM | 21.5 °C (Warm) | juvenile | `TRAMEA023829`, 100 mg/L nitrate stress |
-| `measurement_000001` | *Aphidius platensis* | Development | 39 days | < 15 °C (Cold) | *not in KG* | `TRAMEA000001` |
-| `measurement_003743` | *Rana temporaria* | Development | 35 days | 15–25 °C (Warm) | *not in KG* | `TRAMEA003743` |
-| `measurement_004493` | *Drosophila melanogaster* | Development | 16 days | 15–25 °C (Warm) | *not in KG* | `TRAMEA004493` |
-
-### Expected SPARQL output (Turtle, abridged)
-
-Running `extract-data-sample.sparql` against `sharetrait-kg.ttl` produces triples like these — this is what should end up in `sharetrait-data-sample.ttl`:
-
-```turtle
-:measurement_023773 a owl:NamedIndividual , t:TraitMeasurement ;
-    rdfs:label              "TRAMEA023773 (hero record)" ;
-    t:measuresTraitType     t:MetabolicRateTrait ;
-    t:measuredOnOrganism    :organism_Leiopotherapon_unicolor ;
-    t:hasTemperatureRange   t:warm1 ;
-    t:hasLifeStage          t:juvenile1 ;
-    t:usedInstrument        t:respirometer_001585 ;
-    t:hasTraitValue         117.0165483 .
-
-:organism_Leiopotherapon_unicolor a owl:NamedIndividual , t:SpangledPerch ;
-    t:hasScientificName     "Leiopotherapon unicolor" .
-
-t:respirometer_001585 a owl:NamedIndividual , t:Respirometer ;
-    rdfs:label "693 mL acrylic/Plexiglas respirometer, fiber optic-based oxygen analyzer" .
-```
-
-The shipped `sharetrait-data-sample.ttl` is the exact serialization of this query (re-grouped by subject and annotated with tutorial commentary), so re-running the SPARQL produces the same triples you load into Protege.
-
-### Load and reason
-
-1. Open your ontology from Part 2 (or the provided `sharetrait-ontology.ttl`).
-
-2. Append the sample data to your ontology file: copy the contents of `sharetrait-data-sample.ttl` and paste them at the end of `sharetrait-ontology.ttl`. Both files use the same namespace, so this works directly.
-
-3. Re-open the combined file in Protege: **File > Open** `sharetrait-ontology.ttl`.
-
-4. Check the **Individuals** tab. You should see the four organism individuals from Part 2, plus the new measurement individuals (`measurement_023773` and friends) and supporting partition individuals (`warm1`, `juvenile1`, …).
-
-5. **Reasoner > HermiT > Start reasoner**.
-
-6. Select each measurement individual and check **Inferred Types** in the Description panel.
-
-### Results
-
-The reasoner classifies the measurements without any manual labels:
-
-- **measurement_023773 (hero)**: `AquaticTraitMeasurement`, `JuvenileFishMeasurement`, `RespirometryMeasurement`, `SpangledPerchRespirometryStudy`
-- **measurement_023776**: same four classes — control replicate
-- **measurement_023829**: same four classes — the inferred *category* is identical, but the raw trait value (751.4 vs 117.0) reveals the biological story: nitrate stress at 100 mg/L elevates the standard metabolic rate by ~6.4×
+- **measurement_023773 (hero)**: `AquaticTraitMeasurement`, `JuvenileFishMeasurement`, `RespirometryMeasurement`
+- **measurement_023776**: same three classes - control replicate
+- **measurement_023829**: same three classes - the *category* is identical, but the raw trait value (751.4 vs 117.0) reveals the biological story: nitrate stress at 100 mg/L elevates the standard metabolic rate by ~6.4×
 - **measurement_000001**: `InsectTraitMeasurement`, `ColdExposureMeasurement`
 - **measurement_004493**: `InsectTraitMeasurement`
 - **measurement_003743**: no additional type. Amphibians have no realm restriction, warm is not cold, not an insect, not a fish. Open-world assumption in action.
 
 ```
-6 measurements, 14 inferred classifications, 0 manual labels
+6 measurements, 12 inferred classifications, 0 manual labels
 ```
 
-The hero record alone picks up four inferred classes — fish biology, life stage, instrument, and the named study class — purely from its data triples plus the ontology rules.
+Note that `SpangledPerchRespirometryStudy` is *not* inferred for the individuals: it is a `SubClassOf` description (Step 7), not a defined class (Step 8), so the reasoner only places it in the **class hierarchy** under `AquaticTraitMeasurement`/`JuvenileFishMeasurement`/`RespirometryMeasurement` - not the individuals into it. Convert it to `EquivalentTo` if you want individuals classified automatically.
 
-This scales to the full knowledge graph. The ShareTrait KG lives in [QLever](https://github.com/ad-freiburg/qlever) for SPARQL querying. QLever itself does not do OWL reasoning. You run the reasoner in Protege first, export the inferred triples, and then load everything into QLever for querying.
+### Did we answer the research question?
+
+Recall the research question from the top of the tutorial: *how does SMR scale with body mass in freshwater fish at ~21 °C, and does nitrate stress shift that scaling?* Be explicit with the group:
+
+- **Answered - the retrieval problem.** From raw triples typed only as `:TraitMeasurement`, the reasoner identifies the 3 perch records as `JuvenileFishMeasurement ⊓ AquaticTraitMeasurement ⊓ RespirometryMeasurement`. A DL Query for that expression returns exactly the candidate rows for a scaling analysis. The nitrate contrast (117 vs 751) is visible in `hasTraitValue`.
+- **Not answered - the analytical question itself.** Three perch records are not a scaling curve; one shifted mean is not a shifted scaling exponent. That regression runs *outside* Protégé, on the assembled dataset.
+- **The punchline.** Ontologies don't run regressions - they make sure you can find every input row you need across studies, units, and naming conventions, so the regression is possible at all. That is what ShareTrait + this ontology buys you.
+
+This scales to the full knowledge graph. The ShareTrait KG lives in [QLever](https://github.com/ad-freiburg/qlever) for SPARQL querying. QLever itself does not do OWL reasoning. You run the reasoner in Protégé first, export the inferred triples, and then load everything into QLever for querying.
 
 ---
 
-## What Comes Next
+## Part 5: What Comes Next + Q&A (10 min)
 
 Now that you know how to build an ontology from scratch, you know how to read and reuse one. Reuse is almost always the better choice.
 
-### Replace, don't rebuild
+### Replace, don't rebuild - trait qualities with PATO
 
-Some of the trait classes we built today already exist in [PATO](http://purl.obolibrary.org/obo/pato.owl) (Phenotypic Quality Ontology):
+Some of the trait classes we built today already exist in [PATO](http://purl.obolibrary.org/obo/pato.owl) (Phenotype And Trait Ontology):
 
 | Our class | PATO term | URI | Notes |
 |---|---|---|---|
 | `FecundityTrait` | "fecundity" | `PATO:0000273` | Exact match |
 | `MetabolicRateTrait` | "rate" | `PATO:0000161` | Too broad (PATO defines rate as "occurrence per unit time" in general) |
-| `DevelopmentTrait` | — | — | No direct PATO term; development time combines a process with a duration |
+| `DevelopmentTrait` | - | - | No direct PATO term; development time combines a process with a duration |
 
-Not everything maps cleanly. `DevelopmentTrait` has no single PATO equivalent because development time combines a biological process with a temporal quality. That is normal: you will often need to combine terms from several ontologies, or keep some local terms where no good match exists.
+PATO is an actively maintained OBO Foundry ontology and remains the standard vocabulary for phenotypic *qualities* - rate, mass, length, viability, motility. It is used by HPO, Monarch, and most cross-species phenotype work. The limit is exactly that: PATO models qualities, not whole trait *types*. Compound traits like "development time" or "sperm progressive motility percentage" usually need a PATO quality combined with a process or anatomy term, or a local class linked to PATO via `skos:closeMatch`.
 
 In practice, you use the external URI directly instead of inventing your own. For example, instead of defining a local `FecundityTrait` class, you use `http://purl.obolibrary.org/obo/PATO_0000273` in your data and restrictions. No need to import the entire PATO ontology.
 
-Where to find terms:
-- [OBO Foundry](http://obofoundry.org/) for curated bio-ontologies
-- [Ontology Lookup Service (OLS)](https://www.ebi.ac.uk/ols4/) to search individual terms across 1,000+ ontologies
+### A note on body size
+
+The research question at the top of the tutorial asks how metabolic rate scales with body mass - and the ShareTrait KG of course carries body mass for the perch records. We left it out of *this* tutorial on purpose: keeping the modelled subset tight on Measurement → Trait → Organism makes the reasoning story crisper in two hours. Tidying up the body-size representation (its own `BodySizeMeasurement` linked to the organism, units from OM/QUDT, quality from PATO) is on the roadmap for a follow-up session.
+
+### Other relevant OWL ontologies
+
+PATO is one piece. A trait record also has a species, an anatomy, an environment, an experimental condition, a life stage, and a unit - each with a mature OWL ontology worth knowing about:
+
+| Slot | Ontology | What it gives you |
+|---|---|---|
+| Taxonomy | **NCBITaxon** | OWL serialisation of NCBI Taxonomy; reasoner can walk species → genus → family |
+| Anatomy | **UBERON** | Cross-species anatomy, includes invertebrates |
+| Habitat / environment | **ENVO** | Biome and environmental-material terms (freshwater, marine, terrestrial, …) |
+| Experimental conditions | **ECTO** | Treatments and exposures (temperature regimes, chemical stressors); built on ENVO + PATO |
+| Life stage | **Uberon life-stages** | Generic life-cycle plus species-specific stage ontologies |
+| Units | **OM** (Ontology of Units of Measure) | OWL 2, SI plus domain units, supports unit conversion |
+| Vertebrate traits | **VT** (Vertebrate Trait Ontology) | Mature trait ontology - but **vertebrate-only**; invertebrates still need local terms or PATO combinations |
+| Observation framework | **OBOE** (Extensible Observation Ontology) | OWL pattern for `Observation → Measurement → Entity / Characteristic / Standard / Protocol` - the same shape we built today around `TraitMeasurement` |
+
+All eight are OWL, all are looked up the same way:
+- [OBO Foundry](http://obofoundry.org/) for the bio-ontologies
+- [Ontology Lookup Service (OLS)](https://www.ebi.ac.uk/ols4/) to search individual terms
+- [OM browser](http://www.ontology-of-units-of-measure.org/) for units
+- [OBOE on GitHub](https://github.com/NCEAS/oboe) / [BioPortal entry](https://bioportal.bioontology.org/ontologies/OBOE) for the observation framework
+
+A note on OBOE specifically: unlike PATO/UBERON/ENVO it is a *structural* pattern, not a term list. Aligning ShareTrait's `TraitMeasurement` with OBOE's `Measurement`, our `Organism` with OBOE's `Entity`, and our `TraitType` with OBOE's `Characteristic` would let other ecological datasets annotated with OBOE (e.g. via DataONE) interoperate with ShareTrait without per-database re-mapping. Last release is 2019 - stable rather than rapidly evolving, which suits our purpose. It is on the roadmap for a follow-up modelling session alongside the body-size cleanup.
+
+Not every external resource is an OWL ontology - taxonomic checklists, gazetteers, and identifier registries (ORCID, ROR, GeoNames, Catalogue of Life) are valuable for linking but cannot be reasoned over the way the eight above can.
 
 ### The pipeline
 
@@ -530,19 +596,24 @@ The full pipeline from CSV to queryable knowledge graph is documented in the [sh
 Spreadsheet / Database
         |
         v
-   RML Mapping           (rows to RDF triples)
+   RML Mapping            (rows → RDF triples)
         |
         v
    Knowledge Graph        (RDF with external ontology URIs)
         |
         v
-   SPARQL Querying        (QLever)
+   Reasoning              (HermiT / Pellet in Protégé)
+        |
+        v
+   SPARQL querying        (QLever)
 ```
+
+Reasoning runs in **Protégé**; QLever stores and queries but does no OWL reasoning. Export inferred triples from Protégé, then load into QLever.
 
 | Step | Tool |
 |---|---|
 | Mapping | [RML.io](https://rml.io/) / [YARRRML](https://rml.io/yarrrml/) |
+| Reasoning | HermiT / Pellet (in Protégé) |
 | Storing and querying | [QLever](https://github.com/ad-freiburg/qlever) |
-| Reasoning | HermiT / Pellet (in Protege) |
 
-You do not need to become an ontology engineer. The skills from this tutorial — and the spangled perch record you walked through — are exactly what you need to read, evaluate, and reuse the ontologies that already exist.
+You do not need to become an ontology engineer. The skills from this tutorial - and the spangled perch record you walked through - are exactly what you need to read, evaluate, and reuse the ontologies that already exist.

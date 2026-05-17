@@ -1,0 +1,291 @@
+@prefix : <http://sharetrait.org/ontologies/traits#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://sharetrait.org/ontologies/traits#> .
+
+<http://sharetrait.org/ontologies/traits> rdf:type owl:Ontology ;
+                                           rdfs:comment "Starter file: result of Prep 1-4 with one slot per layer (class, disjoint, covering, object property, data property) left for participants to fill in during Steps 1-5."@en ;
+                                           rdfs:label "ShareTrait Tutorial Ontology (starter)"@en ;
+                                           owl:versionInfo "starter-1.2" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://sharetrait.org/ontologies/traits#hasComponent
+:hasComponent rdf:type owl:ObjectProperty ;
+              owl:inverseOf :isComponentOf .
+
+
+###  http://sharetrait.org/ontologies/traits#hasRealm
+:hasRealm rdf:type owl:ObjectProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :Organism ;
+          rdfs:range :Realm .
+
+
+###  http://sharetrait.org/ontologies/traits#hasTemperatureRange
+:hasTemperatureRange rdf:type owl:ObjectProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :TraitMeasurement ;
+                     rdfs:range :TemperatureRange .
+
+
+###  http://sharetrait.org/ontologies/traits#isComponentOf
+:isComponentOf rdf:type owl:ObjectProperty .
+
+
+###  http://sharetrait.org/ontologies/traits#isInstrumentOf
+:isInstrumentOf rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf :isComponentOf ;
+                owl:inverseOf :usedInstrument .
+
+
+###  http://sharetrait.org/ontologies/traits#isOrganismOf
+:isOrganismOf rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :isComponentOf ;
+              owl:inverseOf :measuredOnOrganism .
+
+
+###  http://sharetrait.org/ontologies/traits#isTraitTypeOf
+:isTraitTypeOf rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :isComponentOf ;
+               owl:inverseOf :measuresTraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#measuredOnOrganism
+:measuredOnOrganism rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :hasComponent ;
+                    rdf:type owl:FunctionalProperty ;
+                    rdfs:domain :TraitMeasurement ;
+                    rdfs:range :Organism .
+
+
+###  http://sharetrait.org/ontologies/traits#measuresTraitType
+:measuresTraitType rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :hasComponent ;
+                   rdfs:domain :TraitMeasurement ;
+                   rdfs:range :TraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#usedInstrument
+:usedInstrument rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf :hasComponent ;
+                rdf:type owl:FunctionalProperty ;
+                rdfs:domain :TraitMeasurement ;
+                rdfs:range :Instrument .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://sharetrait.org/ontologies/traits#hasTraitValue
+:hasTraitValue rdf:type owl:DatatypeProperty ;
+               rdfs:domain :TraitMeasurement ;
+               rdfs:range xsd:decimal .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://sharetrait.org/ontologies/traits#Adult
+:Adult rdf:type owl:Class ;
+       rdfs:subClassOf :LifeStage .
+
+
+###  http://sharetrait.org/ontologies/traits#Amphibian
+:Amphibian rdf:type owl:Class ;
+           rdfs:subClassOf :Organism .
+
+
+###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentStudy
+:AphidiusDevelopmentStudy rdf:type owl:Class ;
+                          rdfs:subClassOf :TraitMeasurement ;
+                          owl:disjointWith :SpangledPerchRespirometryStudy .
+
+
+###  http://sharetrait.org/ontologies/traits#Aquatic
+:Aquatic rdf:type owl:Class ;
+         rdfs:subClassOf :Realm ;
+         owl:disjointWith :Terrestrial .
+
+
+###  http://sharetrait.org/ontologies/traits#Cold
+:Cold rdf:type owl:Class ;
+      rdfs:subClassOf :TemperatureRange .
+
+
+###  http://sharetrait.org/ontologies/traits#DevelopmentTrait
+:DevelopmentTrait rdf:type owl:Class ;
+                  rdfs:subClassOf :TraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#FecundityTrait
+:FecundityTrait rdf:type owl:Class ;
+                rdfs:subClassOf :TraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#Fish
+:Fish rdf:type owl:Class ;
+      rdfs:subClassOf :Organism .
+
+
+###  http://sharetrait.org/ontologies/traits#FruitFly
+:FruitFly rdf:type owl:Class ;
+          rdfs:subClassOf :Insect ;
+          owl:disjointWith :ParasitoidWasp .
+
+
+###  http://sharetrait.org/ontologies/traits#Hot
+:Hot rdf:type owl:Class ;
+     rdfs:subClassOf :TemperatureRange .
+
+
+###  http://sharetrait.org/ontologies/traits#IndependentEntity
+:IndependentEntity rdf:type owl:Class ;
+                   owl:disjointWith :ValuePartition .
+
+
+###  http://sharetrait.org/ontologies/traits#Insect
+:Insect rdf:type owl:Class ;
+        rdfs:subClassOf :Organism .
+
+
+###  http://sharetrait.org/ontologies/traits#Instrument
+:Instrument rdf:type owl:Class ;
+            rdfs:subClassOf :IndependentEntity .
+
+
+###  http://sharetrait.org/ontologies/traits#Juvenile
+:Juvenile rdf:type owl:Class ;
+          rdfs:subClassOf :LifeStage .
+
+
+###  http://sharetrait.org/ontologies/traits#Larva
+:Larva rdf:type owl:Class ;
+       rdfs:subClassOf :LifeStage .
+
+
+###  http://sharetrait.org/ontologies/traits#LifeStage
+:LifeStage rdf:type owl:Class ;
+           rdfs:subClassOf :ValuePartition .
+
+
+###  http://sharetrait.org/ontologies/traits#MetabolicRateTrait
+:MetabolicRateTrait rdf:type owl:Class ;
+                    rdfs:subClassOf :TraitType .
+
+
+###  http://sharetrait.org/ontologies/traits#Organism
+:Organism rdf:type owl:Class ;
+          rdfs:subClassOf :IndependentEntity .
+
+
+###  http://sharetrait.org/ontologies/traits#ParasitoidWasp
+:ParasitoidWasp rdf:type owl:Class ;
+                rdfs:subClassOf :Insect .
+
+
+###  http://sharetrait.org/ontologies/traits#Realm
+:Realm rdf:type owl:Class ;
+       owl:equivalentClass [ rdf:type owl:Class ;
+                             owl:unionOf ( :Aquatic
+                                           :Terrestrial
+                                         )
+                           ] ;
+       rdfs:subClassOf :ValuePartition .
+
+
+###  http://sharetrait.org/ontologies/traits#Respirometer
+:Respirometer rdf:type owl:Class ;
+              rdfs:subClassOf :Instrument .
+
+
+###  http://sharetrait.org/ontologies/traits#SpangledPerch
+:SpangledPerch rdf:type owl:Class ;
+               rdfs:subClassOf :Fish .
+
+
+###  http://sharetrait.org/ontologies/traits#SpangledPerchRespirometryStudy
+:SpangledPerchRespirometryStudy rdf:type owl:Class ;
+                                rdfs:subClassOf :TraitMeasurement .
+
+
+###  http://sharetrait.org/ontologies/traits#TemperatureRange
+:TemperatureRange rdf:type owl:Class ;
+                  owl:equivalentClass [ rdf:type owl:Class ;
+                                        owl:unionOf ( :Cold
+                                                      :Hot
+                                                      :Warm
+                                                    )
+                                      ] ;
+                  rdfs:subClassOf :ValuePartition .
+
+
+###  http://sharetrait.org/ontologies/traits#Terrestrial
+:Terrestrial rdf:type owl:Class ;
+             rdfs:subClassOf :Realm .
+
+
+###  http://sharetrait.org/ontologies/traits#TraitMeasurement
+:TraitMeasurement rdf:type owl:Class ;
+                  rdfs:subClassOf :IndependentEntity .
+
+
+###  http://sharetrait.org/ontologies/traits#TraitType
+:TraitType rdf:type owl:Class ;
+           rdfs:subClassOf :IndependentEntity .
+
+
+###  http://sharetrait.org/ontologies/traits#ValuePartition
+:ValuePartition rdf:type owl:Class .
+
+
+###  http://sharetrait.org/ontologies/traits#Warm
+:Warm rdf:type owl:Class ;
+      rdfs:subClassOf :TemperatureRange .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Adult
+                :Juvenile
+                :Larva
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Cold
+                :Hot
+                :Warm
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :DevelopmentTrait
+                :FecundityTrait
+                :MetabolicRateTrait
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Instrument
+                :Organism
+                :TraitMeasurement
+                :TraitType
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

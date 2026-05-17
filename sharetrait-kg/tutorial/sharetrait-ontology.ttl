@@ -276,5 +276,7 @@ terms:license a owl:AnnotationProperty .
 :organism_Rana_temporaria         a owl:NamedIndividual , :Amphibian ;      :hasScientificName "Rana temporaria" .
 :organism_Drosophila_melanogaster a owl:NamedIndividual , :FruitFly ;       :hasScientificName "Drosophila melanogaster" .
 
+:respirometer_001585              a owl:NamedIndividual , :Respirometer ;   rdfs:label "Respirometer 001585" .
+
 [] a owl:AllDifferent ;
     owl:distinctMembers ( :organism_Leiopotherapon_unicolor :organism_Aphidius_platensis :organism_Rana_temporaria :organism_Drosophila_melanogaster ) .
