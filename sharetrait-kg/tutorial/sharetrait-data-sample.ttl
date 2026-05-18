@@ -118,13 +118,12 @@
 # TRAMEA023773: juvenile Leiopotherapon unicolor,
 # standard metabolic rate, 21.5 C, nitrate control (0 mg/L NO3-).
 # Expected inferences (defined / EquivalentTo classes only):
-#   - AquaticTraitMeasurement   (fish -> aquatic realm)
-#   - JuvenileFishMeasurement   (fish + juvenile)
-#   - RespirometryMeasurement   (used a respirometer)
-# Note: SpangledPerchRespirometryStudy is declared with SubClassOf
+#   - JuvenileFishMeasurement   (SpangledPerch ⊑ Fish + hasLifeStage juvenile1)
+#   - RespirometryMeasurement   (usedInstrument some Respirometer)
+# Note: MetabolicRateRespirometryStudy is declared with SubClassOf
 # (necessary conditions only), so the reasoner places it in the
-# class hierarchy under the three defined classes above, but does
-# not classify this individual into it.
+# class hierarchy under RespirometryMeasurement, but does not
+# classify this individual into it.
 
 :measurement_023773 a owl:NamedIndividual , :TraitMeasurement ;
     rdfs:label                "TRAMEA023773 (hero record)" ;

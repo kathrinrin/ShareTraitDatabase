@@ -7,10 +7,9 @@
 @base <http://sharetrait.org/ontologies/traits#> .
 
 <http://sharetrait.org/ontologies/traits> rdf:type owl:Ontology ;
-                                           owl:imports <http://sharetrait.org/ontologies/traits/data-sample> ;
-                                           rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. In Steps 1-5 the participant adds exactly one element of each modelling layer that has been left out: one class (SpangledPerch), one disjoint axiom (Insect/Amphibian/Fish), one covering axiom (LifeStage), one object property (hasLifeStage), one data property (hasScientificName). Four of the five defined classes (AquaticTraitMeasurement, ColdExposureMeasurement, InsectTraitMeasurement, JuvenileFishMeasurement) are pre-filled as reference patterns; the participant builds the fifth (RespirometryMeasurement) in Step 8."@en ;
+                                           rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. The participant adds the modelling elements that have been left out: one class (SpangledPerch), one disjoint axiom (Insect/Amphibian/Fish), one covering axiom (LifeStage), one object property (hasLifeStage), one data property (hasScientificName), one existential restriction on Fish (hasRealm some Aquatic), one closure axiom on MetabolicRateRespirometryStudy (measuresTraitType only MetabolicRateTrait), and one defined class (RespirometryMeasurement). Three of the four defined classes (ColdExposureMeasurement, InsectTraitMeasurement, JuvenileFishMeasurement) are pre-filled as reference patterns. The ABox (named individuals) is in sharetrait-data-sample.ttl and is imported live during the session, not from this file."@en ;
                                            rdfs:label "ShareTrait Tutorial Ontology - Starter"@en ;
-                                           owl:versionInfo "starter-1.5" .
+                                           owl:versionInfo "starter-1.7" .
 
 #################################################################
 #    Object Properties
@@ -123,33 +122,13 @@
                                             owl:onProperty :measuresTraitType ;
                                             owl:allValuesFrom :DevelopmentTrait
                                           ] ;
-                          owl:disjointWith :SpangledPerchRespirometryStudy .
+                          owl:disjointWith :MetabolicRateRespirometryStudy .
 
 
 ###  http://sharetrait.org/ontologies/traits#Aquatic
 :Aquatic rdf:type owl:Class ;
          rdfs:subClassOf :Realm ;
          owl:disjointWith :Terrestrial .
-
-
-###  http://sharetrait.org/ontologies/traits#AquaticTraitMeasurement
-:AquaticTraitMeasurement rdf:type owl:Class ;
-                         owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
-                                                                    [ rdf:type owl:Restriction ;
-                                                                      owl:onProperty :measuredOnOrganism ;
-                                                                      owl:someValuesFrom [ owl:intersectionOf ( :Organism
-                                                                                                                [ rdf:type owl:Restriction ;
-                                                                                                                  owl:onProperty :hasRealm ;
-                                                                                                                  owl:someValuesFrom :Aquatic
-                                                                                                                ]
-                                                                                                              ) ;
-                                                                                           rdf:type owl:Class
-                                                                                         ]
-                                                                    ]
-                                                                  ) ;
-                                               rdf:type owl:Class
-                                             ] ;
-                         rdfs:subClassOf :TraitMeasurement .
 
 
 ###  http://sharetrait.org/ontologies/traits#Cold
@@ -277,9 +256,17 @@
               rdfs:subClassOf :Instrument .
 
 
-###  http://sharetrait.org/ontologies/traits#SpangledPerchRespirometryStudy
-:SpangledPerchRespirometryStudy rdf:type owl:Class ;
-                                rdfs:subClassOf :TraitMeasurement .
+###  http://sharetrait.org/ontologies/traits#MetabolicRateRespirometryStudy
+:MetabolicRateRespirometryStudy rdf:type owl:Class ;
+                                rdfs:subClassOf :TraitMeasurement ,
+                                                [ rdf:type owl:Restriction ;
+                                                  owl:onProperty :measuresTraitType ;
+                                                  owl:someValuesFrom :MetabolicRateTrait
+                                                ] ,
+                                                [ rdf:type owl:Restriction ;
+                                                  owl:onProperty :usedInstrument ;
+                                                  owl:someValuesFrom :Respirometer
+                                                ] .
 
 
 ###  http://sharetrait.org/ontologies/traits#TemperatureRange
