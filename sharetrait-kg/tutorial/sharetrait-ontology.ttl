@@ -199,10 +199,11 @@
 
 
 ###  http://sharetrait.org/ontologies/traits#InconsistentDevelopmentMetabolism
-:InconsistentDevelopmentMetabolism rdf:type owl:Class ;
-                                   rdfs:subClassOf :DevelopmentTrait ,
-                                                   :MetabolicRateTrait ;
-                                   rdfs:comment "Probe class: intentionally unsatisfiable because :DevelopmentTrait and :MetabolicRateTrait are declared disjoint."@en .
+# Commented out because it's optional 
+# :InconsistentDevelopmentMetabolism rdf:type owl:Class ;
+#                                    rdfs:subClassOf :DevelopmentTrait ,
+#                                                    :MetabolicRateTrait ;
+#                                    rdfs:comment "Probe class: intentionally unsatisfiable because :DevelopmentTrait and :MetabolicRateTrait are declared disjoint."@en .
 
 
 ###  http://sharetrait.org/ontologies/traits#Insect
@@ -348,17 +349,18 @@
 
 
 ###  http://sharetrait.org/ontologies/traits#UnclosedTraitMeasurement
-:UnclosedTraitMeasurement rdf:type owl:Class ;
-                          rdfs:subClassOf :TraitMeasurement ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :measuredOnOrganism ;
-                                            owl:someValuesFrom :Insect
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty :measuresTraitType ;
-                                            owl:someValuesFrom :DevelopmentTrait
-                                          ] ;
-                          rdfs:comment "Probe class: no closure (owl:allValuesFrom) axiom on :measuresTraitType, so the reasoner cannot conclude this class is equivalent to :InsectTraitMeasurement."@en .
+# Commented out because it's optional 
+# :UnclosedTraitMeasurement rdf:type owl:Class ;
+#                           rdfs:subClassOf :TraitMeasurement ,
+#                                           [ rdf:type owl:Restriction ;
+#                                             owl:onProperty :measuredOnOrganism ;
+#                                             owl:someValuesFrom :Insect
+#                                           ] ,
+#                                           [ rdf:type owl:Restriction ;
+#                                             owl:onProperty :measuresTraitType ;
+#                                             owl:someValuesFrom :DevelopmentTrait
+#                                           ] ;
+#                           rdfs:comment "Probe class: no closure (owl:allValuesFrom) axiom on :measuresTraitType, so the reasoner cannot conclude this class is equivalent to :InsectTraitMeasurement."@en .
 
 
 ###  http://sharetrait.org/ontologies/traits#Warm
