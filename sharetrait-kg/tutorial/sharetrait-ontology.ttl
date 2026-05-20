@@ -21,11 +21,11 @@
               owl:inverseOf :isComponentOf .
 
 
-###  http://sharetrait.org/ontologies/traits#hasLifeStage
-:hasLifeStage rdf:type owl:ObjectProperty ,
-                       owl:FunctionalProperty ;
-              rdfs:domain :TraitMeasurement ;
-              rdfs:range :LifeStage .
+###  http://sharetrait.org/ontologies/traits#measuredAtLifeStage
+:measuredAtLifeStage rdf:type owl:ObjectProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain :TraitMeasurement ;
+                     rdfs:range :LifeStage .
 
 
 ###  http://sharetrait.org/ontologies/traits#hasRealm
@@ -91,12 +91,6 @@
 #    Data properties
 #################################################################
 
-###  http://sharetrait.org/ontologies/traits#hasScientificName
-:hasScientificName rdf:type owl:DatatypeProperty ;
-                   rdfs:domain :Organism ;
-                   rdfs:range xsd:string .
-
-
 ###  http://sharetrait.org/ontologies/traits#hasTraitValue
 :hasTraitValue rdf:type owl:DatatypeProperty ;
                rdfs:domain :TraitMeasurement ;
@@ -114,11 +108,13 @@
 
 ###  http://sharetrait.org/ontologies/traits#Amphibian
 :Amphibian rdf:type owl:Class ;
-           rdfs:subClassOf :Organism .
+           rdfs:subClassOf :Organism ;
+           owl:disjointWith :Fish ,
+                            :Insect .
 
 
-###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentStudy
-:AphidiusDevelopmentStudy rdf:type owl:Class ;
+###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentMeasurement
+:AphidiusDevelopmentMeasurement rdf:type owl:Class ;
                           rdfs:subClassOf :TraitMeasurement ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty :hasTemperatureRange ;
@@ -136,7 +132,7 @@
                                             owl:onProperty :measuresTraitType ;
                                             owl:allValuesFrom :DevelopmentTrait
                                           ] ;
-                          owl:disjointWith :MetabolicRateRespirometryStudy .
+                          owl:disjointWith :MetabolicRateRespirometryMeasurement .
 
 
 ###  http://sharetrait.org/ontologies/traits#Aquatic
@@ -173,18 +169,14 @@
         rdfs:subClassOf :LifeStage .
 
 
-###  http://sharetrait.org/ontologies/traits#FecundityTrait
-:FecundityTrait rdf:type owl:Class ;
-                rdfs:subClassOf :TraitType .
-
-
 ###  http://sharetrait.org/ontologies/traits#Fish
 :Fish rdf:type owl:Class ;
       rdfs:subClassOf :Organism ,
                       [ rdf:type owl:Restriction ;
                         owl:onProperty :hasRealm ;
                         owl:someValuesFrom :Aquatic
-                      ] .
+                      ] ;
+      owl:disjointWith :Insect .
 
 
 ###  http://sharetrait.org/ontologies/traits#FruitFly
@@ -237,7 +229,7 @@
 :JuvenileFishMeasurement rdf:type owl:Class ;
                          owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
                                                                     [ rdf:type owl:Restriction ;
-                                                                      owl:onProperty :hasLifeStage ;
+                                                                      owl:onProperty :measuredAtLifeStage ;
                                                                       owl:someValuesFrom :Juvenile
                                                                     ]
                                                                     [ rdf:type owl:Restriction ;
@@ -260,8 +252,8 @@
                                ] .
 
 
-###  http://sharetrait.org/ontologies/traits#MetabolicRateRespirometryStudy
-:MetabolicRateRespirometryStudy rdf:type owl:Class ;
+###  http://sharetrait.org/ontologies/traits#MetabolicRateRespirometryMeasurement
+:MetabolicRateRespirometryMeasurement rdf:type owl:Class ;
                                 rdfs:subClassOf :TraitMeasurement ,
                                                 [ rdf:type owl:Restriction ;
                                                   owl:onProperty :measuresTraitType ;
@@ -279,7 +271,8 @@
 
 ###  http://sharetrait.org/ontologies/traits#MetabolicRateTrait
 :MetabolicRateTrait rdf:type owl:Class ;
-                    rdfs:subClassOf :TraitType .
+                    rdfs:subClassOf :TraitType ;
+                    owl:disjointWith :DevelopmentTrait .
 
 
 ###  http://sharetrait.org/ontologies/traits#Organism
@@ -381,27 +374,12 @@
 
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Amphibian
-                :Fish
-                :Insect
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
   owl:members ( :Cold
                 :Hot
                 :Warm
               )
 ] .
 
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :DevelopmentTrait
-                :FecundityTrait
-                :MetabolicRateTrait
-              )
-] .
 
 
 [ rdf:type owl:AllDisjointClasses ;

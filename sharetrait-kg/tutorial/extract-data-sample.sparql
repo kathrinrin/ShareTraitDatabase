@@ -51,12 +51,11 @@ CONSTRUCT {
            t:measuresTraitType     ?traitClass ;
            t:measuredOnOrganism    ?orgInd ;
            t:hasTemperatureRange   ?tempInd ;
-           t:hasLifeStage          ?lifeInd ;
+           t:measuredAtLifeStage   ?lifeInd ;
            t:usedInstrument        ?instInd ;
            t:hasTraitValue         ?traitValue .
 
-    ?orgInd  a owl:NamedIndividual , ?orgClass ;
-             t:hasScientificName   ?sciClean .
+    ?orgInd  a owl:NamedIndividual , ?orgClass .
 
     ?instInd a owl:NamedIndividual , t:Respirometer ;
              rdfs:label            ?instLabel .
@@ -111,7 +110,7 @@ WHERE {
     #      Tutorial ontology has 3 stages (Embryo/Juvenile/Adult), so
     #      "egg" -> :embryo1 and "larva" is unmapped (no triple emitted).
     #      Unbound ?lifeStr (Aphidius/Rana/Drosophila) also leaves
-    #      ?lifeInd unbound; CONSTRUCT skips the t:hasLifeStage triple.
+    #      ?lifeInd unbound; CONSTRUCT skips the t:measuredAtLifeStage triple.
     BIND(IF(?lifeStr = "juvenile", t:juvenile1,
          IF(?lifeStr = "adult",    t:adult1,
          IF(?lifeStr = "egg",      t:embryo1,
@@ -131,14 +130,6 @@ WHERE {
     # makes it visually clear in Protégé that each organism is ONE
     # animal, not the species as a whole. Two records can share a
     # numeric ID (e.g. measurement_023773 was taken on organism_023773).
-    #
-    # Drop any parenthesized text (author year or subgenus), then keep
-    # only the first two whitespace-separated tokens (Genus + species):
-    #   "Leiopotherapon unicolor (Gunther, 1859)"        -> "Leiopotherapon unicolor"
-    #   "Aphidius platensis Brethes, 1913"               -> "Aphidius platensis"
-    #   "Drosophila (Sophophora) melanogaster Meigen..." -> "Drosophila melanogaster"
-    BIND(REPLACE(?sciName, "\\([^)]*\\)", "")                 AS ?sci1)
-    BIND(REPLACE(?sci1, "^\\s*(\\S+)\\s+(\\S+).*$", "$1 $2")  AS ?sciClean)
     BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#measurement_",
                     STRAFTER(STR(?mea), "TRAMEA")))           AS ?tInd)
     BIND(IRI(CONCAT("http://sharetrait.org/ontologies/traits#organism_",

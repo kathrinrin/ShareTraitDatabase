@@ -43,12 +43,11 @@
 # ontology, which this file is imported into.)
 
 :hasTemperatureRange a owl:ObjectProperty .
-:hasLifeStage        a owl:ObjectProperty .
+:measuredAtLifeStage        a owl:ObjectProperty .
 :measuredOnOrganism  a owl:ObjectProperty .
 :measuresTraitType   a owl:ObjectProperty .
 :usedInstrument      a owl:ObjectProperty .
 :hasTraitValue       a owl:DatatypeProperty .
-:hasScientificName   a owl:DatatypeProperty .
 
 
 # -- Individuals of the closed sets (TemperatureRange, LifeStage) --
@@ -89,23 +88,17 @@
 # :FruitFly) is asserted directly by the extractor so that the
 # reasoner can fire downstream class restrictions.
 
-:organism_023773 a owl:NamedIndividual , :SpangledPerch ;
-    :hasScientificName "Leiopotherapon unicolor" .
+:organism_023773 a owl:NamedIndividual , :SpangledPerch .
 
-:organism_023776 a owl:NamedIndividual , :SpangledPerch ;
-    :hasScientificName "Leiopotherapon unicolor" .
+:organism_023776 a owl:NamedIndividual , :SpangledPerch .
 
-:organism_023829 a owl:NamedIndividual , :SpangledPerch ;
-    :hasScientificName "Leiopotherapon unicolor" .
+:organism_023829 a owl:NamedIndividual , :SpangledPerch .
 
-:organism_000001 a owl:NamedIndividual , :ParasitoidWasp ;
-    :hasScientificName "Aphidius platensis" .
+:organism_000001 a owl:NamedIndividual , :ParasitoidWasp .
 
-:organism_003743 a owl:NamedIndividual , :Amphibian ;
-    :hasScientificName "Rana temporaria" .
+:organism_003743 a owl:NamedIndividual , :Amphibian .
 
-:organism_004493 a owl:NamedIndividual , :FruitFly ;
-    :hasScientificName "Drosophila melanogaster" .
+:organism_004493 a owl:NamedIndividual , :FruitFly .
 
 
 # ==============================================================
@@ -118,9 +111,9 @@
 # TRAMEA023773: juvenile Leiopotherapon unicolor,
 # standard metabolic rate, 21.5 C, nitrate control (0 mg/L NO3-).
 # Expected inferences (defined / EquivalentTo classes only):
-#   - JuvenileFishMeasurement   (SpangledPerch ⊑ Fish + hasLifeStage juvenile1)
+#   - JuvenileFishMeasurement   (SpangledPerch ⊑ Fish + measuredAtLifeStage juvenile1)
 #   - RespirometryMeasurement   (usedInstrument some Respirometer)
-# Note: MetabolicRateRespirometryStudy is declared with SubClassOf
+# Note: MetabolicRateRespirometryMeasurement is declared with SubClassOf
 # (necessary conditions only), so the reasoner places it in the
 # class hierarchy under RespirometryMeasurement, but does not
 # classify this individual into it.
@@ -130,7 +123,7 @@
     :measuresTraitType        :MetabolicRateTrait ;
     :measuredOnOrganism       :organism_023773 ;
     :hasTemperatureRange      :warm1 ;
-    :hasLifeStage             :juvenile1 ;
+    :measuredAtLifeStage      :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
     :hasTraitValue            117.0165483 .
 
@@ -143,7 +136,7 @@
     :measuresTraitType        :MetabolicRateTrait ;
     :measuredOnOrganism       :organism_023776 ;
     :hasTemperatureRange      :warm1 ;
-    :hasLifeStage             :juvenile1 ;
+    :measuredAtLifeStage      :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
     :hasTraitValue            110.0274363 .
 
@@ -159,14 +152,14 @@
     :measuresTraitType        :MetabolicRateTrait ;
     :measuredOnOrganism       :organism_023829 ;
     :hasTemperatureRange      :warm1 ;
-    :hasLifeStage             :juvenile1 ;
+    :measuredAtLifeStage      :juvenile1 ;
     :usedInstrument           :respirometer_001585 ;
     :hasTraitValue            751.3638873 .
 
 
 # -- TRAMEA000001: Aphidius platensis, development, < 15 C -----
 # Real-world sparsity: the KG record carries no life-stage
-# annotation, so the extractor emits no :hasLifeStage triple.
+# annotation, so the extractor emits no :measuredAtLifeStage triple.
 # Expected inferences depend only on organism class and temperature.
 
 :measurement_000001 a owl:NamedIndividual , :TraitMeasurement ;

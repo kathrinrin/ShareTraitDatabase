@@ -7,9 +7,9 @@
 @base <http://sharetrait.org/ontologies/traits#> .
 
 <http://sharetrait.org/ontologies/traits> rdf:type owl:Ontology ;
-                                           rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. The participant adds the modelling elements that have been left out: one class (SpangledPerch), one disjoint axiom (Insect/Amphibian/Fish), one covering axiom (LifeStage), one object property (hasLifeStage), one data property (hasScientificName), one existential restriction on Fish (hasRealm some Aquatic), one closure axiom on MetabolicRateRespirometryStudy (measuresTraitType only MetabolicRateTrait), and one defined class (RespirometryMeasurement). Three of the four defined classes (ColdExposureMeasurement, InsectTraitMeasurement, JuvenileFishMeasurement) are pre-filled as reference patterns. The ABox (named individuals) is in sharetrait-data-sample.ttl and is imported live during the session, not from this file."@en ;
+                                           rdfs:comment "Pre-built starter ontology for the ShareTrait Protege tutorial. The participant adds the modelling elements that have been left out: one class (SpangledPerch), one disjoint axiom (Fish/Insect), one covering axiom (LifeStage), the domain/range/Functional characteristic of one object property (measuredAtLifeStage, pre-declared as a bare ObjectProperty), one existential restriction on Fish (hasRealm some Aquatic), one closure axiom on MetabolicRateRespirometryMeasurement (measuresTraitType only MetabolicRateTrait), and one defined class (RespirometryMeasurement). Three of the four defined classes (ColdExposureMeasurement, InsectTraitMeasurement, JuvenileFishMeasurement) are pre-filled as reference patterns. The ABox (named individuals) is in sharetrait-data-sample.ttl and is imported live during the session, not from this file."@en ;
                                            rdfs:label "ShareTrait Tutorial Ontology - Starter"@en ;
-                                           owl:versionInfo "starter-1.7" .
+                                           owl:versionInfo "starter-1.8" .
 
 #################################################################
 #    Object Properties
@@ -56,6 +56,10 @@
                owl:inverseOf :measuresTraitType .
 
 
+###  http://sharetrait.org/ontologies/traits#measuredAtLifeStage
+:measuredAtLifeStage rdf:type owl:ObjectProperty .
+
+
 ###  http://sharetrait.org/ontologies/traits#measuredOnOrganism
 :measuredOnOrganism rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :hasComponent ;
@@ -100,11 +104,13 @@
 
 ###  http://sharetrait.org/ontologies/traits#Amphibian
 :Amphibian rdf:type owl:Class ;
-           rdfs:subClassOf :Organism .
+           rdfs:subClassOf :Organism ;
+           owl:disjointWith :Fish ,
+                            :Insect .
 
 
-###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentStudy
-:AphidiusDevelopmentStudy rdf:type owl:Class ;
+###  http://sharetrait.org/ontologies/traits#AphidiusDevelopmentMeasurement
+:AphidiusDevelopmentMeasurement rdf:type owl:Class ;
                           rdfs:subClassOf :TraitMeasurement ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty :hasTemperatureRange ;
@@ -122,7 +128,7 @@
                                             owl:onProperty :measuresTraitType ;
                                             owl:allValuesFrom :DevelopmentTrait
                                           ] ;
-                          owl:disjointWith :MetabolicRateRespirometryStudy .
+                          owl:disjointWith :MetabolicRateRespirometryMeasurement .
 
 
 ###  http://sharetrait.org/ontologies/traits#Aquatic
@@ -157,11 +163,6 @@
 ###  http://sharetrait.org/ontologies/traits#Embryo
 :Embryo rdf:type owl:Class ;
         rdfs:subClassOf :LifeStage .
-
-
-###  http://sharetrait.org/ontologies/traits#FecundityTrait
-:FecundityTrait rdf:type owl:Class ;
-                rdfs:subClassOf :TraitType .
 
 
 ###  http://sharetrait.org/ontologies/traits#Fish
@@ -211,7 +212,7 @@
 :JuvenileFishMeasurement rdf:type owl:Class ;
                          owl:equivalentClass [ owl:intersectionOf ( :TraitMeasurement
                                                                     [ rdf:type owl:Restriction ;
-                                                                      owl:onProperty :hasLifeStage ;
+                                                                      owl:onProperty :measuredAtLifeStage ;
                                                                       owl:someValuesFrom :Juvenile
                                                                     ]
                                                                     [ rdf:type owl:Restriction ;
@@ -230,7 +231,8 @@
 
 ###  http://sharetrait.org/ontologies/traits#MetabolicRateTrait
 :MetabolicRateTrait rdf:type owl:Class ;
-                    rdfs:subClassOf :TraitType .
+                    rdfs:subClassOf :TraitType ;
+                    owl:disjointWith :DevelopmentTrait .
 
 
 ###  http://sharetrait.org/ontologies/traits#Organism
@@ -256,8 +258,8 @@
               rdfs:subClassOf :Instrument .
 
 
-###  http://sharetrait.org/ontologies/traits#MetabolicRateRespirometryStudy
-:MetabolicRateRespirometryStudy rdf:type owl:Class ;
+###  http://sharetrait.org/ontologies/traits#MetabolicRateRespirometryMeasurement
+:MetabolicRateRespirometryMeasurement rdf:type owl:Class ;
                                 rdfs:subClassOf :TraitMeasurement ,
                                                 [ rdf:type owl:Restriction ;
                                                   owl:onProperty :measuresTraitType ;
@@ -313,14 +315,6 @@
   owl:members ( :Cold
                 :Hot
                 :Warm
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :DevelopmentTrait
-                :FecundityTrait
-                :MetabolicRateTrait
               )
 ] .
 
